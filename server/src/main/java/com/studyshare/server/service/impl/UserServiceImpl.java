@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
+        validateUserInput(userDTO);
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
@@ -38,6 +39,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new ValidationException("Email already exists");
         }
         return convertToDTO(userRepository.save(user));
+    }
+
+    private void validateUserInput(UserDTO userDTO) {
+        if (userDTO.getUsername() == null || userDTO.getUsername().trim().isEmpty()) {
+            throw new ValidationException("Username cannot be empty");
+        }
+        if (userDTO.getEmail() == null || !userDTO.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new ValidationException("Invalid email format");
+        }
+        if (userDTO.getPassword() == null || userDTO.getPassword().length() < 6) {
+            throw new ValidationException("Password must be at least 6 characters");
+        }
     }
 
     @Override
@@ -114,12 +127,13 @@ public CompletableFuture<UserDTO> register(UserDTO userDTO) {
     });
 }
 
-    @Override
-    public boolean authenticate(String username, String password) {
-        return userRepository.findByUsername(username)
-                .map(user -> passwordEncoder.matches(password, user.getPassword()))
-                .orElse(false);
-    }
+
+@Override
+public boolean authenticate(String username, String password) {
+    return userRepository.findByUsername(username)
+            .map(user -> password.equals(user.getPassword()))
+            .orElse(false);
+}
 
     @Override
     public UserDTO getCurrentUser() {

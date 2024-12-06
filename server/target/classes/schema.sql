@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS hibernate_sequences (
     sequence_name TEXT PRIMARY KEY,
-    next_val INTEGER
+    next_val BIGINT
 );
 
--- Initialize sequence
+
 INSERT OR IGNORE INTO hibernate_sequences (sequence_name, next_val)
 VALUES ('users', 1);
 
@@ -43,13 +43,9 @@ CREATE TABLE IF NOT EXISTS transactions (
 );
 
 
+INSERT OR REPLACE INTO users (username, password, email, role)
+VALUES ('admin', 'admin', 'admin@studyshare.com', 'ADMIN');
+SELECT 'Schema executed successfully' as debug_message;
+
 
 INSERT OR IGNORE INTO roles (role_name) VALUES ('USER'), ('ADMIN');
-
-
--- Clear existing admin user
-DELETE FROM users WHERE username = 'admin';
-
--- Insert admin with BCrypt encoded password
-INSERT OR IGNORE INTO users (username, password, email, role)
-VALUES ('admin', '$2a$10$xn3LI/AjqicFYZFruSwve.681477XaVNaUQbr1gioaWPn4t1KsnmG', 'admin@studyshare.com', 'ADMIN');

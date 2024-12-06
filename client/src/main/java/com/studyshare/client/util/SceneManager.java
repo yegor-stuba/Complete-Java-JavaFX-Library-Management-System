@@ -6,18 +6,26 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+
 public class SceneManager {
     private final Stage primaryStage;
-    private final ControllerFactory controllerFactory;
+    private ControllerFactory controllerFactory;
 
-    public SceneManager(Stage primaryStage, ControllerFactory controllerFactory) {
+    public SceneManager(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.controllerFactory = controllerFactory;
+    }
+
+    public void setControllerFactory(ControllerFactory factory) {
+        this.controllerFactory = factory;
     }
 
     public void switchToLogin() {
         loadScene("/fxml/login.fxml", "Login");
     }
+
+    public void switchToRegister() {
+    loadScene("/fxml/register.fxml", "Register");
+}
 
     public void switchToBookManagement() {
         loadScene("/fxml/book-management.fxml", "Book Management");

@@ -11,30 +11,20 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class ClientApplication extends Application {
-    private SceneManager sceneManager;
-    private RestClient restClient;
-    private UserService userService;
-    private BookService bookService;
-    private ControllerFactory controllerFactory;
-
     @Override
     public void start(Stage primaryStage) {
-        initializeServices();
-        initializeControllerFactory(primaryStage);
+        RestClient restClient = new RestClient();
+        UserService userService = new UserServiceImpl(restClient);
+        BookService bookService = new BookServiceImpl(restClient);
+
+        SceneManager sceneManager = new SceneManager(primaryStage);
+        ControllerFactory controllerFactory = new ControllerFactory(sceneManager, userService, bookService);
+        sceneManager.setControllerFactory(controllerFactory);
+
+        primaryStage.setTitle("StudyShare Library");
         sceneManager.switchToLogin();
+        primaryStage.show();
     }
-
-    private void initializeServices() {
-        restClient = new RestClient();
-        userService = new UserServiceImpl(restClient);
-        bookService = new BookServiceImpl(restClient);
-    }
-
-    private void initializeControllerFactory(Stage primaryStage) {
-    // Remove the first initialization of sceneManager
-    controllerFactory = new ControllerFactory(sceneManager, userService, bookService);
-    sceneManager = new SceneManager(primaryStage, controllerFactory);
-}
 
     public static void main(String[] args) {
         launch(args);

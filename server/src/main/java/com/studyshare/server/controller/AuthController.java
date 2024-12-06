@@ -14,9 +14,9 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-public ResponseEntity<Boolean> login(@RequestBody UserDTO userDTO) {
-    return ResponseEntity.ok(userService.authenticate(userDTO.getUsername(), userDTO.getPassword()));
-}
+    public ResponseEntity<Boolean> login(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.authenticate(userDTO.getUsername(), userDTO.getPassword()));
+    }
 
     @PostMapping("/register")
     public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
@@ -35,7 +35,13 @@ public ResponseEntity<Boolean> login(@RequestBody UserDTO userDTO) {
     }
 
     @GetMapping("/check")
-public ResponseEntity<String> check() {
-    return ResponseEntity.ok("Auth endpoint is working");
-}
+    public ResponseEntity<String> check() {
+        return ResponseEntity.ok("Auth endpoint is working");
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("Auth endpoint is working");
+    }
+
 }

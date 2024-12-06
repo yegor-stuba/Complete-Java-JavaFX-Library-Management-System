@@ -11,6 +11,7 @@
 /Users/yegor/Documents/STU/SDIKT/library/server/src/main/java/com/studyshare/server/controller/AuthController.java
 /Users/yegor/Documents/STU/SDIKT/library/server/src/main/java/com/studyshare/server/exception/ResourceNotFoundException.java
 /Users/yegor/Documents/STU/SDIKT/library/server/src/main/java/com/studyshare/server/config/SecurityConfig.java
+/Users/yegor/Documents/STU/SDIKT/library/server/src/main/java/com/studyshare/server/controller/HomeController.java
 /Users/yegor/Documents/STU/SDIKT/library/server/src/main/java/com/studyshare/server/controller/TransactionController.java
 /Users/yegor/Documents/STU/SDIKT/library/server/src/main/java/com/studyshare/server/service/BookService.java
 /Users/yegor/Documents/STU/SDIKT/library/server/src/main/java/com/studyshare/server/model/Transaction.java

@@ -9,3 +9,6 @@ admin
 admin
 
 you can add user yourself
+
+
+shall we mention why there are so little commits in the project?

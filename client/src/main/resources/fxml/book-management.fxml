@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <HBox spacing="10">
+        <TextField fx:id="searchField" promptText="Search books..." HBox.hgrow="ALWAYS"/>
+        <Button text="Search" onAction="#handleSearch"/>
+        <Button text="Add Book" onAction="#handleAddBook"/>
+    </HBox>
+
+    <TableView fx:id="booksTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="titleColumn" text="Title"/>
+            <TableColumn fx:id="authorColumn" text="Author"/>
+            <TableColumn fx:id="isbnColumn" text="ISBN"/>
+            <TableColumn fx:id="copiesColumn" text="Available Copies"/>
+        </columns>
+    </TableView>
+</VBox>

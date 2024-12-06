@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.studyshare.client.controller.UserProfileController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label fx:id="usernameLabel" styleClass="header-label"/>
+    <Label fx:id="emailLabel"/>
+    <Label fx:id="roleLabel"/>
+
+    <TableView fx:id="borrowedBooksTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="titleColumn" text="Title"/>
+            <TableColumn fx:id="authorColumn" text="Author"/>
+            <TableColumn fx:id="dueDateColumn" text="Due Date"/>
+        </columns>
+    </TableView>
+
+    <Button text="Logout" onAction="#handleLogout"/>
+</VBox>

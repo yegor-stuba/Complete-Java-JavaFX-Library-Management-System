@@ -1,14 +1,23 @@
-# to be added something
-## because i want to finish this d@mn project
-### one thing left to figure out, how to convert commits and overally make them nice.
+# StudyShare Library Management System
 
-#### commit to be included: "few commits in the project, because of the gpt help to clean up repository with command: git reset --hard origin/main"
+## Current Implementation Status
+- [x] Basic Architecture
+- [x] Database Setup
+- [ ] User Role System (IN PROGRESS)
+- [ ] Security & Error Handling
+- [ ] Book Management System
+- [ ] Transaction System
 
-for admin:
-admin 
-admin
+## Current Task: User Role System
+Implementation Requirements:
+- Admin Dashboard
+- Role-based Access Control
+- User Management Operations
+- Security Integration
 
-you can add user yourself
-
-
-shall we mention why there are so little commits in the project?
+## Next Task: Security & Error Handling
+Planned Features:
+- Input Validation
+- Error Messages
+- Access Control
+- Security Checks

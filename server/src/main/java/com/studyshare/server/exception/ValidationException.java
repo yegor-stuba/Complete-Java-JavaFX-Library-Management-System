@@ -1,11 +1,15 @@
 package com.studyshare.server.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import lombok.Getter;
+import org.springframework.validation.ObjectError;
+import java.util.List;
 
-@ResponseStatus(HttpStatus.BAD_REQUEST)
+@Getter
 public class ValidationException extends RuntimeException {
-    public ValidationException(String message) {
-        super(message);
+    private final List<ObjectError> errors;
+
+    public ValidationException(List<ObjectError> errors) {
+        super("Validation failed");
+        this.errors = errors;
     }
 }

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.studyshare.client.controller.AdminDashboardController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <MenuBar>
+        <Menu text="System">
+            <MenuItem text="Refresh Data" onAction="#refreshData"/>
+            <MenuItem text="Logout" onAction="#handleLogout"/>
+        </Menu>
+    </MenuBar>
+
+    <TabPane VBox.vgrow="ALWAYS">
+        <!-- User Management Tab -->
+        <Tab text="User Management" closable="false">
+            <VBox spacing="10">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="userSearchField" promptText="Search users..." HBox.hgrow="ALWAYS"/>
+                    <Button text="Search" onAction="#handleUserSearch"/>
+                    <Button text="Add User" onAction="#handleAddUser"/>
+                </HBox>
+
+                <TableView fx:id="usersTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="userIdColumn" text="ID" prefWidth="50"/>
+                        <TableColumn fx:id="usernameColumn" text="Username" prefWidth="150"/>
+                        <TableColumn fx:id="emailColumn" text="Email" prefWidth="200"/>
+                        <TableColumn fx:id="roleColumn" text="Role" prefWidth="100"/>
+                        <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- Book Management Tab -->
+        <Tab text="Book Management" closable="false">
+            <VBox spacing="10">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="bookSearchField" promptText="Search books..." HBox.hgrow="ALWAYS"/>
+                    <Button text="Search" onAction="#handleBookSearch"/>
+                    <Button text="Add Book" onAction="#handleAddBook"/>
+                </HBox>
+
+                <TableView fx:id="booksTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="bookIdColumn" text="ID" prefWidth="50"/>
+                        <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
+                        <TableColumn fx:id="authorColumn" text="Author" prefWidth="150"/>
+                        <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="100"/>
+                        <TableColumn fx:id="copiesColumn" text="Available Copies" prefWidth="100"/>
+                        <TableColumn fx:id="bookActionsColumn" text="Actions" prefWidth="150"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- System Statistics Tab -->
+        <Tab text="Statistics" closable="false">
+            <VBox spacing="20" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                <Label fx:id="totalUsersLabel" styleClass="stat-label"/>
+                <Label fx:id="totalBooksLabel" styleClass="stat-label"/>
+                <Label fx:id="activeLoansLabel" styleClass="stat-label"/>
+                <Label fx:id="totalTransactionsLabel" styleClass="stat-label"/>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

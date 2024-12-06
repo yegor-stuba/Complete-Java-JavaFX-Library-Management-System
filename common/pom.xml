@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>com.studyshare</groupId>
-        <artifactId>library-management</artifactId>
+        <artifactId>library</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 

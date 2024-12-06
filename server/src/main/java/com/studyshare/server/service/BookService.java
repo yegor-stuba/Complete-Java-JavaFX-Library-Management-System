@@ -11,4 +11,9 @@ public interface BookService {
     BookDTO updateBook(Long id, BookDTO bookDTO);
     void deleteBook(Long id);
     List<BookDTO> searchBooks(String query);
+    Long getBookCount();
+    boolean isBookAvailable(Long bookId);
+    List<BookDTO> getAvailableBooks();
+    BookDTO borrowBook(Long bookId, Long userId);
+    BookDTO returnBook(Long bookId, Long userId);
 }

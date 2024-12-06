@@ -30,30 +30,28 @@ public class LoginController {
     }
 
 
-
     @FXML
-private void handleLogin() {
-    String username = usernameField.getText();
-    String password = passwordField.getText();
+    private void handleLogin() {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
 
-    System.out.println("Attempting login with username: " + username);
+        if (username.isEmpty() || password.isEmpty()) {
+            AlertUtil.showWarning("Login Error", "Please enter both username and password");
+            return;
+        }
 
-    userService.login(username, password)
-        .thenAccept(success -> {
-            System.out.println("Login result: " + success);
-            if (Boolean.TRUE.equals(success)) {
-                Platform.runLater(() -> {
-                    System.out.println("Switching to book management view");
-                    sceneManager.switchToBookManagement();
+        userService.login(username, password)
+                .thenAccept(user -> {
+                    if (user != null) {
+                        Platform.runLater(() -> sceneManager.navigateBasedOnRole(user.getRole()));
+                    } else {
+                        AlertUtil.showError("Login Failed", "Invalid username or password");
+                    }
+                })
+                .exceptionally(throwable -> {
+                    Platform.runLater(() -> AlertUtil.showError("Error", "Could not connect to server"));
+                    return null;
                 });
-            } else {
-                Platform.runLater(() -> AlertUtil.showError("Login Failed", "Invalid username or password"));
-            }
-        })
-        .exceptionally(throwable -> {
-            System.out.println("Login error: " + throwable.getMessage());
-            Platform.runLater(() -> AlertUtil.showError("Error", "Could not connect to server"));
-            return null;
-        });
-}
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.studyshare.client.util;
 
 import com.studyshare.client.config.ClientConfig;
+import com.studyshare.common.enums.UserRole;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -49,4 +50,13 @@ public class SceneManager {
             AlertUtil.showError("Error", "Failed to load scene");
         }
     }
+
+    public void navigateBasedOnRole(UserRole role) {
+        if (role == UserRole.ADMIN) {
+            loadScene("/fxml/admin-dashboard.fxml", "Admin Dashboard");
+        } else {
+            loadScene("/fxml/book-management.fxml", "Book Management");
+        }
+    }
+
 }

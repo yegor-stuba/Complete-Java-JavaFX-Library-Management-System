@@ -3,6 +3,7 @@ package com.studyshare.common.dto;
 import com.studyshare.common.enums.UserRole;
 import lombok.Data;
 
+
 @Data
 public class UserDTO {
     private Long userId;

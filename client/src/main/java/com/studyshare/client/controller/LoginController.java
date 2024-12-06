@@ -8,6 +8,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 
+
+import com.studyshare.client.service.UserService;
+import com.studyshare.client.util.AlertUtil;
+import com.studyshare.client.util.SceneManager;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
+import lombok.RequiredArgsConstructor;
+
+
 public class LoginController extends BaseController {
 
     private final UserService userService;

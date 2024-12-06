@@ -3,32 +3,34 @@ package com.studyshare.client.service.impl;
 import com.studyshare.client.service.RestClient;
 import com.studyshare.client.service.UserService;
 import com.studyshare.common.dto.UserDTO;
+import com.studyshare.common.enums.UserRole;
+import com.studyshare.server.security.dto.AuthenticationResponse;
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final RestClient restClient;
-    private UserDTO currentUser;
-
-    public UserServiceImpl(RestClient restClient) {
-        this.restClient = restClient;
-    }
+    private AuthenticationResponse currentUser;
 
     @Override
-    public CompletableFuture<UserDTO> login(String username, String password) {
+    public CompletableFuture<AuthenticationResponse> login(String username, String password) {
         UserDTO loginRequest = new UserDTO();
         loginRequest.setUsername(username);
         loginRequest.setPassword(password);
-        return restClient.post("/api/auth/login", loginRequest, UserDTO.class)
-            .thenApply(user -> {
-                this.currentUser = user;
-                return user;
+
+        return restClient.post("/api/auth/login", loginRequest, AuthenticationResponse.class)
+            .thenApply(response -> {
+                this.currentUser = response;
+                return response;
             });
     }
 
     @Override
-    public CompletableFuture<UserDTO> register(UserDTO userDTO) {
-        return restClient.post("/api/auth/register", userDTO, UserDTO.class);
+    public CompletableFuture<AuthenticationResponse> register(UserDTO userDTO) {
+        return restClient.post("/api/auth/register", userDTO, AuthenticationResponse.class);
     }
 
     @Override
@@ -39,11 +41,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public CompletableFuture<List<UserDTO>> getAllUsers() {
         return restClient.get("/api/users", List.class);
-    }
-
-    @Override
-    public CompletableFuture<UserDTO> createUser(UserDTO userDTO) {
-        return restClient.post("/api/users", userDTO, UserDTO.class);
     }
 
     @Override
@@ -62,13 +59,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CompletableFuture<Long> getUserCount() {
-        return restClient.get("/api/users/count", Long.class);
-    }
-
-    @Override
     public CompletableFuture<Void> logout() {
         return restClient.post("/api/auth/logout", null, Void.class)
             .thenRun(() -> this.currentUser = null);
+    }
+
+    @Override
+    public boolean isAdmin() {
+        return currentUser != null && UserRole.ADMIN.equals(currentUser.getRole());
     }
 }

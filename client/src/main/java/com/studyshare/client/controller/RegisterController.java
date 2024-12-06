@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 
+
 public class RegisterController {
     private final UserService userService;
     private final SceneManager sceneManager;
@@ -50,28 +51,38 @@ public class RegisterController {
             });
     }
 
-    @FXML
-    private void handleBackToLogin() {
-        sceneManager.switchToLogin();
-    }
 
     private boolean validateInput() {
-        if (usernameField.getText().isEmpty() || emailField.getText().isEmpty()
-            || passwordField.getText().isEmpty() || confirmPasswordField.getText().isEmpty()) {
+        String username = usernameField.getText().trim();
+        String email = emailField.getText().trim();
+        String password = passwordField.getText();
+        String confirmPassword = confirmPasswordField.getText();
+
+        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             AlertUtil.showWarning("Validation Error", "All fields are required");
             return false;
         }
 
-        if (!passwordField.getText().equals(confirmPasswordField.getText())) {
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            AlertUtil.showWarning("Validation Error", "Please enter a valid email address");
+            return false;
+        }
+
+        if (!password.equals(confirmPassword)) {
             AlertUtil.showWarning("Validation Error", "Passwords do not match");
             return false;
         }
 
-        if (!emailField.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            AlertUtil.showWarning("Validation Error", "Invalid email format");
+        if (password.length() < 6) {
+            AlertUtil.showWarning("Validation Error", "Password must be at least 6 characters long");
             return false;
         }
 
         return true;
+    }
+
+    @FXML
+    private void handleBackToLogin() {
+        sceneManager.switchToLogin();
     }
 }

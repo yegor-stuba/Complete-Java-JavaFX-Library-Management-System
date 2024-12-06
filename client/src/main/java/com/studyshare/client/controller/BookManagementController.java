@@ -12,7 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.io.IOException;
 
-public class BookManagementController {
+public class BookManagementController extends BaseController {
     private final BookService bookService;
     private final ObservableList<BookDTO> books = FXCollections.observableArrayList();
 
@@ -69,6 +69,11 @@ public class BookManagementController {
                     AlertUtil.showError("Error", "Failed to load books");
                     return null;
                 });
+        handleAsync(bookService.getAllBooks())
+                .thenAccept(bookList -> {
+                    books.clear();
+                    books.addAll(bookList);
+                });
     }
 
     @FXML
@@ -79,6 +84,11 @@ public class BookManagementController {
             return;
         }
 
+        handleAsync(bookService.searchBooks(searchTerm))
+                .thenAccept(results -> {
+                    books.clear();
+                    books.addAll(results);
+                });
         bookService.searchBooks(searchTerm)
                 .thenAccept(results -> {
                     books.clear();
@@ -95,6 +105,8 @@ public class BookManagementController {
         Dialog<BookDTO> dialog = new Dialog<>();
         dialog.setTitle("Add New Book");
         dialog.setHeaderText("Enter book details");
+
+
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add-book-dialog.fxml"));
@@ -121,6 +133,12 @@ public class BookManagementController {
                         newBook.setAuthor(authorField.getText());
                         newBook.setIsbn(isbnField.getText());
                         newBook.setAvailableCopies(Integer.parseInt(copiesField.getText()));
+
+                        handleAsync(bookService.addBook(newBook))
+                                .thenAccept(savedBook -> {
+                                    books.add(savedBook);
+                                    AlertUtil.showInfo("Success", "Book added successfully");
+                                });
 
                         return newBook;
                     } catch (NumberFormatException e) {

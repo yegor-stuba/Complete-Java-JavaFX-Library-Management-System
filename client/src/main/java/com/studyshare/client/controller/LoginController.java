@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 
-public class LoginController {
+public class LoginController extends BaseController {
 
     private final UserService userService;
     private final SceneManager sceneManager;
@@ -39,6 +39,15 @@ public class LoginController {
             AlertUtil.showWarning("Login Error", "Please enter both username and password");
             return;
         }
+
+        handleAsync(userService.login(username, password))
+                .thenAccept(success -> {
+                            if (Boolean.TRUE.equals(success)) {
+                                sceneManager.switchToBookManagement();
+                            } else {
+                                AlertUtil.showError("Login Failed", "Invalid username or password");
+                            }
+                        });
 
         userService.login(username, password)
                 .thenAccept(user -> {

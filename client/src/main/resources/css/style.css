@@ -40,3 +40,60 @@
     -fx-padding: 20;
     -fx-alignment: center;
 }
+
+
+.transaction-table {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 4px;
+}
+
+.transaction-table .column-header {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.transaction-row-cell {
+    -fx-padding: 8px;
+}
+
+.transaction-status-active {
+    -fx-text-fill: #4CAF50;
+    -fx-font-weight: bold;
+}
+
+.transaction-status-overdue {
+    -fx-text-fill: #f44336;
+    -fx-font-weight: bold;
+}
+
+.transaction-status-completed {
+    -fx-text-fill: #2196F3;
+    -fx-font-weight: bold;
+}
+
+.transaction-details-dialog {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 20px;
+}
+
+.transaction-details-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.transaction-details-value {
+    -fx-font-size: 14px;
+}
+
+.transaction-action-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+}
+
+.transaction-action-button:hover {
+    -fx-background-color: #45a049;
+}

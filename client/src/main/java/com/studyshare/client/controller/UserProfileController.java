@@ -12,7 +12,8 @@ import javafx.collections.ObservableList;
 import javafx.beans.property.SimpleStringProperty;
 
 @SuppressWarnings("unused")
-public class UserProfileController {
+public class UserProfileController extends BaseController {
+
     private final UserService userService;
     private final SceneManager sceneManager;
     private final ObservableList<BookDTO> borrowedBooks = FXCollections.observableArrayList();

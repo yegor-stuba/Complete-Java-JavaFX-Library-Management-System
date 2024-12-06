@@ -32,7 +32,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
         if (book.getAvailableCopies() < 1) {
-            throw new ValidationException("No copies available for borrowing");
+            throw new ValidationException(List.of(new org.springframework.validation.ObjectError("book", "No copies available for borrowing")));
         }
 
         Transaction transaction = new Transaction();
@@ -44,7 +44,6 @@ public class TransactionServiceImpl implements TransactionService {
 
         return convertToDTO(transactionRepository.save(transaction));
     }
-
     @Override
     public TransactionDTO getTransactionById(Long id) {
         return transactionRepository.findById(id)

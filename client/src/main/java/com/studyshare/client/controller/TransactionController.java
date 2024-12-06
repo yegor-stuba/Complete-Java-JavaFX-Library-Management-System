@@ -1,19 +1,24 @@
 package com.studyshare.client.controller;
 
 import com.studyshare.client.service.TransactionService;
+import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.TransactionUtil;
-import com.studyshare.client.util.DateTimeUtil;
 import com.studyshare.common.dto.TransactionDTO;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.studyshare.common.dto.UserDTO;
+import com.studyshare.client.service.UserService;  // Update import
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.TableCell;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import lombok.RequiredArgsConstructor;
 
-public class TransactionController extends BaseController {
+import java.util.concurrent.CompletableFuture;
+
+@RequiredArgsConstructor
+public class TransactionController {
     private final TransactionService transactionService;
+    private final com.studyshare.client.service.UserService userService; // Update to client UserService
     private final ObservableList<TransactionDTO> transactions = FXCollections.observableArrayList();
 
     @FXML private TableView<TransactionDTO> transactionsTable;
@@ -23,79 +28,51 @@ public class TransactionController extends BaseController {
     @FXML private TableColumn<TransactionDTO, String> dueDateColumn;
     @FXML private TableColumn<TransactionDTO, String> statusColumn;
 
-    public TransactionController(TransactionService transactionService) {
-        this.transactionService = transactionService;
-    }
-
     @FXML
     private void initialize() {
         setupTableColumns();
-        setupTableRowAction();
         loadTransactions();
+        setupTableClickHandler();
     }
 
     private void setupTableColumns() {
-        bookTitleColumn.setCellValueFactory(data ->
-            new SimpleStringProperty(data.getValue().getBookTitle()));
-
-        typeColumn.setCellValueFactory(data ->
-            new SimpleStringProperty(data.getValue().getType().toString()));
-
-        dateColumn.setCellValueFactory(data ->
-            new SimpleStringProperty(DateTimeUtil.formatDateTime(data.getValue().getDate())));
-
-        dueDateColumn.setCellValueFactory(data ->
-            new SimpleStringProperty(DateTimeUtil.formatDateTime(data.getValue().getDueDate())));
-
-        statusColumn.setCellValueFactory(data -> {
-            TransactionDTO transaction = data.getValue();
-            String status = transaction.isCompleted() ? "Completed" :
-                          DateTimeUtil.isOverdue(transaction.getDueDate()) ? "Overdue" : "Active";
-            return new SimpleStringProperty(status);
-        });
-
-        setupColumnStyles();
+        TransactionUtil.setupTransactionTableColumns(
+            bookTitleColumn,
+            typeColumn,
+            dateColumn,
+            dueDateColumn,
+            statusColumn
+        );
     }
 
-    private void setupColumnStyles() {
-        statusColumn.setCellFactory(column -> new TableCell<TransactionDTO, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    getStyleClass().removeAll("transaction-status-active",
-                                            "transaction-status-overdue",
-                                            "transaction-status-completed");
-                } else {
-                    setText(item);
-                    getStyleClass().removeAll("transaction-status-active",
-                                            "transaction-status-overdue",
-                                            "transaction-status-completed");
-                    getStyleClass().add("transaction-status-" + item.toLowerCase());
-                }
-            }
-        });
-    }
-
-    private void setupTableRowAction() {
-        transactionsTable.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                TransactionDTO selectedTransaction = transactionsTable.getSelectionModel().getSelectedItem();
-                if (selectedTransaction != null) {
-                    TransactionUtil.showTransactionDetails(selectedTransaction, transactionService);
-                }
-            }
-        });
+    private Long getCurrentUserId() {
+        CompletableFuture<UserDTO> userFuture = userService.getCurrentUser();
+        UserDTO currentUser = userFuture.join();
+        return currentUser.getUserId();
     }
 
     @FXML
     private void loadTransactions() {
-        handleAsync(transactionService.getCurrentUserTransactions())
-            .thenAccept(userTransactions -> {
+        transactionService.getUserTransactions(getCurrentUserId())
+            .thenAccept(transactionList -> {
                 transactions.clear();
-                transactions.addAll(userTransactions);
+                transactions.addAll(transactionList);
                 transactionsTable.setItems(transactions);
+            })
+            .exceptionally(throwable -> {
+                AlertUtil.showError("Error", "Failed to load transactions");
+                return null;
             });
+    }
+
+    private void setupTableClickHandler() {
+        transactionsTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                TransactionDTO selectedTransaction = transactionsTable.getSelectionModel().getSelectedItem();
+                if (selectedTransaction != null) {
+                    TransactionUtil.showTransactionDetails(selectedTransaction, this::loadTransactions);
+                }
+            }
+        });
     }
 }

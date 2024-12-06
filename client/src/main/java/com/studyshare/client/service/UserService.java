@@ -1,7 +1,7 @@
 package com.studyshare.client.service;
 
 import com.studyshare.common.dto.UserDTO;
-import com.studyshare.server.security.dto.AuthenticationResponse;
+import com.studyshare.common.security.dto.AuthenticationResponse;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -15,4 +15,6 @@ public interface UserService {
     CompletableFuture<List<UserDTO>> searchUsers(String query);
     CompletableFuture<Void> logout();
     boolean isAdmin();
+    CompletableFuture<Long> getUserCount();
+CompletableFuture<UserDTO> createUser(UserDTO userDTO);
 }

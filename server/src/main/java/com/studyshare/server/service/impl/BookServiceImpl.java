@@ -31,6 +31,13 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new RuntimeException("Owner not found")));
         return convertToDTO(bookRepository.save(book));
     }
+    @Override
+    public List<BookDTO> searchBooks(String query) {
+        return bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public BookDTO getBookById(Long id) {
@@ -48,7 +55,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDTO> getBooksByOwner(Long ownerId) {
-        return bookRepository.findByOwnerId(ownerId).stream()
+        return bookRepository.findByOwnerUserId(ownerId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -73,13 +80,6 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    @Override
-    public List<BookDTO> searchBooks(String query) {
-        return bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query)
-                .stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public Long getBookCount() {

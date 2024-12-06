@@ -1,11 +1,8 @@
 package com.studyshare.client.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.studyshare.client.config.ClientConfig;
-import com.studyshare.client.service.exception.RestClientException;
-import com.studyshare.client.service.interceptor.AuthenticationInterceptor;
-import lombok.RequiredArgsConstructor;
-
+import com.fasterxml.jackson.databind.JavaType;
+import org.springframework.core.ParameterizedTypeReference;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -13,23 +10,31 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
-@RequiredArgsConstructor
 public class RestClient {
-    private final String baseUrl = ClientConfig.BASE_URL;
+    private final String baseUrl;
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
-    private final AuthenticationInterceptor authInterceptor;
 
-    public RestClient(AuthenticationService authenticationService) {
+    public RestClient() {
+        this.baseUrl = "http://localhost:8080";
         this.httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofMillis(ClientConfig.CONNECTION_TIMEOUT))
+            .connectTimeout(Duration.ofSeconds(10))
             .build();
         this.objectMapper = new ObjectMapper();
-        this.authInterceptor = new AuthenticationInterceptor(authenticationService);
     }
 
     public <T> CompletableFuture<T> get(String path, Class<T> responseType) {
-        HttpRequest request = createRequestBuilder(path)
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(baseUrl + path))
+            .GET()
+            .build();
+
+        return sendRequest(request, responseType);
+    }
+
+    public <T> CompletableFuture<T> get(String path, ParameterizedTypeReference<T> responseType) {
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(baseUrl + path))
             .GET()
             .build();
 
@@ -37,59 +42,48 @@ public class RestClient {
     }
 
     public <T> CompletableFuture<T> post(String path, Object body, Class<T> responseType) {
-        String jsonBody = serializeBody(body);
-        HttpRequest request = createRequestBuilder(path)
-            .header("Content-Type", "application/json")
-            .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-            .build();
-
-        return sendRequest(request, responseType);
+        return sendWithBody(path, body, responseType, "POST");
     }
 
     public <T> CompletableFuture<T> put(String path, Object body, Class<T> responseType) {
-        String jsonBody = serializeBody(body);
-        HttpRequest request = createRequestBuilder(path)
-            .header("Content-Type", "application/json")
-            .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
-            .build();
-
-        return sendRequest(request, responseType);
+        return sendWithBody(path, body, responseType, "PUT");
     }
 
-    public <T> CompletableFuture<T> delete(String path, Class<T> responseType) {
-        HttpRequest request = createRequestBuilder(path)
+    public CompletableFuture<Void> delete(String path) {
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(baseUrl + path))
             .DELETE()
             .build();
 
-        return sendRequest(request, responseType);
+        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.discarding())
+            .thenApply(response -> null);
     }
 
-    private HttpRequest.Builder createRequestBuilder(String path) {
-        return authInterceptor.apply(
-            HttpRequest.newBuilder()
+    private <T> CompletableFuture<T> sendWithBody(String path, Object body, Class<T> responseType, String method) {
+        try {
+            String jsonBody = body != null ? objectMapper.writeValueAsString(body) : "";
+            HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(baseUrl + path))
-                .timeout(Duration.ofMillis(ClientConfig.CONNECTION_TIMEOUT)),
-            path
-        );
+                .header("Content-Type", "application/json")
+                .method(method, HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+            return sendRequest(request, responseType);
+        } catch (Exception e) {
+            return CompletableFuture.failedFuture(e);
+        }
     }
 
-        private <T> CompletableFuture<T> sendRequest(HttpRequest request, Class<T> responseType) {
+    private <T> CompletableFuture<T> sendRequest(HttpRequest request, Class<T> responseType) {
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-            .thenApply(response -> {
-                if (response.statusCode() >= 400) {
-                    throw new RestClientException(response.statusCode(), response.body());
-                }
-                return response.body();
-            })
+            .thenApply(HttpResponse::body)
             .thenApply(body -> deserialize(body, responseType));
     }
 
-    private String serializeBody(Object body) {
-        try {
-            return body != null ? objectMapper.writeValueAsString(body) : "";
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to serialize request body", e);
-        }
+    private <T> CompletableFuture<T> sendRequest(HttpRequest request, ParameterizedTypeReference<T> responseType) {
+        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+            .thenApply(HttpResponse::body)
+            .thenApply(body -> deserializeCollection(body, responseType));
     }
 
     private <T> T deserialize(String json, Class<T> type) {
@@ -100,6 +94,12 @@ public class RestClient {
         }
     }
 
-
-
+    private <T> T deserializeCollection(String json, ParameterizedTypeReference<T> typeReference) {
+        try {
+            JavaType type = objectMapper.getTypeFactory().constructType(typeReference.getType());
+            return objectMapper.readValue(json, type);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to deserialize collection response", e);
+        }
+    }
 }

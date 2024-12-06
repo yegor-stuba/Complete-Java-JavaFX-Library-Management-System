@@ -10,21 +10,20 @@ import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
+    @Override
+    public CompletableFuture<Integer> getActiveLoansCount() {
+        return restClient.get("/api/transactions/active-loans-count", Integer.class);
+    }
     private final RestClient restClient;
-
-    @Override
-    public CompletableFuture<List<TransactionDTO>> getCurrentUserTransactions() {
-        return restClient.get("/api/transactions/current", List.class);
-    }
-
-    @Override
-    public CompletableFuture<List<TransactionDTO>> getBookTransactions(Long bookId) {
-        return restClient.get("/api/transactions/book/" + bookId, List.class);
-    }
 
     @Override
     public CompletableFuture<TransactionDTO> createTransaction(TransactionDTO transactionDTO) {
         return restClient.post("/api/transactions", transactionDTO, TransactionDTO.class);
+    }
+
+    @Override
+    public CompletableFuture<List> getUserTransactions(Long userId) {
+        return restClient.get("/api/transactions/user/" + userId, List.class);
     }
 
     @Override
@@ -33,7 +32,12 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public CompletableFuture<List<TransactionDTO>> getOverdueTransactions() {
+    public CompletableFuture<List> getOverdueTransactions() {
         return restClient.get("/api/transactions/overdue", List.class);
+    }
+
+    @Override
+    public CompletableFuture<TransactionDTO> getTransactionDetails(Long transactionId) {
+        return restClient.get("/api/transactions/" + transactionId, TransactionDTO.class);
     }
 }

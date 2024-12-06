@@ -13,6 +13,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -21,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import lombok.RequiredArgsConstructor;
+import javafx.scene.layout.HBox;
 
 import java.awt.*;
 
@@ -34,14 +36,39 @@ public class AdminDashboardController {
     private final ObservableList<UserDTO> users = FXCollections.observableArrayList();
     private final ObservableList<BookDTO> books = FXCollections.observableArrayList();
 
-    @FXML private TableView<UserDTO> usersTable;
-    @FXML private TableView<BookDTO> booksTable;
-    @FXML private TextField userSearchField;
-    @FXML private TextField bookSearchField;
-    @FXML private Label totalUsersLabel;
-    @FXML private Label totalBooksLabel;
-    @FXML private Label activeLoansLabel;
-    @FXML private Label totalTransactionsLabel;
+    @FXML
+    private TableView<UserDTO> usersTable;
+    @FXML
+    private TableView<BookDTO> booksTable;
+    @FXML
+    private TextField userSearchField;
+    @FXML
+    private TextField bookSearchField;
+    @FXML
+    private Label totalUsersLabel;
+    @FXML
+    private Label totalBooksLabel;
+    @FXML
+    private Label activeLoansLabel;
+    @FXML
+    private Label totalTransactionsLabel;
+    @FXML
+    private TableColumn<UserDTO, String> userIdColumn;
+    @FXML
+    private TableColumn<UserDTO, String> usernameColumn;
+    @FXML
+    private TableColumn<UserDTO, String> emailColumn;
+    @FXML
+    private TableColumn<UserDTO, String> roleColumn;
+    @FXML
+    private TableColumn<UserDTO, Void> actionsColumn;
+
+
+    private void loadInitialData() {
+        loadUsers();
+        loadBooks();
+        updateStatistics();
+    }
 
     @FXML
     private void initialize() {
@@ -60,10 +87,12 @@ public class AdminDashboardController {
         actionsColumn.setCellFactory(col -> new TableCell<>() {
             private final Button editButton = new Button("Edit");
             private final Button deleteButton = new Button("Delete");
+
             {
                 editButton.setOnAction(e -> handleEditUser(getTableView().getItems().get(getIndex())));
                 deleteButton.setOnAction(e -> handleDeleteUser(getTableView().getItems().get(getIndex())));
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -90,48 +119,48 @@ public class AdminDashboardController {
 
     private void loadUsers() {
         userService.getAllUsers()
-            .thenAccept(userList -> Platform.runLater(() -> {
-                users.clear();
-                users.addAll(userList);
-            }))
-            .exceptionally(throwable -> {
-                Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load users"));
-                return null;
-            });
+                .thenAccept(userList -> Platform.runLater(() -> {
+                    users.clear();
+                    users.addAll(userList);
+                }))
+                .exceptionally(throwable -> {
+                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load users"));
+                    return null;
+                });
     }
 
     private void loadBooks() {
         bookService.getAllBooks()
-            .thenAccept(bookList -> Platform.runLater(() -> {
-                books.clear();
-                books.addAll(bookList);
-            }))
-            .exceptionally(throwable -> {
-                Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load books"));
-                return null;
-            });
+                .thenAccept(bookList -> Platform.runLater(() -> {
+                    books.clear();
+                    books.addAll(bookList);
+                }))
+                .exceptionally(throwable -> {
+                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load books"));
+                    return null;
+                });
     }
 
     private void updateStatistics() {
         // Update statistics labels with current system data
         userService.getUserCount().thenAccept(count ->
-            Platform.runLater(() -> totalUsersLabel.setText("Total Users: " + count)));
+                Platform.runLater(() -> totalUsersLabel.setText("Total Users: " + count)));
 
         bookService.getBookCount().thenAccept(count ->
-            Platform.runLater(() -> totalBooksLabel.setText("Total Books: " + count)));
+                Platform.runLater(() -> totalBooksLabel.setText("Total Books: " + count)));
 
         transactionService.getActiveLoansCount().thenAccept(count ->
-            Platform.runLater(() -> activeLoansLabel.setText("Active Loans: " + count)));
+                Platform.runLater(() -> activeLoansLabel.setText("Active Loans: " + count)));
     }
 
     @FXML
     private void handleLogout() {
         userService.logout()
-            .thenRun(() -> Platform.runLater(() -> sceneManager.switchToLogin()))
-            .exceptionally(throwable -> {
-                Platform.runLater(() -> AlertUtil.showError("Error", "Logout failed"));
-                return null;
-            });
+                .thenRun(() -> Platform.runLater(() -> sceneManager.switchToLogin()))
+                .exceptionally(throwable -> {
+                    Platform.runLater(() -> AlertUtil.showError("Error", "Logout failed"));
+                    return null;
+                });
     }
 
     // User management methods
@@ -140,30 +169,30 @@ public class AdminDashboardController {
         UserDTO newUser = showUserDialog(null);
         if (newUser != null) {
             userService.createUser(newUser)
-                .thenAccept(user -> Platform.runLater(() -> {
-                    users.add(user);
-                    AlertUtil.showInfo("Success", "User created successfully");
-                }))
-                .exceptionally(throwable -> {
-                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to create user"));
-                    return null;
-                });
+                    .thenAccept(user -> Platform.runLater(() -> {
+                        users.add(user);
+                        AlertUtil.showInfo("Success", "User created successfully");
+                    }))
+                    .exceptionally(throwable -> {
+                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to create user"));
+                        return null;
+                    });
         }
     }
 
-     private void handleEditUser(UserDTO user) {
+    private void handleEditUser(UserDTO user) {
         UserDTO updatedUser = showUserDialog(user);
         if (updatedUser != null) {
             userService.updateUser(user.getUserId(), updatedUser)
-                .thenAccept(updated -> Platform.runLater(() -> {
-                    int index = users.indexOf(user);
-                    users.set(index, updated);
-                    AlertUtil.showInfo("Success", "User updated successfully");
-                }))
-                .exceptionally(throwable -> {
-                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to update user"));
-                    return null;
-                });
+                    .thenAccept(updated -> Platform.runLater(() -> {
+                        int index = users.indexOf(user);
+                        users.set(index, updated);
+                        AlertUtil.showInfo("Success", "User updated successfully");
+                    }))
+                    .exceptionally(throwable -> {
+                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to update user"));
+                        return null;
+                    });
         }
     }
 
@@ -176,14 +205,14 @@ public class AdminDashboardController {
         confirmation.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 userService.deleteUser(user.getUserId())
-                    .thenRun(() -> Platform.runLater(() -> {
-                        users.remove(user);
-                        AlertUtil.showInfo("Success", "User deleted successfully");
-                    }))
-                    .exceptionally(throwable -> {
-                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to delete user"));
-                        return null;
-                    });
+                        .thenRun(() -> Platform.runLater(() -> {
+                            users.remove(user);
+                            AlertUtil.showInfo("Success", "User deleted successfully");
+                        }))
+                        .exceptionally(throwable -> {
+                            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to delete user"));
+                            return null;
+                        });
             }
         });
     }
@@ -194,14 +223,14 @@ public class AdminDashboardController {
         BookDTO newBook = showBookDialog(null);
         if (newBook != null) {
             bookService.addBook(newBook)
-                .thenAccept(book -> Platform.runLater(() -> {
-                    books.add(book);
-                    AlertUtil.showInfo("Success", "Book added successfully");
-                }))
-                .exceptionally(throwable -> {
-                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to add book"));
-                    return null;
-                });
+                    .thenAccept(book -> Platform.runLater(() -> {
+                        books.add(book);
+                        AlertUtil.showInfo("Success", "Book added successfully");
+                    }))
+                    .exceptionally(throwable -> {
+                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to add book"));
+                        return null;
+                    });
         }
     }
 
@@ -209,15 +238,15 @@ public class AdminDashboardController {
         BookDTO updatedBook = showBookDialog(book);
         if (updatedBook != null) {
             bookService.updateBook(book.getBookId(), updatedBook)
-                .thenAccept(updated -> Platform.runLater(() -> {
-                    int index = books.indexOf(book);
-                    books.set(index, updated);
-                    AlertUtil.showInfo("Success", "Book updated successfully");
-                }))
-                .exceptionally(throwable -> {
-                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to update book"));
-                    return null;
-                });
+                    .thenAccept(updated -> Platform.runLater(() -> {
+                        int index = books.indexOf(book);
+                        books.set(index, updated);
+                        AlertUtil.showInfo("Success", "Book updated successfully");
+                    }))
+                    .exceptionally(throwable -> {
+                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to update book"));
+                        return null;
+                    });
         }
     }
 
@@ -230,17 +259,18 @@ public class AdminDashboardController {
         confirmation.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 bookService.deleteBook(book.getBookId())
-                    .thenRun(() -> Platform.runLater(() -> {
-                        books.remove(book);
-                        AlertUtil.showInfo("Success", "Book deleted successfully");
-                    }))
-                    .exceptionally(throwable -> {
-                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to delete book"));
-                        return null;
-                    });
+                        .thenRun(() -> Platform.runLater(() -> {
+                            books.remove(book);
+                            AlertUtil.showInfo("Success", "Book deleted successfully");
+                        }))
+                        .exceptionally(throwable -> {
+                            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to delete book"));
+                            return null;
+                        });
             }
         });
     }
+
 
     // Search functionality
     private void setupSearchListeners() {
@@ -249,10 +279,10 @@ public class AdminDashboardController {
                 loadUsers();
             } else {
                 userService.searchUsers(newValue)
-                    .thenAccept(results -> Platform.runLater(() -> {
-                        users.clear();
-                        users.addAll(results);
-                    }));
+                        .thenAccept(results -> Platform.runLater(() -> {
+                            users.clear();
+                            users.addAll(results);
+                        }));
             }
         });
 
@@ -261,15 +291,15 @@ public class AdminDashboardController {
                 loadBooks();
             } else {
                 bookService.searchBooks(newValue)
-                    .thenAccept(results -> Platform.runLater(() -> {
-                        books.clear();
-                        books.addAll(results);
-                    }));
+                        .thenAccept(results -> Platform.runLater(() -> {
+                            books.clear();
+                            books.addAll(results);
+                        }));
             }
         });
     }
 
-            private UserDTO showUserDialog(UserDTO user) {
+    private UserDTO showUserDialog(UserDTO user) {
         Dialog<UserDTO> dialog = new Dialog<>();
         dialog.setTitle(user == null ? "Add New User" : "Edit User");
         dialog.setHeaderText(user == null ? "Enter user details" : "Edit user details");
@@ -319,7 +349,8 @@ public class AdminDashboardController {
         });
 
         return dialog.showAndWait().orElse(null);
-}
+    }
+
 
     private BookDTO showBookDialog(BookDTO book) {
         Dialog<BookDTO> dialog = new Dialog<>();
@@ -369,4 +400,35 @@ public class AdminDashboardController {
         return dialog.showAndWait().orElse(null);
     }
 
+    @FXML
+    private void handleBookSearch() {
+        String searchQuery = bookSearchField.getText();
+        if (!searchQuery.isEmpty()) {
+            bookService.searchBooks(searchQuery)
+                    .thenAccept(results -> Platform.runLater(() -> {
+                        books.clear();
+                        books.addAll(results);
+                    }));
+        }
+    }
+    @FXML
+    private void handleUserSearch() {
+        String searchQuery = userSearchField.getText();
+        if (!searchQuery.isEmpty()) {
+            userService.searchUsers(searchQuery)
+                    .thenAccept(results -> Platform.runLater(() -> {
+                        users.clear();
+                        users.addAll(results);
+                    }))
+                    .exceptionally(throwable -> {
+                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to search users"));
+                        return null;
+                    });
+        } else {
+            loadUsers();
+        }
+    }
+
+
 }
+

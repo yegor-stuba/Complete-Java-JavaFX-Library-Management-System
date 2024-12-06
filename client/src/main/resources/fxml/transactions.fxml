@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<?import javafx.scene.layout.HBox?>
-<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
+<VBox spacing="10" styleClass="content-container" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.studyshare.client.controller.TransactionController">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Refresh" onAction="#loadTransactions"/>
+        <Button text="Refresh" styleClass="secondary-button" onAction="#loadTransactions"/>
     </HBox>
 
-    <TableView fx:id="transactionsTable" VBox.vgrow="ALWAYS">
+    <TableView fx:id="transactionsTable" VBox.vgrow="ALWAYS" styleClass="transaction-table">
         <columns>
             <TableColumn fx:id="bookTitleColumn" text="Book Title"/>
             <TableColumn fx:id="typeColumn" text="Transaction Type"/>
             <TableColumn fx:id="dateColumn" text="Date"/>
             <TableColumn fx:id="dueDateColumn" text="Due Date"/>
+            <TableColumn fx:id="statusColumn" text="Status"/>
         </columns>
     </TableView>
-
-    <HBox spacing="10" alignment="CENTER">
-        <Label fx:id="statusLabel" styleClass="status-label"/>
-    </HBox>
 </VBox>

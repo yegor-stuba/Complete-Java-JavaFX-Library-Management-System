@@ -2,7 +2,6 @@ package com.studyshare.server.controller;
 
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.server.security.JwtTokenProvider;
-import com.studyshare.server.security.dto.AuthenticationRequest;
 import com.studyshare.server.security.dto.AuthenticationResponse;
 import com.studyshare.server.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,24 +12,25 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody UserDTO userDTO) {
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.generateToken(authentication);
-        UserDTO user = userService.findByUsername(request.getUsername());
+        UserDTO user = userService.findByUsername(userDTO.getUsername());
 
         return ResponseEntity.ok(AuthenticationResponse.builder()
             .token(jwt)
@@ -58,15 +58,19 @@ public class AuthenticationController {
             .build());
     }
 
-    @GetMapping("/validate")
-    public ResponseEntity<Boolean> validateToken(@RequestHeader("Authorization") String token) {
-        String jwt = token.substring(7);
-        return ResponseEntity.ok(tokenProvider.validateToken(jwt));
+    @GetMapping("/current")
+    public ResponseEntity<CompletableFuture<UserDTO>> getCurrentUser() {
+        return ResponseEntity.ok(userService.getCurrentUser());
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<Boolean> validateToken(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(tokenProvider.validateToken(token.substring(7)));
     }
 }

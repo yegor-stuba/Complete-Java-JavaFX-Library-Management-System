@@ -16,34 +16,25 @@ public class BookManagementController extends BaseController {
     private final BookService bookService;
     private final ObservableList<BookDTO> books = FXCollections.observableArrayList();
 
-    @FXML
-    private TextField searchField;
+   @FXML private TextField searchField;
+@FXML private TableView<BookDTO> booksTable;
+@FXML private TableColumn<BookDTO, String> titleColumn;
+@FXML private TableColumn<BookDTO, String> authorColumn;
+@FXML private TableColumn<BookDTO, String> isbnColumn;
+@FXML private TableColumn<BookDTO, Integer> copiesColumn;
 
-    @FXML
-    private TableView<BookDTO> booksTable;
-
-    @FXML
-    private TableColumn<BookDTO, String> titleColumn;
-
-    @FXML
-    private TableColumn<BookDTO, String> authorColumn;
-
-    @FXML
-    private TableColumn<BookDTO, String> isbnColumn;
-
-    @FXML
-    private TableColumn<BookDTO, Integer> copiesColumn;
+@FXML
+private void initialize() {
+    setupTableColumns();
+    loadBooks();
+    booksTable.setItems(books);
+}
 
     public BookManagementController(BookService bookService) {
         this.bookService = bookService;
     }
 
-    @FXML
-    private void initialize() {
-        setupTableColumns();
-        loadBooks();
-        booksTable.setItems(books);
-    }
+
 
     private void setupTableColumns() {
     titleColumn.setCellValueFactory(data ->

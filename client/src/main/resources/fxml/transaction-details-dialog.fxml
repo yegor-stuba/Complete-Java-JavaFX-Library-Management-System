@@ -1,32 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10">
+<GridPane xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.studyshare.client.controller.TransactionDetailsController"
+          styleClass="transaction-details-dialog"
+          hgap="10" vgap="10">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <Label text="Book Title:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-    <Label fx:id="bookTitleLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <Label text="Book Title:" styleClass="transaction-details-label"
+           GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <Label fx:id="bookTitleLabel" styleClass="transaction-details-value"
+           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-    <Label text="Transaction Type:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-    <Label fx:id="transactionTypeLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <Label text="Transaction Type:" styleClass="transaction-details-label"
+           GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <Label fx:id="transactionTypeLabel" styleClass="transaction-details-value"
+           GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-    <Label text="Date:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-    <Label fx:id="dateLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Label text="Date:" styleClass="transaction-details-label"
+           GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <Label fx:id="dateLabel" styleClass="transaction-details-value"
+           GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-    <Label text="Due Date:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-    <Label fx:id="dueDateLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    <Label text="Due Date:" styleClass="transaction-details-label"
+           GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <Label fx:id="dueDateLabel" styleClass="transaction-details-value"
+           GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-    <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-    <Label fx:id="statusLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    <Label text="Status:" styleClass="transaction-details-label"
+           GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <Label fx:id="statusLabel" styleClass="transaction-details-value"
+           GridPane.rowIndex="4" GridPane.columnIndex="1"/>
 
-    <ButtonBar GridPane.rowIndex="5" GridPane.columnSpan="2">
-        <buttons>
-            <Button fx:id="completeButton" text="Complete" onAction="#handleComplete"/>
-            <Button text="Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
-        </buttons>
-    </ButtonBar>
+    <HBox GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="2"
+          spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="completeButton" text="Complete"
+                styleClass="transaction-action-button" onAction="#handleComplete"/>
+        <Button text="Close" styleClass="transaction-action-button"
+                onAction="#handleClose"/>
+    </HBox>
 </GridPane>

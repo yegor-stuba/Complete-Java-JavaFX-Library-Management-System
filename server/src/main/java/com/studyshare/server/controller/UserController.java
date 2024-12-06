@@ -3,6 +3,9 @@ package com.studyshare.server.controller;
 import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.common.dto.UserDTO;
+import com.studyshare.common.enums.UserRole;
+import com.studyshare.server.service.BookService;
+import com.studyshare.server.service.TransactionService;
 import com.studyshare.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final BookService bookService;       // Add this
+    private final TransactionService transactionService;  // Add this
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -58,22 +63,26 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> searchUsers(@RequestParam String query) {
         return ResponseEntity.ok(userService.searchUsers(query));
     }
+    @GetMapping("/profile")
+    public ResponseEntity<UserDTO> getCurrentUserProfile() {
+        return ResponseEntity.ok(userService.getCurrentUser().join());
+    }
 
-    @PostMapping("/{id}/role")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long id, @RequestBody String role) {
-        return ResponseEntity.ok(userService.updateUserRole(id, role));
+    @PutMapping("/{id}/role")
+    public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long id, @RequestBody UserRole role) {
+        UserDTO userDTO = userService.getCurrentUser().join();
+        userDTO.setRole(role);
+        return ResponseEntity.ok(userService.updateUser(id, userDTO));
+    }
     }
 
     @GetMapping("/{id}/books")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<List<BookDTO>> getUserBooks(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserBooks(id));
+        return ResponseEntity.ok(bookService.getBooksByOwner(id));
     }
 
     @GetMapping("/{id}/transactions")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserTransactions(id));
+        return ResponseEntity.ok(transactionService.getUserTransactions(id));
     }
 }

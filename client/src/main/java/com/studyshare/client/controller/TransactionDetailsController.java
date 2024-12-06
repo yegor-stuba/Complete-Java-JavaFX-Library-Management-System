@@ -31,6 +31,23 @@ public class TransactionDetailsController extends BaseController {
         this.dialogStage = dialogStage;
     }
 
+    public void setTransaction(TransactionDTO newTransaction) {
+        // Instead of assigning to the final field, update its properties
+        this.transaction.setBookTitle(newTransaction.getBookTitle());
+        this.transaction.setType(newTransaction.getType());
+        this.transaction.setDate(newTransaction.getDate());
+        this.transaction.setDueDate(newTransaction.getDueDate());
+        this.transaction.setCompleted(newTransaction.isCompleted());
+        this.transaction.setTransactionId(newTransaction.getTransactionId());
+        populateTransactionDetails();
+    }
+
+    private Runnable onCompleteCallback;
+
+    public void setOnComplete(Runnable callback) {
+        this.onCompleteCallback = callback;
+    }
+
     @FXML
     private void initialize() {
         populateTransactionDetails();
@@ -69,4 +86,9 @@ public class TransactionDetailsController extends BaseController {
         statusLabel.setText(status);
         statusLabel.getStyleClass().add(transaction.isCompleted() ? "completed" : "active");
     }
+    @FXML
+private void handleClose() {
+    dialogStage.close();
 }
+}
+

@@ -3,8 +3,9 @@ package com.studyshare.client.service.impl;
 import com.studyshare.client.service.AuthenticationService;
 import com.studyshare.client.service.RestClient;
 import com.studyshare.common.dto.UserDTO;
-import com.studyshare.server.security.dto.AuthenticationRequest;
-import com.studyshare.server.security.dto.AuthenticationResponse;
+
+import com.studyshare.common.security.dto.AuthenticationRequest;
+import com.studyshare.common.security.dto.AuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.util.concurrent.CompletableFuture;
@@ -57,3 +58,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return token != null;
     }
 }
+

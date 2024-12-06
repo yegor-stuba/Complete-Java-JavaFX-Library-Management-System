@@ -7,7 +7,9 @@ import com.studyshare.server.exception.ValidationException;
 import com.studyshare.server.service.BookService;
 import com.studyshare.server.service.UserService;
 import com.studyshare.server.validation.BookValidator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,20 +24,14 @@ import java.util.List;
 @ControllerAdvice
 class BookControllerAdvice {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
-        return ResponseEntity.notFound().build();
-    }
+
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneral(Exception ex) {
-        return ResponseEntity.internalServerError().body("An unexpected error occurred");
-    }
+
 }
 
 @RestController
@@ -58,16 +54,6 @@ public class BookController {
             throw new ValidationException(bindingResult.getAllErrors());
         }
         return ResponseEntity.ok(bookService.createBook(bookDTO));
-    }
-
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO,
-                                              BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new ValidationException(bindingResult.getAllErrors());
-        }
-        return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
     }
 
 
@@ -126,14 +112,26 @@ public class BookController {
     }
 
     @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<BookDTO>> getBooksByOwner(@PathVariable Long ownerId) {
-        return ResponseEntity.ok(bookService.getBooksByOwner(ownerId));
-    }
+public ResponseEntity<List<BookDTO>> getBooksByOwner(@PathVariable Long ownerId) {
+    // Changed from getUserById to getUserById
+    userService.getUserById(ownerId); // Verify user exists
+    return ResponseEntity.ok(bookService.getBooksByOwner(ownerId));
+}
 
     private Long getCurrentUserId() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userService.findByUsername(username)
-                .map(UserDTO::getUserId)
-                .orElseThrow(() -> new IllegalStateException("User not found"));
-    }
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    UserDTO user = userService.findByUsername(username);
+    return user.getUserId(); // Make sure UserDTO has getUserId method
+}
+    @ExceptionHandler(ResourceNotFoundException.class)
+public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(ex.getMessage());
+}
+
+@ExceptionHandler(Exception.class)
+public ResponseEntity<String> handleGeneralException(Exception ex) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(ex.getMessage());
+}
 }

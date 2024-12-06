@@ -3,8 +3,6 @@ package com.studyshare.client.service.interceptor;
 import com.studyshare.client.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 
-import java.io.IOException;
-import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.util.function.BiFunction;
 

@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-    List<Book> findByOwnerUserId(Long userId);
-    List<Book> findByTitleContainingIgnoreCase(String title);
+    List<Book> findByOwnerUserId(Long ownerId);  // Changed from findByOwnerId
+    List<Book> findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(String title, String author);
+    List<Book> findByAvailableCopiesGreaterThan(Integer copies);
+    boolean existsByIsbn(String isbn);  // Changed from existsByIsbn
     Optional<Book> findByIsbn(String isbn);
 }

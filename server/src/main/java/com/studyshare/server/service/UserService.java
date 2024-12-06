@@ -3,17 +3,21 @@ package com.studyshare.server.service;
 import com.studyshare.common.dto.UserDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 
 public interface UserService extends UserDetailsService {
     UserDTO createUser(UserDTO userDTO);
     UserDTO getUserById(Long id);
     List<UserDTO> getAllUsers();
+    UserDTO findByUsername(String username);
     UserDTO updateUser(Long id, UserDTO userDTO);
     void deleteUser(Long id);
-    UserDTO findByUsername(String username);
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
     List<UserDTO> searchUsers(String query);
-    Long getUserCount();
-    boolean validateCredentials(String username, String password);
-    UserDTO getCurrentUser();
+    CompletableFuture<UserDTO> getCurrentUser();
+    void validateToken(String token);
+    boolean authenticate(String username, String password);
     void logout();
 }

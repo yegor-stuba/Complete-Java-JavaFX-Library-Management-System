@@ -1,11 +1,14 @@
 package com.studyshare.client.config;
 
 public class ClientConfig {
-    // API endpoints
     public static final String BASE_URL = "http://localhost:8080";
-    public static final String AUTH_ENDPOINT = "/api/auth";
-    public static final String BOOKS_ENDPOINT = "/api/books";
-    public static final String USERS_ENDPOINT = "/api/users";
+    public static final int REQUEST_TIMEOUT = 10000;
+    public static final String API_VERSION = "/api/v1";
+
+    public static final String BOOKS_ENDPOINT = API_VERSION + "/books";
+    public static final String USERS_ENDPOINT = API_VERSION + "/users";
+    public static final String AUTH_ENDPOINT = API_VERSION + "/auth";
+
 
     // Application settings
     public static final String APP_TITLE = "StudyShare Library";

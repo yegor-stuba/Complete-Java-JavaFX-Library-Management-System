@@ -4,10 +4,13 @@ import com.studyshare.common.dto.BookDTO;
 import com.studyshare.server.exception.ResourceNotFoundException;
 import com.studyshare.server.exception.ValidationException;
 import com.studyshare.server.model.Book;
+import com.studyshare.server.model.User;
 import com.studyshare.server.repository.BookRepository;
 import com.studyshare.server.repository.UserRepository;
 import com.studyshare.server.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,23 +23,22 @@ public class BookServiceImpl implements BookService {
     private final UserRepository userRepository;
 
     @Override
-    public BookDTO createBook(BookDTO bookDTO) {
-        Book book = new Book();
-        book.setTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setAvailableCopies(bookDTO.getAvailableCopies());
-        book.setOwner(userRepository.findById(bookDTO.getOwnerId())
-                .orElseThrow(() -> new RuntimeException("Owner not found")));
-        if (bookDTO.getIsbn() != null && bookRepository.findByIsbn(bookDTO.getIsbn()).isPresent()) {
-            throw new ValidationException("Book with this ISBN already exists");
-        }
-        if (bookDTO.getAvailableCopies() < 0) {
-            throw new ValidationException("Available copies cannot be negative");
-        }
-        return convertToDTO(bookRepository.save(book));
-    }
+public BookDTO createBook(BookDTO bookDTO) {
+    Book book = new Book();
+    book.setTitle(bookDTO.getTitle());
+    book.setAuthor(bookDTO.getAuthor());
+    book.setIsbn(bookDTO.getIsbn());
+    book.setAvailableCopies(bookDTO.getAvailableCopies());
 
+    // Get current user as owner
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    User currentUser = userRepository.findByUsername(auth.getName())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    book.setOwner(currentUser);
+
+    Book savedBook = bookRepository.save(book);
+    return convertToDTO(savedBook);
+}
     @Override
     public BookDTO getBookById(Long id) {
         return bookRepository.findById(id)

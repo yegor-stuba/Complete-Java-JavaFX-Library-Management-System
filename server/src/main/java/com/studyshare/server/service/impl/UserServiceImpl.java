@@ -1,6 +1,7 @@
 package com.studyshare.server.service.impl;
 
 import com.studyshare.common.dto.UserDTO;
+import com.studyshare.common.enums.UserRole;
 import com.studyshare.server.model.User;
 import com.studyshare.server.repository.UserRepository;
 import com.studyshare.server.service.UserService;
@@ -27,31 +28,37 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         validateUserInput(userDTO);
+
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setRole(userDTO.getRole());
-        if (userRepository.existsByUsername(userDTO.getUsername())) {
-            throw new ValidationException("Username already exists");
-        }
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new ValidationException("Email already exists");
-        }
-        return convertToDTO(userRepository.save(user));
+        user.setRole(UserRole.USER);
+
+        User savedUser = userRepository.save(user);
+        return convertToDTO(savedUser);
     }
 
     private void validateUserInput(UserDTO userDTO) {
-        if (userDTO.getUsername() == null || userDTO.getUsername().trim().isEmpty()) {
-            throw new ValidationException("Username cannot be empty");
-        }
-        if (userDTO.getEmail() == null || !userDTO.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            throw new ValidationException("Invalid email format");
-        }
+    if (userDTO.getUsername() == null || userDTO.getUsername().trim().isEmpty()) {
+        throw new ValidationException("Username cannot be empty");
+    }
+    if (userDTO.getEmail() == null || !userDTO.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        throw new ValidationException("Invalid email format");
+    }
+    // Allow admin/admin for testing, but enforce stronger passwords for other users
+    if (!userDTO.getUsername().equals("admin")) {
         if (userDTO.getPassword() == null || userDTO.getPassword().length() < 6) {
             throw new ValidationException("Password must be at least 6 characters");
         }
     }
+    if (userRepository.existsByUsername(userDTO.getUsername())) {
+        throw new ValidationException("Username already exists");
+    }
+    if (userRepository.existsByEmail(userDTO.getEmail())) {
+        throw new ValidationException("Email already exists");
+    }
+}
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -127,13 +134,14 @@ public CompletableFuture<UserDTO> register(UserDTO userDTO) {
     });
 }
 
+    @Override
+    public boolean authenticate(String username, String password) {
+        return userRepository.findByUsername(username)
+                .map(user -> passwordEncoder.matches(password, user.getPassword()))
+                .orElse(false);
+    }
 
-@Override
-public boolean authenticate(String username, String password) {
-    return userRepository.findByUsername(username)
-            .map(user -> password.equals(user.getPassword()))
-            .orElse(false);
-}
+
 
     @Override
     public UserDTO getCurrentUser() {

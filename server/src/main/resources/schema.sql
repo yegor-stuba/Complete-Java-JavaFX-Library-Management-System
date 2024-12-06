@@ -3,9 +3,7 @@ CREATE TABLE IF NOT EXISTS hibernate_sequences (
     next_val BIGINT
 );
 
-
-INSERT OR IGNORE INTO hibernate_sequences (sequence_name, next_val)
-VALUES ('users', 1);
+INSERT OR IGNORE INTO hibernate_sequences (sequence_name, next_val) VALUES ('books', 1);
 
 CREATE TABLE IF NOT EXISTS roles (
     role_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,6 +39,8 @@ CREATE TABLE IF NOT EXISTS transactions (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (book_id) REFERENCES books(book_id)
 );
+
+
 
 
 INSERT OR REPLACE INTO users (username, password, email, role)

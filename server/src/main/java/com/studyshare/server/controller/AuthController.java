@@ -10,17 +10,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
-
     private final UserService userService;
+
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("Received registration request for user: " + userDTO.getUsername());
+            return ResponseEntity.ok(userService.createUser(userDTO));
+        } catch (Exception e) {
+            System.out.println("Registration failed: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
     @PostMapping("/login")
     public ResponseEntity<Boolean> login(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.authenticate(userDTO.getUsername(), userDTO.getPassword()));
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.createUser(userDTO));
     }
 
     @GetMapping("/current")
@@ -33,15 +38,4 @@ public class AuthController {
         userService.logout();
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/check")
-    public ResponseEntity<String> check() {
-        return ResponseEntity.ok("Auth endpoint is working");
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Auth endpoint is working");
-    }
-
 }

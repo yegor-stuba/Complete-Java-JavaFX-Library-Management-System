@@ -2,17 +2,22 @@ package com.studyshare.server.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.security.SecurityException;
-
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -70,5 +75,25 @@ public class JwtTokenProvider {
             log.error("JWT claims string is empty");
         }
         return false;
+    }
+
+    public UserDetails getUserDetailsFromToken(String token) {
+        String username = getUsernameFromToken(token);
+        return User.withUsername(username)
+                .password("")
+                .authorities(getAuthoritiesFromToken(token))
+                .build();
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthoritiesFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return Arrays.stream(claims.get("roles", String.class).split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 }

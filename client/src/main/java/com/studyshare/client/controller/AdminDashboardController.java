@@ -7,34 +7,34 @@ import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.SceneManager;
 import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.dto.UserDTO;
-import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.common.enums.UserRole;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import lombok.RequiredArgsConstructor;
 import javafx.scene.layout.HBox;
 
-import java.awt.*;
-
-@RequiredArgsConstructor
 public class AdminDashboardController {
     private final UserService userService;
     private final BookService bookService;
     private final TransactionService transactionService;
     private final SceneManager sceneManager;
-
     private final ObservableList<UserDTO> users = FXCollections.observableArrayList();
     private final ObservableList<BookDTO> books = FXCollections.observableArrayList();
+
+    public AdminDashboardController(
+            UserService userService,
+            BookService bookService,
+            TransactionService transactionService,
+            SceneManager sceneManager) {
+        this.userService = userService;
+        this.bookService = bookService;
+        this.transactionService = transactionService;
+        this.sceneManager = sceneManager;
+    }
 
     @FXML
     private TableView<UserDTO> usersTable;

@@ -1,11 +1,12 @@
 package com.studyshare.client.service;
 
 import com.studyshare.common.dto.UserDTO;
+import com.studyshare.common.security.dto.AuthenticationResponse;
 import java.util.concurrent.CompletableFuture;
 
 public interface AuthenticationService {
-    CompletableFuture<String> login(String username, String password);
-    CompletableFuture<String> register(UserDTO userDTO);
+    CompletableFuture<AuthenticationResponse> login(String username, String password);
+    CompletableFuture<AuthenticationResponse> register(UserDTO userDTO);
     CompletableFuture<Boolean> validateToken(String token);
     CompletableFuture<Void> logout();
     String getToken();

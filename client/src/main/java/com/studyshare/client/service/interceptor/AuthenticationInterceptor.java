@@ -1,20 +1,27 @@
 package com.studyshare.client.service.interceptor;
 
 import com.studyshare.client.service.AuthenticationService;
-import lombok.RequiredArgsConstructor;
-
 import java.net.http.HttpRequest;
-import java.util.function.BiFunction;
 
-@RequiredArgsConstructor
-public class AuthenticationInterceptor implements BiFunction<HttpRequest.Builder, String, HttpRequest.Builder> {
+public class AuthenticationInterceptor {
     private final AuthenticationService authenticationService;
 
-    @Override
-    public HttpRequest.Builder apply(HttpRequest.Builder builder, String uri) {
-        if (authenticationService.isAuthenticated()) {
-            return builder.header("Authorization", "Bearer " + authenticationService.getToken());
+    public AuthenticationInterceptor(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+
+    public HttpRequest intercept(HttpRequest request) {
+        if (authenticationService.getToken() != null) {
+            HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(request.uri())
+                .header("Authorization", "Bearer " + authenticationService.getToken())
+                .method(request.method(), request.bodyPublisher().orElse(HttpRequest.BodyPublishers.noBody()));
+
+            request.headers().map().forEach((name, values) ->
+                values.forEach(value -> builder.header(name, value)));
+
+            return builder.build();
         }
-        return builder;
+        return request;
     }
 }

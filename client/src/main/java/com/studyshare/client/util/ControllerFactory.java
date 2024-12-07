@@ -2,14 +2,14 @@ package com.studyshare.client.util;
 
 import com.studyshare.client.service.BookService;
 import com.studyshare.client.service.UserService;
+import com.studyshare.client.service.TransactionService;
 import com.studyshare.client.controller.*;
-import com.studyshare.client.service.TransactionService;  // Update import
 
 public class ControllerFactory {
     private final SceneManager sceneManager;
     private final UserService userService;
     private final BookService bookService;
-    private final TransactionService transactionService;  // Update type
+    private final TransactionService transactionService;
 
     public ControllerFactory(
             SceneManager sceneManager,
@@ -30,8 +30,8 @@ public class ControllerFactory {
         } else if (controllerClass == UserProfileController.class) {
             return new UserProfileController(userService, sceneManager);
         } else if (controllerClass == TransactionController.class) {
-    return new TransactionController(transactionService, userService);
-}
+        return new TransactionController(transactionService, userService);
+        }
         throw new IllegalArgumentException("Unknown controller class: " + controllerClass.getName());
     }
 }

@@ -19,8 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final BookService bookService;       // Add this
-    private final TransactionService transactionService;  // Add this
+    private final BookService bookService;
+    private final TransactionService transactionService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -55,7 +55,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<UserDTO> getCurrentUserProfile() {
-        return ResponseEntity.ok(userService.getCurrentUser());
+        return ResponseEntity.ok(userService.getCurrentUser().join());
     }
 
     @GetMapping("/search")
@@ -63,17 +63,13 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> searchUsers(@RequestParam String query) {
         return ResponseEntity.ok(userService.searchUsers(query));
     }
-    @GetMapping("/profile")
-    public ResponseEntity<UserDTO> getCurrentUserProfile() {
-        return ResponseEntity.ok(userService.getCurrentUser().join());
-    }
 
     @PutMapping("/{id}/role")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> updateUserRole(@PathVariable Long id, @RequestBody UserRole role) {
         UserDTO userDTO = userService.getCurrentUser().join();
         userDTO.setRole(role);
         return ResponseEntity.ok(userService.updateUser(id, userDTO));
-    }
     }
 
     @GetMapping("/{id}/books")

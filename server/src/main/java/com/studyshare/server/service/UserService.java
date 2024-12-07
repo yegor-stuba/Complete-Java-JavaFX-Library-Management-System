@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-
 public interface UserService extends UserDetailsService {
     UserDTO createUser(UserDTO userDTO);
     UserDTO getUserById(Long id);

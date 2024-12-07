@@ -5,16 +5,18 @@ import com.studyshare.client.service.UserService;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.common.enums.UserRole;
 import com.studyshare.common.security.dto.AuthenticationResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final RestClient restClient;
-    private AuthenticationResponse currentUser;
+    private AuthenticationResponse authResponse;
+
+    public UserServiceImpl(RestClient restClient) {
+        this.restClient = restClient;
+        this.authResponse = null;
+    }
 
     @Override
     public CompletableFuture<AuthenticationResponse> login(String username, String password) {
@@ -24,14 +26,18 @@ public class UserServiceImpl implements UserService {
 
         return restClient.post("/api/auth/login", loginRequest, AuthenticationResponse.class)
             .thenApply(response -> {
-                this.currentUser = response;
+                this.authResponse = response;
                 return response;
             });
     }
 
     @Override
     public CompletableFuture<AuthenticationResponse> register(UserDTO userDTO) {
-        return restClient.post("/api/auth/register", userDTO, AuthenticationResponse.class);
+        return restClient.post("/api/auth/register", userDTO, AuthenticationResponse.class)
+            .thenApply(response -> {
+                this.authResponse = response;
+                return response;
+            });
     }
 
     @Override
@@ -40,9 +46,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-public CompletableFuture<List<UserDTO>> getAllUsers() {
-    return restClient.get("/api/users", new ParameterizedTypeReference<List<UserDTO>>() {});
-}
+    public CompletableFuture<List<UserDTO>> getAllUsers() {
+        return restClient.get("/api/users", new ParameterizedTypeReference<>() {});
+    }
+
     @Override
     public CompletableFuture<UserDTO> updateUser(Long id, UserDTO userDTO) {
         return restClient.put("/api/users/" + id, userDTO, UserDTO.class);
@@ -52,30 +59,31 @@ public CompletableFuture<List<UserDTO>> getAllUsers() {
     public CompletableFuture<Void> deleteUser(Long id) {
         return restClient.delete("/api/users/" + id);
     }
+
     @Override
-public CompletableFuture<List<UserDTO>> searchUsers(String query) {
-    return restClient.get("/api/users/search?query=" + query,
-        new ParameterizedTypeReference<List<UserDTO>>() {});
-}
+    public CompletableFuture<List<UserDTO>> searchUsers(String query) {
+        return restClient.get("/api/users/search?query=" + query,
+            new ParameterizedTypeReference<>() {});
+    }
 
     @Override
     public CompletableFuture<Void> logout() {
         return restClient.post("/api/auth/logout", null, Void.class)
-            .thenRun(() -> this.currentUser = null);
+            .thenRun(() -> this.authResponse = null);
     }
 
     @Override
     public boolean isAdmin() {
-        return currentUser != null && UserRole.ADMIN.equals(currentUser.getRole());
+        return authResponse != null && UserRole.ADMIN.equals(authResponse.getRole());
     }
 
     @Override
-public CompletableFuture<Long> getUserCount() {
-    return restClient.get("/api/users/count", Long.class);
-}
+    public CompletableFuture<Long> getUserCount() {
+        return restClient.get("/api/users/count", Long.class);
+    }
 
-@Override
-public CompletableFuture<UserDTO> createUser(UserDTO userDTO) {
-    return restClient.post("/api/users", userDTO, UserDTO.class);
-}
+    @Override
+    public CompletableFuture<UserDTO> createUser(UserDTO userDTO) {
+        return restClient.post("/api/users", userDTO, UserDTO.class);
+    }
 }

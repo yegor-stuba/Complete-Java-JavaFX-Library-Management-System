@@ -6,9 +6,9 @@ import java.util.concurrent.CompletableFuture;
 
 public interface TransactionService {
     CompletableFuture<TransactionDTO> createTransaction(TransactionDTO transactionDTO);
-    CompletableFuture<List> getUserTransactions(Long userId);
+    CompletableFuture<List<TransactionDTO>> getUserTransactions(Long userId);
     CompletableFuture<TransactionDTO> completeTransaction(Long transactionId);
-    CompletableFuture<List> getOverdueTransactions();
+    CompletableFuture<List<TransactionDTO>> getOverdueTransactions();
     CompletableFuture<TransactionDTO> getTransactionDetails(Long transactionId);
     CompletableFuture<Integer> getActiveLoansCount();
 }

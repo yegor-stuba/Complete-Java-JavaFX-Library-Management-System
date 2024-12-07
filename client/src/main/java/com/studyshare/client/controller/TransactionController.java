@@ -1,25 +1,28 @@
 package com.studyshare.client.controller;
 
 import com.studyshare.client.service.TransactionService;
+import com.studyshare.client.service.UserService;
 import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.TransactionUtil;
 import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.common.dto.UserDTO;
-import com.studyshare.client.service.UserService;  // Update import
-import javafx.fxml.FXML;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import lombok.RequiredArgsConstructor;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 import java.util.concurrent.CompletableFuture;
 
-@RequiredArgsConstructor
-public class TransactionController {
+public class TransactionController extends BaseController {
     private final TransactionService transactionService;
-    private final com.studyshare.client.service.UserService userService; // Update to client UserService
+    private final UserService userService;
     private final ObservableList<TransactionDTO> transactions = FXCollections.observableArrayList();
+
+    public TransactionController(TransactionService transactionService, UserService userService) {
+        this.transactionService = transactionService;
+        this.userService = userService;
+    }
 
     @FXML private TableView<TransactionDTO> transactionsTable;
     @FXML private TableColumn<TransactionDTO, String> bookTitleColumn;

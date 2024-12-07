@@ -27,33 +27,24 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .headers(headers -> headers
-                        .contentSecurityPolicy(csp -> csp
-                                .policyDirectives("default-src 'self'; frame-ancestors 'none'"))
-                        .permissionsPolicy(permissions -> permissions
-                                .policy("geolocation=()")
-                        )
-                )
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/books/manage/**").hasRole("ADMIN")
-                        .requestMatchers("/api/users/manage/**").hasRole("ADMIN")
-                        .requestMatchers("/api/books/**").authenticated()
-                        .requestMatchers("/api/users/**").authenticated()
-                        .requestMatchers("/api/transactions/**").authenticated()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            .requestMatchers("/api/books/manage/**").hasRole("ADMIN")
+            .requestMatchers("/api/users/manage/**").hasRole("ADMIN")
+            .requestMatchers("/api/books/**").authenticated()
+            .requestMatchers("/api/users/**").authenticated()
+            .requestMatchers("/api/transactions/**").authenticated()
+            .anyRequest().authenticated()
+        );
+    return http.build();
+}
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {

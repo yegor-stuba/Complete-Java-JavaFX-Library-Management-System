@@ -5,6 +5,8 @@ import com.studyshare.server.security.JwtTokenProvider;
 import com.studyshare.server.security.dto.AuthenticationResponse;
 import com.studyshare.server.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -22,23 +25,31 @@ public class AuthenticationController {
     private final JwtTokenProvider tokenProvider;
     private final UserService userService;
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody UserDTO userDTO) {
+   @PostMapping("/login")
+public ResponseEntity<AuthenticationResponse> login(@RequestBody UserDTO userDTO) {
+    try {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
+            new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.generateToken(authentication);
         UserDTO user = userService.findByUsername(userDTO.getUsername());
 
-        return ResponseEntity.ok(AuthenticationResponse.builder()
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(AuthenticationResponse.builder()
                 .token(jwt)
                 .username(user.getUsername())
                 .role(user.getRole())
                 .userId(user.getUserId())
                 .build());
+    } catch (Exception e) {
+        log.error("Authentication failed", e);
+        throw new RuntimeException("Authentication failed: " + e.getMessage());
     }
+}
+
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDTO userDTO) {

@@ -16,5 +16,5 @@ public class UserDTO {
     private String username;
     private String email;
     private UserRole role;
-    private String password; // Only used for registration/login
+    private String password;
 }

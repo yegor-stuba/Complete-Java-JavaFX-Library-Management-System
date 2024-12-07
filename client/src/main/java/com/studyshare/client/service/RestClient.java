@@ -1,8 +1,11 @@
 package com.studyshare.client.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -15,6 +18,8 @@ public class RestClient {
     private final String baseUrl;
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
+    private static final Logger logger = LoggerFactory.getLogger(RestClient.class);
+
 
     public RestClient() {
         this.baseUrl = "http://localhost:8080";
@@ -23,7 +28,8 @@ public class RestClient {
                 .version(HttpClient.Version.HTTP_1_1)
                 .build();
         this.objectMapper = new ObjectMapper()
-                .registerModule(new JavaTimeModule());
+                .registerModule(new JavaTimeModule())
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public <T> CompletableFuture<T> get(String path, Class<T> responseType) {
@@ -37,11 +43,13 @@ public class RestClient {
 
     public <T> CompletableFuture<T> get(String path, ParameterizedTypeReference<T> responseType) {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(baseUrl + path))
-            .GET()
-            .build();
+                .uri(URI.create(baseUrl + path))
+                .GET()
+                .build();
 
-        return sendRequest(request, responseType);
+        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenApply(body -> deserializeCollection(body, responseType));
     }
 
     public <T> CompletableFuture<T> post(String path, Object body, Class<T> responseType) {
@@ -53,12 +61,10 @@ public class RestClient {
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .build();
 
-            return sendRequest(request, responseType)
-                .exceptionally(throwable -> {
-                    throw new RuntimeException("Failed to connect to server: " + throwable.getMessage());
-                });
+            return sendRequest(request, responseType);
         } catch (Exception e) {
-            return CompletableFuture.failedFuture(e);
+            return CompletableFuture.failedFuture(
+                new RuntimeException("Failed to create request: " + e.getMessage(), e));
         }
     }
 
@@ -87,36 +93,51 @@ public class RestClient {
 
             return sendRequest(request, responseType);
         } catch (Exception e) {
-            return CompletableFuture.failedFuture(e);
+            return CompletableFuture.failedFuture(
+                new RuntimeException("Failed to create request: " + e.getMessage(), e));
         }
     }
 
     private <T> CompletableFuture<T> sendRequest(HttpRequest request, Class<T> responseType) {
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-            .thenApply(HttpResponse::body)
-            .thenApply(body -> deserialize(body, responseType));
-    }
-
-    private <T> CompletableFuture<T> sendRequest(HttpRequest request, ParameterizedTypeReference<T> responseType) {
-        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-            .thenApply(HttpResponse::body)
-            .thenApply(body -> deserializeCollection(body, responseType));
+                .thenApply(response -> {
+                    logger.debug("Received response with status: {}", response.statusCode());
+                    if (response.statusCode() >= 400) {
+                        logger.error("Server error: {} {}", response.statusCode(), response.body());
+                        throw new RuntimeException("Server error: " + response.statusCode());
+                    }
+                    return deserialize(response.body(), responseType);
+                })
+                .exceptionally(throwable -> {
+                    logger.error("Request failed: {}", throwable.getMessage());
+                    throw new RuntimeException("Connection failed: " + throwable.getMessage());
+                });
     }
 
     private <T> T deserialize(String json, Class<T> type) {
         try {
+            if (json == null || json.isEmpty()) {
+                throw new RuntimeException("Empty response from server");
+            }
+            System.out.println("Received JSON: " + json); // Debug line
             return objectMapper.readValue(json, type);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to deserialize response", e);
+            System.err.println("Deserialization error for JSON: " + json); // Debug line
+            e.printStackTrace(); // Debug line
+            throw new RuntimeException("Failed to deserialize response: " + json, e);
         }
     }
 
+
     private <T> T deserializeCollection(String json, ParameterizedTypeReference<T> typeReference) {
         try {
+            if (json == null || json.isEmpty()) {
+                throw new RuntimeException("Empty response from server");
+            }
             JavaType type = objectMapper.getTypeFactory().constructType(typeReference.getType());
             return objectMapper.readValue(json, type);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to deserialize collection response", e);
+            throw new RuntimeException("Failed to deserialize collection response: " + json, e);
         }
     }
 }

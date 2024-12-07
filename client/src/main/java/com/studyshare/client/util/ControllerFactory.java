@@ -30,7 +30,7 @@ public class ControllerFactory {
     } else if (controllerClass == BookManagementController.class) {
         return new BookManagementController(bookService);
     } else if (controllerClass == UserProfileController.class) {
-        return new UserProfileController(userService, sceneManager);
+        return new UserProfileController(userService, transactionService, sceneManager);
     } else if (controllerClass == TransactionController.class) {
         return new TransactionController(transactionService, userService);
     }

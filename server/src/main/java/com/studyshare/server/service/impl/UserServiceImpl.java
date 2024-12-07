@@ -46,22 +46,19 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validatePassword(String password) {
-        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
-            throw new ValidationException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters long");
-        }
-        if (!password.matches(".*[A-Z].*")) {
-            throw new ValidationException("Password must contain at least one uppercase letter");
-        }
-        if (!password.matches(".*[a-z].*")) {
-            throw new ValidationException("Password must contain at least one lowercase letter");
-        }
-        if (!password.matches(".*\\d.*")) {
-            throw new ValidationException("Password must contain at least one number");
-        }
-        if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) {
-            throw new ValidationException("Password must contain at least one special character");
-        }
+    if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
+        throw new ValidationException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters long");
     }
+    if (!password.matches(".*[A-Z].*")) {
+        throw new ValidationException("Password must contain at least one uppercase letter");
+    }
+    if (!password.matches(".*[a-z].*")) {
+        throw new ValidationException("Password must contain at least one lowercase letter");
+    }
+    if (!password.matches(".*\\d.*")) {
+        throw new ValidationException("Password must contain at least one number");
+    }
+}
 
     @Override
     public UserDTO getUserById(Long id) {

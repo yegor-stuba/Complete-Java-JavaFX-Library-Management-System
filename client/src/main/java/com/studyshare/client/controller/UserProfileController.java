@@ -1,20 +1,27 @@
 package com.studyshare.client.controller;
 
+import com.studyshare.client.service.TransactionService;
 import com.studyshare.client.service.UserService;
 import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.SceneManager;
 import com.studyshare.common.dto.BookDTO;
+import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.common.dto.UserDTO;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @SuppressWarnings("unused")
 public class UserProfileController extends BaseController {
 
     private final UserService userService;
+    private final TransactionService transactionService;
     private final SceneManager sceneManager;
     private final ObservableList<BookDTO> borrowedBooks = FXCollections.observableArrayList();
 
@@ -39,8 +46,9 @@ public class UserProfileController extends BaseController {
     @FXML
     private TableColumn<BookDTO, String> dueDateColumn;
 
-    public UserProfileController(UserService userService, SceneManager sceneManager) {
+    public UserProfileController(UserService userService, TransactionService transactionService, SceneManager sceneManager) {
         this.userService = userService;
+        this.transactionService = transactionService;
         this.sceneManager = sceneManager;
     }
 
@@ -48,16 +56,31 @@ public class UserProfileController extends BaseController {
     private void initialize() {
         setupTableColumns();
         loadUserProfile();
+        loadBorrowedBooks();
         borrowedBooksTable.setItems(borrowedBooks);
     }
 
     private void setupTableColumns() {
         titleColumn.setCellValueFactory(data ->
-            new SimpleStringProperty(data.getValue().getTitle()));
+                new SimpleStringProperty(data.getValue().getTitle()));
         authorColumn.setCellValueFactory(data ->
-            new SimpleStringProperty(data.getValue().getAuthor()));
+                new SimpleStringProperty(data.getValue().getAuthor()));
         dueDateColumn.setCellValueFactory(data ->
-            new SimpleStringProperty("Due Date")); // TODO: Implement due date
+                new SimpleStringProperty("Due Date")); // Placeholder until we implement due dates
+    }
+
+    private void loadBorrowedBooks() {
+        transactionService.getUserTransactions(getCurrentUserId())
+                .thenAccept(transactions -> {
+                    List<BookDTO> books = transactions.stream()
+                            .map(TransactionDTO::getBook)
+                            .collect(Collectors.toList());
+                    Platform.runLater(() -> borrowedBooks.setAll(books));
+                })
+                .exceptionally(throwable -> {
+                    AlertUtil.showError("Error", "Failed to load borrowed books");
+                    return null;
+                });
     }
 
     private void loadUserProfile() {
@@ -84,5 +107,11 @@ public class UserProfileController extends BaseController {
                     AlertUtil.showError("Error", "Failed to logout");
                     return null;
                 });
+    }
+
+    private Long getCurrentUserId() {
+        return userService.getCurrentUser()
+                .thenApply(UserDTO::getUserId)
+                .join();
     }
 }

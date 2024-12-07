@@ -62,12 +62,26 @@ public class AdminDashboardController {
     private TableColumn<UserDTO, String> roleColumn;
     @FXML
     private TableColumn<UserDTO, Void> actionsColumn;
+    @FXML
+    private TableView<BookDTO> bookTable;
+    @FXML
+    private TableColumn<BookDTO, String> bookIdColumn;
+    @FXML
+    private TableColumn<BookDTO, String> titleColumn;
+    @FXML
+    private TableColumn<BookDTO, String> authorColumn;
+    @FXML
+    private TableColumn<BookDTO, String> isbnColumn;
+    @FXML
+    private TableColumn<BookDTO, String> copiesColumn;
+
 
 
     private void loadInitialData() {
         loadUsers();
         loadBooks();
         updateStatistics();
+
     }
 
     @FXML
@@ -76,6 +90,54 @@ public class AdminDashboardController {
         setupBookTable();
         loadInitialData();
         setupSearchListeners();
+        setupUserManagement();
+        updateStatistics();
+    }
+
+    private void setupBookTable() {
+        bookIdColumn.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getBookId())));
+        titleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
+        authorColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAuthor()));
+        isbnColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getIsbn()));
+        copiesColumn.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAvailableCopies())));
+
+        loadBooks();
+    }
+
+    private void setupUserManagement() {
+        // User table columns setup
+        userIdColumn.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getUserId())));
+        usernameColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUsername()));
+        emailColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEmail()));
+        roleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRole().toString()));
+
+        // Add action buttons
+        actionsColumn.setCellFactory(column -> new TableCell<UserDTO, Void>() {
+            private final Button editButton = new Button("Edit");
+            private final Button deleteButton = new Button("Delete");
+
+            {
+                editButton.setOnAction(event -> {
+                    UserDTO user = getTableView().getItems().get(getIndex());
+                    handleEditUser(user);
+                });
+                deleteButton.setOnAction(event -> {
+                    UserDTO user = getTableView().getItems().get(getIndex());
+                    handleDeleteUser(user);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    HBox buttons = new HBox(5, editButton, deleteButton);
+                    setGraphic(buttons);
+                }
+            }
+        });
     }
 
     private void setupUserTable() {
@@ -106,9 +168,7 @@ public class AdminDashboardController {
         });
     }
 
-    private void setupBookTable() {
-        // Similar setup for book table columns
-    }
+
 
     @FXML
     private void refreshData() {

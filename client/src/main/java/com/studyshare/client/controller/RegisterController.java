@@ -5,6 +5,7 @@ import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.SceneManager;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.common.enums.UserRole;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
@@ -29,28 +30,38 @@ public class RegisterController {
     }
 
     @FXML
-    private void handleRegister() {
-        if (!validateInput()) {
-            return;
-        }
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(usernameField.getText());
-        userDTO.setEmail(emailField.getText());
-        userDTO.setPassword(passwordField.getText());
-        userDTO.setRole(UserRole.USER);
-
-        userService.register(userDTO)
-            .thenAccept(user -> {
-                AlertUtil.showInfo("Success", "Registration successful!");
-                sceneManager.switchToLogin();
-            })
-            .exceptionally(throwable -> {
-                AlertUtil.showError("Error", "Registration failed: " + throwable.getMessage());
-                return null;
-            });
+private void handleRegister() {
+    if (!validateInput()) {
+        return;
     }
 
+    UserDTO userDTO = new UserDTO();
+    userDTO.setUsername(usernameField.getText().trim());
+    userDTO.setEmail(emailField.getText().trim());
+    userDTO.setPassword(passwordField.getText());
+    userDTO.setRole(UserRole.USER);
+
+    userService.register(userDTO)
+        .thenAccept(response -> {
+            Platform.runLater(() -> {
+                AlertUtil.showInfo("Success", "Registration successful!");
+                sceneManager.switchToLogin();
+            });
+        })
+        .exceptionally(throwable -> {
+            Platform.runLater(() -> {
+                String errorMessage = throwable.getCause().getMessage();
+                if (errorMessage.contains("username already exists")) {
+                    AlertUtil.showError("Registration Failed", "Username already taken");
+                } else if (errorMessage.contains("email already exists")) {
+                    AlertUtil.showError("Registration Failed", "Email already registered");
+                } else {
+                    AlertUtil.showError("Registration Failed", "An error occurred: " + errorMessage);
+                }
+            });
+            return null;
+        });
+}
 
     private boolean validateInput() {
         String username = usernameField.getText().trim();

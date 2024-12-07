@@ -7,17 +7,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SceneManager {
     private final Stage primaryStage;
+    @Setter
     private ControllerFactory controllerFactory;
 
     public SceneManager(Stage primaryStage) {
         this.primaryStage = primaryStage;
-    }
-
-    public void setControllerFactory(ControllerFactory factory) {
-        this.controllerFactory = factory;
     }
 
     public void switchToLogin() {
@@ -25,8 +25,8 @@ public class SceneManager {
     }
 
     public void switchToRegister() {
-    loadScene("/fxml/register.fxml", "Register");
-}
+        loadScene("/fxml/register.fxml", "Register");
+    }
 
     public void switchToBookManagement() {
         loadScene("/fxml/book-management.fxml", "Book Management");
@@ -35,6 +35,7 @@ public class SceneManager {
     public void switchToUserProfile() {
         loadScene("/fxml/user-profile.fxml", "User Profile");
     }
+
 
     private void loadScene(String fxmlPath, String title) {
         try {
@@ -45,12 +46,17 @@ public class SceneManager {
             loader.setControllerFactory(controllerFactory::createController);
             Parent root = loader.load();
             Scene scene = new Scene(root, ClientConfig.WINDOW_WIDTH, ClientConfig.WINDOW_HEIGHT);
-            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
+            String cssPath = getClass().getResource("/css/style.css").toExternalForm();
+            if (cssPath != null) {
+                scene.getStylesheets().add(cssPath);
+            }
+
             primaryStage.setTitle(ClientConfig.APP_TITLE + " - " + title);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
-            e.printStackTrace(); // Add logging for debugging
+            log.error("Failed to load scene: {}", e.getMessage(), e);
             AlertUtil.showError("Error", "Failed to load scene: " + e.getMessage());
         }
     }
@@ -59,7 +65,7 @@ public class SceneManager {
         if (role == UserRole.ADMIN) {
             loadScene("/fxml/admin-dashboard.fxml", "Admin Dashboard");
         } else {
-            loadScene("/fxml/book-management.fxml", "Book Management");
+            loadScene("/fxml/user-profile.fxml", "User Profile");
         }
     }
 

@@ -33,36 +33,34 @@ public class LoginController extends BaseController {
 
 
     @FXML
-    private void handleLogin() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+private void handleLogin() {
+    String username = usernameField.getText();
+    String password = passwordField.getText();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            AlertUtil.showWarning("Login Error", "Please enter both username and password");
-            return;
-        }
-
-        handleAsync(userService.login(username, password))
-                .thenAccept(success -> {
-                            if (Boolean.TRUE.equals(success)) {
-                                sceneManager.switchToBookManagement();
-                            } else {
-                                AlertUtil.showError("Login Failed", "Invalid username or password");
-                            }
-                        });
-
-        userService.login(username, password)
-                .thenAccept(user -> {
-                    if (user != null) {
-                        Platform.runLater(() -> sceneManager.navigateBasedOnRole(user.getRole()));
-                    } else {
-                        AlertUtil.showError("Login Failed", "Invalid username or password");
-                    }
-                })
-                .exceptionally(throwable -> {
-                    Platform.runLater(() -> AlertUtil.showError("Error", "Could not connect to server"));
-                    return null;
-                });
+    if (username.isEmpty() || password.isEmpty()) {
+        AlertUtil.showWarning("Login Error", "Please enter both username and password");
+        return;
     }
+
+    userService.login(username, password)
+        .thenAccept(response -> {
+            if (response != null) {
+                Platform.runLater(() -> sceneManager.navigateBasedOnRole(response.getRole()));
+            }
+        })
+        .exceptionally(throwable -> {
+            Platform.runLater(() -> {
+                String errorMessage = throwable.getCause().getMessage();
+                if (errorMessage.contains("401")) {
+                    AlertUtil.showError("Login Failed", "Invalid username or password");
+                } else if (errorMessage.contains("Connection refused")) {
+                    AlertUtil.showError("Connection Error", "Could not connect to server. Please try again.");
+                } else {
+                    AlertUtil.showError("Error", "An unexpected error occurred: " + errorMessage);
+                }
+            });
+            return null;
+        });
+}
 
 }

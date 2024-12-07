@@ -1,12 +1,12 @@
 package com.studyshare.client.util;
 
 import com.studyshare.client.config.ClientConfig;
+import com.studyshare.client.controller.BaseController;
 import com.studyshare.common.enums.UserRole;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +36,6 @@ public class SceneManager {
         loadScene("/fxml/user-profile.fxml", "User Profile");
     }
 
-
     private void loadScene(String fxmlPath, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -46,6 +45,7 @@ public class SceneManager {
             loader.setControllerFactory(controllerFactory::createController);
             Parent root = loader.load();
             Scene scene = new Scene(root, ClientConfig.WINDOW_WIDTH, ClientConfig.WINDOW_HEIGHT);
+            scene.setUserData(loader.getController());
 
             String cssPath = getClass().getResource("/css/style.css").toExternalForm();
             if (cssPath != null) {
@@ -69,4 +69,13 @@ public class SceneManager {
         }
     }
 
+    public void updateConnectionStatus(boolean isConnected) {
+        Scene currentScene = primaryStage.getScene();
+        if (currentScene != null) {
+            Object controller = currentScene.getUserData();
+            if (controller instanceof BaseController) {
+                ((BaseController) controller).updateConnectionStatus(isConnected);
+            }
+        }
+    }
 }

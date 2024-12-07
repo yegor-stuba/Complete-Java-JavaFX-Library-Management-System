@@ -6,6 +6,7 @@ import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.SceneManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 
@@ -56,15 +57,29 @@ public class LoginController extends BaseController {
                 });
     }
 
-    private void handleLoginError(Throwable throwable) {
-        String errorMessage = throwable.getCause().getMessage();
-        if (errorMessage.contains("401")) {
-            AlertUtil.showError("Login Failed", "Invalid username or password");
-        } else if (errorMessage.contains("429")) {
-            AlertUtil.showError("Login Failed", "Too many attempts. Please try again later.");
-        } else {
-            AlertUtil.showError("Error", "An unexpected error occurred: " + errorMessage);
-        }
+    @FXML
+private Label errorLabel;
+
+private void handleLoginError(Throwable throwable) {
+    String message = throwable.getMessage();
+    if (message.contains("401")) {
+        errorLabel.setText("Invalid username or password");
+    } else if (message.contains("429")) {
+        errorLabel.setText("Too many attempts. Please try again later");
+    } else if (message.contains("Connection")) {
+        errorLabel.setText("Cannot connect to server. Please try again");
+    } else {
+        errorLabel.setText("An unexpected error occurred");
     }
+    errorLabel.setVisible(true);
+}
+@FXML
+private Label connectionStatus;
+
+public void updateConnectionStatus(boolean isConnected) {
+    connectionStatus.setText(isConnected ? "Connected" : "Offline");
+    connectionStatus.getStyleClass().setAll("connection-status",
+        isConnected ? "connected" : "disconnected");
+}
 
 }

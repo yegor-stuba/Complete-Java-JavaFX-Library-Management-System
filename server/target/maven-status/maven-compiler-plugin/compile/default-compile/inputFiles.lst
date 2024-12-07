@@ -13,6 +13,7 @@
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/controller/UserController.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/mapper/UserMapper.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/repository/BookRepository.java
+/Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/exception/ErrorResponse.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/config/SecurityConfig.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/service/BookService.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/config/DatabaseConfig.java
@@ -24,6 +25,7 @@
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/repository/TransactionRepository.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/config/WebConfig.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/service/SecurityAuditService.java
+/Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/controller/HealthController.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/model/Transaction.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/service/LoginAttemptService.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/security/JwtAuthenticationFilter.java

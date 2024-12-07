@@ -1,9 +1,12 @@
+com/studyshare/server/exception/ErrorResponse.class
 com/studyshare/server/service/LoginAttemptService$1.class
 com/studyshare/server/service/impl/UserServiceImpl.class
 com/studyshare/server/service/LoginAttemptService.class
 com/studyshare/server/security/dto/AuthenticationRequest.class
 com/studyshare/server/repository/UserRepository.class
 com/studyshare/server/security/dto/AuthenticationResponse.class
+com/studyshare/server/controller/HealthController.class
+com/studyshare/server/exception/ErrorResponse$ErrorResponseBuilder.class
 com/studyshare/server/repository/BookRepository.class
 com/studyshare/server/controller/TransactionController.class
 com/studyshare/server/config/SecurityConfig.class

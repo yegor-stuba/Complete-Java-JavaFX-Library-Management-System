@@ -111,4 +111,6 @@ public class AuthenticationController {
     public ResponseEntity<Boolean> validateToken(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(tokenProvider.validateToken(token.substring(7)));
     }
+
+
 }

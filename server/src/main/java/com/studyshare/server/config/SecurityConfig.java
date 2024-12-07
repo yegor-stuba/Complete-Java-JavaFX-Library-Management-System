@@ -51,7 +51,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 
 @Bean
 public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
+    return new BCryptPasswordEncoder(10);
 }
 
     @Bean

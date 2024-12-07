@@ -13,13 +13,14 @@
 
     <VBox styleClass="header">
         <Label text="Veres Library" styleClass="header-label"/>
+        <Label fx:id="connectionStatus" styleClass="connection-status"/>
     </VBox>
 
     <VBox styleClass="login-form" maxWidth="400">
         <Label text="Login" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
         <TextField fx:id="usernameField" promptText="Username" styleClass="input-field"/>
         <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
-        <Label fx:id="errorLabel" styleClass="error-label"/>
+        <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
         <Button text="Login" onAction="#handleLogin" styleClass="primary-button"/>
         <Hyperlink text="Create new account" onAction="#handleRegisterLink" styleClass="link-button"/>
     </VBox>

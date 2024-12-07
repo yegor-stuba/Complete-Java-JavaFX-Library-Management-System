@@ -186,3 +186,21 @@
 .primary-button:hover {
     -fx-background-color: #39813d;
 }
+
+/* Add to existing styles */
+.connection-status {
+    -fx-padding: 5px 10px;
+    -fx-font-size: 12px;
+    -fx-background-radius: 4px;
+    -fx-alignment: center;
+}
+
+.connection-status.connected {
+    -fx-text-fill: #4CAF50;
+    -fx-background-color: #E8F5E9;
+}
+
+.connection-status.disconnected {
+    -fx-text-fill: #f44336;
+    -fx-background-color: #FFEBEE;
+}

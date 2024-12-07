@@ -14,17 +14,17 @@ public class ControllerFactory {
     private final AuthenticationService authService;
 
     public ControllerFactory(
-            SceneManager sceneManager,
-            UserService userService,
-            BookService bookService,
-            TransactionService transactionService,
-            AuthenticationService authService) {
-        this.sceneManager = sceneManager;
-        this.userService = userService;
-        this.bookService = bookService;
-        this.transactionService = transactionService;
-        this.authService = authService;
-    }
+    SceneManager sceneManager,
+    UserService userService,
+    BookService bookService,
+    TransactionService transactionService,
+    AuthenticationService authService) {
+    this.sceneManager = sceneManager;
+    this.userService = userService;
+    this.bookService = bookService;
+    this.transactionService = transactionService;
+    this.authService = authService;
+}
 
     public Object createController(Class<?> controllerClass) {
         if (controllerClass == LoginController.class) {

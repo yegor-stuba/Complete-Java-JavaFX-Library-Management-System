@@ -14,12 +14,13 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
+
 public class RestClient {
     private final String baseUrl;
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
     private static final Logger logger = LoggerFactory.getLogger(RestClient.class);
-
+    private boolean isConnected = false;
 
     public RestClient() {
         this.baseUrl = "http://localhost:8080";
@@ -98,21 +99,24 @@ public class RestClient {
         }
     }
 
-    private <T> CompletableFuture<T> sendRequest(HttpRequest request, Class<T> responseType) {
-        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> {
-                    logger.debug("Received response with status: {}", response.statusCode());
-                    if (response.statusCode() >= 400) {
-                        logger.error("Server error: {} {}", response.statusCode(), response.body());
-                        throw new RuntimeException("Server error: " + response.statusCode());
-                    }
-                    return deserialize(response.body(), responseType);
-                })
-                .exceptionally(throwable -> {
-                    logger.error("Request failed: {}", throwable.getMessage());
-                    throw new RuntimeException("Connection failed: " + throwable.getMessage());
-                });
-    }
+
+
+private <T> CompletableFuture<T> sendRequest(HttpRequest request, Class<T> responseType) {
+    return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+            .thenApply(response -> {
+                isConnected = true;
+                logger.debug("Received response with status: {}", response.statusCode());
+                if (response.statusCode() >= 400) {
+                    handleHttpError(response);
+                }
+                return deserialize(response.body(), responseType);
+            })
+            .exceptionally(throwable -> {
+                isConnected = false;
+                logger.error("Request failed: {}", throwable.getMessage());
+                throw new RuntimeException("Connection failed: " + throwable.getMessage());
+            });
+}
 
     private <T> T deserialize(String json, Class<T> type) {
         try {
@@ -139,5 +143,23 @@ public class RestClient {
         } catch (Exception e) {
             throw new RuntimeException("Failed to deserialize collection response: " + json, e);
         }
+    }
+
+    private void handleHttpError(HttpResponse<?> response) {
+        switch (response.statusCode()) {
+            case 400 -> throw new RuntimeException("Invalid input: " + response.body());
+            case 401 -> throw new RuntimeException("Authentication required");
+            case 403 -> throw new RuntimeException("Access denied");
+            case 404 -> throw new RuntimeException("Resource not found");
+            case 429 -> throw new RuntimeException("Too many attempts, please wait");
+            case 500 -> throw new RuntimeException("Server error, please try again later");
+            default -> throw new RuntimeException("Connection error: " + response.statusCode());
+        }
+    }
+    private String getErrorMessage(Throwable throwable) {
+        if (throwable.getMessage().contains("Connection refused")) {
+            return "Cannot connect to server";
+        }
+        return throwable.getMessage();
     }
 }

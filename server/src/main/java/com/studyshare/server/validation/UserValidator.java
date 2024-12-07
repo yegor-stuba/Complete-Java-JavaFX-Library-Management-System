@@ -28,25 +28,17 @@ public class UserValidator implements Validator {
     }
 
     private void validatePassword(String password, Errors errors) {
-        if (password == null || password.length() < 8) {
-            errors.rejectValue("password", "invalid.password.length", "Password must be at least 8 characters");
-            return;
-        }
-
-        if (!password.matches(".*[A-Z].*")) {
-            errors.rejectValue("password", "invalid.password.uppercase", "Password must contain uppercase letter");
-        }
-
-        if (!password.matches(".*[a-z].*")) {
-            errors.rejectValue("password", "invalid.password.lowercase", "Password must contain lowercase letter");
-        }
-
-        if (!password.matches(".*\\d.*")) {
-            errors.rejectValue("password", "invalid.password.digit", "Password must contain a digit");
-        }
-
-        if (!password.matches(".*[!@#$%^&*()].*")) {
-            errors.rejectValue("password", "invalid.password.special", "Password must contain special character");
-        }
+    if (password == null || password.length() < 4) {
+        errors.rejectValue("password", "invalid.password.length", "Password must be at least 4 characters");
+        return;
     }
+
+    if (!password.matches(".*[A-Za-z].*")) {
+        errors.rejectValue("password", "invalid.password.letter", "Password must contain at least one letter");
+    }
+
+    if (!password.matches(".*\\d.*")) {
+        errors.rejectValue("password", "invalid.password.digit", "Password must contain at least one number");
+    }
+}
 }

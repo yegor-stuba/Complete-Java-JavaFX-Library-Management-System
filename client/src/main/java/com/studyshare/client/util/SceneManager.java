@@ -39,6 +39,9 @@ public class SceneManager {
     private void loadScene(String fxmlPath, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            if (loader.getLocation() == null) {
+                throw new RuntimeException("FXML file not found: " + fxmlPath);
+            }
             loader.setControllerFactory(controllerFactory::createController);
             Parent root = loader.load();
             Scene scene = new Scene(root, ClientConfig.WINDOW_WIDTH, ClientConfig.WINDOW_HEIGHT);
@@ -47,7 +50,8 @@ public class SceneManager {
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
-            AlertUtil.showError("Error", "Failed to load scene");
+            e.printStackTrace(); // Add logging for debugging
+            AlertUtil.showError("Error", "Failed to load scene: " + e.getMessage());
         }
     }
 

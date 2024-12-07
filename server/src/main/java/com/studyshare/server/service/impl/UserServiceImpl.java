@@ -1,5 +1,6 @@
 package com.studyshare.server.service.impl;
 
+import com.studyshare.server.exception.ValidationException;
 import com.studyshare.server.service.UserService;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.server.repository.UserRepository;
@@ -19,6 +20,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private static final int MIN_PASSWORD_LENGTH = 4;
+
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -28,15 +31,36 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
+        validatePassword(userDTO.getPassword());
         if (existsByUsername(userDTO.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
         if (existsByEmail(userDTO.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        // Enhanced password hashing with salt
+        String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+        userDTO.setPassword(hashedPassword);
         User user = userMapper.toEntity(userDTO);
         return userMapper.toDto(userRepository.save(user));
+    }
+
+    private void validatePassword(String password) {
+        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
+            throw new ValidationException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters long");
+        }
+        if (!password.matches(".*[A-Z].*")) {
+            throw new ValidationException("Password must contain at least one uppercase letter");
+        }
+        if (!password.matches(".*[a-z].*")) {
+            throw new ValidationException("Password must contain at least one lowercase letter");
+        }
+        if (!password.matches(".*\\d.*")) {
+            throw new ValidationException("Password must contain at least one number");
+        }
+        if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) {
+            throw new ValidationException("Password must contain at least one special character");
+        }
     }
 
     @Override

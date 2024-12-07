@@ -23,15 +23,17 @@ public class ControllerFactory {
     }
 
     public Object createController(Class<?> controllerClass) {
-        if (controllerClass == LoginController.class) {
-            return new LoginController(userService, sceneManager);
-        } else if (controllerClass == BookManagementController.class) {
-            return new BookManagementController(bookService);
-        } else if (controllerClass == UserProfileController.class) {
-            return new UserProfileController(userService, sceneManager);
-        } else if (controllerClass == TransactionController.class) {
+    if (controllerClass == LoginController.class) {
+        return new LoginController(userService, sceneManager);
+    } else if (controllerClass == RegisterController.class) {
+        return new RegisterController(userService, sceneManager);
+    } else if (controllerClass == BookManagementController.class) {
+        return new BookManagementController(bookService);
+    } else if (controllerClass == UserProfileController.class) {
+        return new UserProfileController(userService, sceneManager);
+    } else if (controllerClass == TransactionController.class) {
         return new TransactionController(transactionService, userService);
-        }
-        throw new IllegalArgumentException("Unknown controller class: " + controllerClass.getName());
     }
+    throw new IllegalArgumentException("Unknown controller class: " + controllerClass.getName());
+}
 }

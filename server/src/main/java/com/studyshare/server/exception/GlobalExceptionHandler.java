@@ -6,6 +6,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,14 +16,11 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<Map<String, Object>> handleValidationException(ValidationException ex) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "error");
-        response.put("message", "Validation failed");
-        response.put("errors", ex.getErrors().stream()
-            .map(ObjectError::getDefaultMessage)
-            .collect(Collectors.toList()));
-        return ResponseEntity.badRequest().body(response);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleValidationException(ValidationException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

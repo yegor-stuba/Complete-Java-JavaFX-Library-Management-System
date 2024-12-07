@@ -2,6 +2,7 @@ package com.studyshare.client.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.core.ParameterizedTypeReference;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,9 +19,11 @@ public class RestClient {
     public RestClient() {
         this.baseUrl = "http://localhost:8080";
         this.httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
-        this.objectMapper = new ObjectMapper();
+                .connectTimeout(Duration.ofSeconds(10))
+                .version(HttpClient.Version.HTTP_1_1)
+                .build();
+        this.objectMapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule());
     }
 
     public <T> CompletableFuture<T> get(String path, Class<T> responseType) {
@@ -42,7 +45,21 @@ public class RestClient {
     }
 
     public <T> CompletableFuture<T> post(String path, Object body, Class<T> responseType) {
-        return sendWithBody(path, body, responseType, "POST");
+        try {
+            String jsonBody = body != null ? objectMapper.writeValueAsString(body) : "";
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(baseUrl + path))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+            return sendRequest(request, responseType)
+                .exceptionally(throwable -> {
+                    throw new RuntimeException("Failed to connect to server: " + throwable.getMessage());
+                });
+        } catch (Exception e) {
+            return CompletableFuture.failedFuture(e);
+        }
     }
 
     public <T> CompletableFuture<T> put(String path, Object body, Class<T> responseType) {

@@ -53,13 +53,13 @@ CREATE TABLE IF NOT EXISTS transactions (
 CREATE INDEX IF NOT EXISTS idx_transactions_user ON transactions(user_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_book ON transactions(book_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);
-CREATE INDEX IF NOT EXISTS idx_transactions_status ON transactions(status);
+
 
 INSERT OR IGNORE INTO roles (role_name) VALUES ('USER'), ('ADMIN');
 
 
 INSERT OR REPLACE INTO users (username, password, email, role)
-VALUES ('admin', 'admin', 'admin@studyshare.com', 'ADMIN');
+VALUES ('admin', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW', 'admin@studyshare.com', 'ADMIN');
 SELECT 'Schema executed successfully' as debug_message;
 
 

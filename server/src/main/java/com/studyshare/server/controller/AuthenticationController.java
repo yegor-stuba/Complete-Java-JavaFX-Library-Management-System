@@ -25,7 +25,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody UserDTO userDTO) {
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
+                new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -33,11 +33,11 @@ public class AuthenticationController {
         UserDTO user = userService.findByUsername(userDTO.getUsername());
 
         return ResponseEntity.ok(AuthenticationResponse.builder()
-            .token(jwt)
-            .username(user.getUsername())
-            .role(user.getRole())
-            .userId(user.getUserId())
-            .build());
+                .token(jwt)
+                .username(user.getUsername())
+                .role(user.getRole())
+                .userId(user.getUserId())
+                .build());
     }
 
     @PostMapping("/register")

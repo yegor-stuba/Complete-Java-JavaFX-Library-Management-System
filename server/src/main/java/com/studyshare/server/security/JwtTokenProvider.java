@@ -30,7 +30,8 @@ public class JwtTokenProvider {
     private int jwtExpiration;
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(Authentication authentication) {
@@ -38,11 +39,16 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
+        Claims claims = Jwts.claims().setSubject(userPrincipal.getUsername());
+        claims.put("roles", userPrincipal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(",")));
+
         return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(getSigningKey())
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 

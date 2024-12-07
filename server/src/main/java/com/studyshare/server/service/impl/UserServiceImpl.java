@@ -30,13 +30,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-public UserDTO createUser(UserDTO userDTO) {
-    validateNewUser(userDTO);
-    String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
-    userDTO.setPassword(hashedPassword);
-    User user = userMapper.toEntity(userDTO);
-    return userMapper.toDto(userRepository.save(user));
-}
+    public UserDTO createUser(UserDTO userDTO) {
+        validateNewUser(userDTO);
+        String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+        userDTO.setPassword(hashedPassword);
+        User user = userMapper.toEntity(userDTO);
+        return userMapper.toDto(userRepository.save(user));
+    }
 
 private void validateNewUser(UserDTO userDTO) {
     if (existsByUsername(userDTO.getUsername())) {

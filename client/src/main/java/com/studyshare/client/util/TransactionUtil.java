@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Dialog;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 public class TransactionUtil {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -53,9 +54,13 @@ public class TransactionUtil {
     }
 
     private static String getTransactionStatus(TransactionDTO transaction) {
-        if (transaction.getDueDate().isBefore(java.time.LocalDateTime.now())) {
+        if (isOverdue(transaction.getDueDate())) {
             return "OVERDUE";
         }
         return "ACTIVE";
+    }
+
+    public static boolean isOverdue(LocalDateTime dueDate) {
+        return dueDate != null && LocalDateTime.now().isAfter(dueDate);
     }
 }

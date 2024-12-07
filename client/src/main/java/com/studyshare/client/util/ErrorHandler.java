@@ -1,6 +1,7 @@
 package com.studyshare.client.util;
 
 import com.studyshare.client.service.exception.RestClientException;
+import jakarta.validation.ValidationException;
 import javafx.application.Platform;
 import java.util.concurrent.CompletionException;
 
@@ -28,5 +29,12 @@ public class ErrorHandler {
                 AlertUtil.showError("System Error", "An unexpected error occurred");
             }
         });
+    }
+    public static void handleException(Throwable throwable) {
+        if (throwable instanceof ValidationException) {
+            AlertUtil.showWarning("Validation Error", throwable.getMessage());
+        } else {
+            AlertUtil.showError("Error", "An unexpected error occurred: " + throwable.getMessage());
+        }
     }
 }

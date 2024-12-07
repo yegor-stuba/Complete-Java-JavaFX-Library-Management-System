@@ -1,4 +1,6 @@
+com/studyshare/server/service/LoginAttemptService$1.class
 com/studyshare/server/service/impl/UserServiceImpl.class
+com/studyshare/server/service/LoginAttemptService.class
 com/studyshare/server/security/dto/AuthenticationRequest.class
 com/studyshare/server/repository/UserRepository.class
 com/studyshare/server/security/dto/AuthenticationResponse.class
@@ -10,6 +12,7 @@ com/studyshare/server/validation/BookValidator.class
 com/studyshare/server/model/Book.class
 com/studyshare/server/controller/AuthenticationController.class
 com/studyshare/server/exception/InvalidTokenException.class
+com/studyshare/server/service/SecurityAuditService.class
 com/studyshare/server/controller/UserController.class
 com/studyshare/server/ServerApplication.class
 com/studyshare/server/exception/GlobalExceptionHandler.class
@@ -18,6 +21,8 @@ com/studyshare/server/security/dto/AuthenticationResponse$AuthenticationResponse
 com/studyshare/server/controller/HomeController.class
 com/studyshare/server/exception/ResourceNotFoundException.class
 com/studyshare/server/model/User.class
+com/studyshare/server/service/AuthenticationService.class
+com/studyshare/server/validation/UserValidator.class
 com/studyshare/server/config/DatabaseConfig.class
 com/studyshare/server/exception/ValidationException.class
 com/studyshare/server/repository/TransactionRepository.class

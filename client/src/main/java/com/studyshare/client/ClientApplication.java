@@ -1,9 +1,7 @@
 package com.studyshare.client;
 
-import com.studyshare.client.service.RestClient;
-import com.studyshare.client.service.TransactionService;
-import com.studyshare.client.service.UserService;
-import com.studyshare.client.service.BookService;
+import com.studyshare.client.service.*;
+import com.studyshare.client.service.impl.AuthenticationServiceImpl;
 import com.studyshare.client.service.impl.TransactionServiceImpl;
 import com.studyshare.client.service.impl.UserServiceImpl;
 import com.studyshare.client.service.impl.BookServiceImpl;
@@ -19,13 +17,16 @@ public class ClientApplication extends Application {
         UserService userService = new UserServiceImpl(restClient);
         BookService bookService = new BookServiceImpl(restClient);
         TransactionService transactionService = new TransactionServiceImpl(restClient);
+        AuthenticationService authService = new AuthenticationServiceImpl(restClient); // Add this
+
 
         SceneManager sceneManager = new SceneManager(primaryStage);
         ControllerFactory controllerFactory = new ControllerFactory(
             sceneManager,
             userService,
             bookService,
-            transactionService
+            transactionService,
+                authService
         );
         sceneManager.setControllerFactory(controllerFactory);
 

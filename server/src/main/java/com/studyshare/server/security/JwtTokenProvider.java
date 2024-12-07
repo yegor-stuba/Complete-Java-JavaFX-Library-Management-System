@@ -35,22 +35,20 @@ public class JwtTokenProvider {
     }
 
     public String generateToken(Authentication authentication) {
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+    UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+    Date now = new Date();
+    Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
-        Claims claims = Jwts.claims().setSubject(userPrincipal.getUsername());
-        claims.put("roles", userPrincipal.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(",")));
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
-                .compact();
-    }
+    return Jwts.builder()
+            .setSubject(userPrincipal.getUsername())
+            .setIssuedAt(now)
+            .setExpiration(expiryDate)
+            .claim("roles", userPrincipal.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.joining(",")))
+            .signWith(getSigningKey())
+            .compact();
+}
 
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parserBuilder()

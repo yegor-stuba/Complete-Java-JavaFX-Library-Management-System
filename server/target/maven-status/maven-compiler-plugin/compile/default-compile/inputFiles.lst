@@ -8,6 +8,7 @@
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/controller/BookController.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/security/dto/AuthenticationRequest.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/service/impl/UserServiceImpl.java
+/Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/service/AuthenticationService.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/security/SecurityExceptionHandler.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/controller/UserController.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/mapper/UserMapper.java
@@ -18,10 +19,13 @@
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/exception/ResourceNotFoundException.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/repository/UserRepository.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/security/dto/AuthenticationResponse.java
+/Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/validation/UserValidator.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/exception/GlobalExceptionHandler.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/repository/TransactionRepository.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/config/WebConfig.java
+/Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/service/SecurityAuditService.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/model/Transaction.java
+/Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/service/LoginAttemptService.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/security/JwtAuthenticationFilter.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/controller/TransactionController.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/controller/HomeController.java

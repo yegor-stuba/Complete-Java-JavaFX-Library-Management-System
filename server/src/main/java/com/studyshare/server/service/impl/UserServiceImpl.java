@@ -30,35 +30,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO createUser(UserDTO userDTO) {
-        validatePassword(userDTO.getPassword());
-        if (existsByUsername(userDTO.getUsername())) {
-            throw new RuntimeException("Username already exists");
-        }
-        if (existsByEmail(userDTO.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        }
-        // Enhanced password hashing with salt
-        String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
-        userDTO.setPassword(hashedPassword);
-        User user = userMapper.toEntity(userDTO);
-        return userMapper.toDto(userRepository.save(user));
+public UserDTO createUser(UserDTO userDTO) {
+    validateNewUser(userDTO);
+    String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+    userDTO.setPassword(hashedPassword);
+    User user = userMapper.toEntity(userDTO);
+    return userMapper.toDto(userRepository.save(user));
+}
+
+private void validateNewUser(UserDTO userDTO) {
+    if (existsByUsername(userDTO.getUsername())) {
+        throw new ValidationException("Username already exists");
     }
+    if (existsByEmail(userDTO.getEmail())) {
+        throw new ValidationException("Email already exists");
+    }
+    validatePassword(userDTO.getPassword());
+}
 
     private void validatePassword(String password) {
-    if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
-        throw new ValidationException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters long");
+        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
+            throw new ValidationException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters long");
+        }
+        // Keep only basic requirements
+        if (!password.matches(".*[A-Za-z].*")) {
+            throw new ValidationException("Password must contain at least one letter");
+        }
+        if (!password.matches(".*\\d.*")) {
+            throw new ValidationException("Password must contain at least one number");
+        }
     }
-    if (!password.matches(".*[A-Z].*")) {
-        throw new ValidationException("Password must contain at least one uppercase letter");
-    }
-    if (!password.matches(".*[a-z].*")) {
-        throw new ValidationException("Password must contain at least one lowercase letter");
-    }
-    if (!password.matches(".*\\d.*")) {
-        throw new ValidationException("Password must contain at least one number");
-    }
-}
 
     @Override
     public UserDTO getUserById(Long id) {
@@ -112,14 +113,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDTO user = findByUsername(username);
-        return org.springframework.security.core.userdetails.User
-            .withUsername(user.getUsername())
-            .password(user.getPassword())
-            .roles(user.getRole().name())
-            .build();
-    }
+public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    UserDTO user = findByUsername(username);
+    String password = user.getPassword() != null ? user.getPassword() : "";
+    return org.springframework.security.core.userdetails.User
+        .withUsername(user.getUsername())
+        .password(password)
+        .roles(user.getRole().name())
+        .build();
+}
 
     @Override
     public void validateToken(String token) {

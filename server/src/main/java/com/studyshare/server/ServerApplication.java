@@ -1,10 +1,10 @@
 package com.studyshare.server;
 
-import com.studyshare.client.ClientApplication;
 import javafx.application.Platform;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import com.studyshare.client.ClientApplication;
 
 @SpringBootApplication
 public class ServerApplication {

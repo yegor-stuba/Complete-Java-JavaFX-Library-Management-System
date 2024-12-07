@@ -10,6 +10,7 @@
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/service/impl/UserServiceImpl.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/security/SecurityExceptionHandler.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/controller/UserController.java
+/Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/mapper/UserMapper.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/repository/BookRepository.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/config/SecurityConfig.java
 /Users/yegor/Documents/STU/SDIKT/lib/server/src/main/java/com/studyshare/server/service/BookService.java

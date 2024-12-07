@@ -13,26 +13,26 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class ClientApplication extends Application {
-   @Override
-public void start(Stage primaryStage) {
-    RestClient restClient = new RestClient();
-    UserService userService = new UserServiceImpl(restClient);
-    BookService bookService = new BookServiceImpl(restClient);
-    TransactionService transactionService = new TransactionServiceImpl(restClient);
+    @Override
+    public void start(Stage primaryStage) {
+        RestClient restClient = new RestClient();
+        UserService userService = new UserServiceImpl(restClient);
+        BookService bookService = new BookServiceImpl(restClient);
+        TransactionService transactionService = new TransactionServiceImpl(restClient);
 
-    SceneManager sceneManager = new SceneManager(primaryStage);
-    ControllerFactory controllerFactory = new ControllerFactory(
-        sceneManager,
-        userService,
-        bookService,
-        transactionService  // Remove the cast, use client-side TransactionService
-    );
-    sceneManager.setControllerFactory(controllerFactory);
+        SceneManager sceneManager = new SceneManager(primaryStage);
+        ControllerFactory controllerFactory = new ControllerFactory(
+            sceneManager,
+            userService,
+            bookService,
+            transactionService
+        );
+        sceneManager.setControllerFactory(controllerFactory);
 
-    primaryStage.setTitle("StudyShare Library");
-    sceneManager.switchToLogin();
-    primaryStage.show();
-}
+        primaryStage.setTitle("StudyShare Library");
+        sceneManager.switchToLogin();
+        primaryStage.show();
+    }
 
     public static void main(String[] args) {
         launch(args);

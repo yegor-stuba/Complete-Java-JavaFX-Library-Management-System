@@ -22,34 +22,57 @@
     </modules>
 
     <properties>
-    <java.version>17</java.version>
-    <spring.boot.version>3.2.0</spring.boot.version>
-    <javafx.version>21</javafx.version>
-    <lombok.version>1.18.30</lombok.version>
-    <jackson.version>2.15.3</jackson.version>
-    <jwt.version>0.11.5</jwt.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-</properties>
+        <java.version>17</java.version>
+        <spring.boot.version>3.2.0</spring.boot.version>
+        <javafx.version>21</javafx.version>
+        <lombok.version>1.18.30</lombok.version>
+        <jackson.version>2.15.3</jackson.version>
+        <jwt.version>0.11.5</jwt.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <slf4j.version>2.0.9</slf4j.version>
+    </properties>
 
-    <build>
-    <plugins>
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <version>${spring.boot.version}</version>
-            <configuration>
-                <mainClass>com.studyshare.server.ServerApplication</mainClass>
-                <layout>JAR</layout>
-                <includeSystemScope>true</includeSystemScope>
-            </configuration>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>repackage</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>6.1.1</version>  <!-- Should be managed here -->
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <release>17</release>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
 </build>
 </project>

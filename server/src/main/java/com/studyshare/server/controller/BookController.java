@@ -21,19 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@ControllerAdvice
-class BookControllerAdvice {
-
-
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
-    }
-
-
-}
-
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
@@ -56,7 +43,6 @@ public class BookController {
         return ResponseEntity.ok(bookService.createBook(bookDTO));
     }
 
-
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAllBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
@@ -65,12 +51,6 @@ public class BookController {
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
         return ResponseEntity.ok(bookService.getBookById(id));
-    }
-
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO) {
-        return ResponseEntity.ok(bookService.createBook(bookDTO));
     }
 
     @PutMapping("/{id}")
@@ -112,26 +92,26 @@ public class BookController {
     }
 
     @GetMapping("/owner/{ownerId}")
-public ResponseEntity<List<BookDTO>> getBooksByOwner(@PathVariable Long ownerId) {
-    // Changed from getUserById to getUserById
-    userService.getUserById(ownerId); // Verify user exists
-    return ResponseEntity.ok(bookService.getBooksByOwner(ownerId));
-}
+    public ResponseEntity<List<BookDTO>> getBooksByOwner(@PathVariable Long ownerId) {
+        userService.getUserById(ownerId);
+        return ResponseEntity.ok(bookService.getBooksByOwner(ownerId));
+    }
 
     private Long getCurrentUserId() {
-    String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    UserDTO user = userService.findByUsername(username);
-    return user.getUserId(); // Make sure UserDTO has getUserId method
-}
-    @ExceptionHandler(ResourceNotFoundException.class)
-public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body(ex.getMessage());
-}
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserDTO user = userService.findByUsername(username);
+        return user.getUserId();
+    }
 
-@ExceptionHandler(Exception.class)
-public ResponseEntity<String> handleGeneralException(Exception ex) {
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(ex.getMessage());
-}
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneralException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ex.getMessage());
+    }
 }

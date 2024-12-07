@@ -10,14 +10,17 @@ CREATE TABLE IF NOT EXISTS roles (
     role_name TEXT NOT NULL UNIQUE
 );
 
-
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    role TEXT NOT NULL
+    role TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
 CREATE TABLE IF NOT EXISTS books (
     book_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,21 +29,33 @@ CREATE TABLE IF NOT EXISTS books (
     isbn TEXT UNIQUE,
     available_copies INTEGER NOT NULL DEFAULT 1,
     owner_id INTEGER,
-    FOREIGN KEY (owner_id) REFERENCES users(user_id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_books_title ON books(title);
+CREATE INDEX IF NOT EXISTS idx_books_isbn ON books(isbn);
+CREATE INDEX IF NOT EXISTS idx_books_owner ON books(owner_id);
 
 CREATE TABLE IF NOT EXISTS transactions (
     transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     book_id INTEGER NOT NULL,
     type TEXT NOT NULL,
-    date TIMESTAMP NOT NULL,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     due_date TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (book_id) REFERENCES books(book_id)
+    return_date TIMESTAMP,
+    status TEXT NOT NULL DEFAULT 'ACTIVE',
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE
 );
 
+CREATE INDEX IF NOT EXISTS idx_transactions_user ON transactions(user_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_book ON transactions(book_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);
+CREATE INDEX IF NOT EXISTS idx_transactions_status ON transactions(status);
 
+INSERT OR IGNORE INTO roles (role_name) VALUES ('USER'), ('ADMIN');
 
 
 INSERT OR REPLACE INTO users (username, password, email, role)
@@ -48,4 +63,6 @@ VALUES ('admin', 'admin', 'admin@studyshare.com', 'ADMIN');
 SELECT 'Schema executed successfully' as debug_message;
 
 
-INSERT OR IGNORE INTO roles (role_name) VALUES ('USER'), ('ADMIN');
+
+
+

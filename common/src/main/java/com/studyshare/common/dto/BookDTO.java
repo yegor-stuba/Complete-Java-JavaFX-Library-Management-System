@@ -15,4 +15,5 @@ public class BookDTO {
     private String author;
     private String isbn;
     private Integer availableCopies;
+    private Long ownerId;
 }

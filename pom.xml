@@ -29,6 +29,7 @@
         <jackson.version>2.15.3</jackson.version>
         <jwt.version>0.11.5</jwt.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <slf4j.version>2.0.9</slf4j.version>
     </properties>
 
     <dependencyManagement>
@@ -37,6 +38,11 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>6.1.1</version>  <!-- Should be managed here -->
             </dependency>
         </dependencies>
     </dependencyManagement>

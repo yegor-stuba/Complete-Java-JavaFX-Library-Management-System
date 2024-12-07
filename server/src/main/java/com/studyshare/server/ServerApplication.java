@@ -1,6 +1,5 @@
 package com.studyshare.server;
 
-import com.studyshare.client.ClientApplication;
 import javafx.application.Platform;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,8 +10,9 @@ public class ServerApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(ServerApplication.class, args);
 
+        // Launch JavaFX client after server is up
         Platform.startup(() -> {
-            ClientApplication clientApp = new ClientApplication();
+            com.studyshare.client.ClientApplication clientApp = new com.studyshare.client.ClientApplication();
             clientApp.start(new javafx.stage.Stage());
         });
     }

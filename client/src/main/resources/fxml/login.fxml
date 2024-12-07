@@ -12,7 +12,7 @@
       fx:controller="com.studyshare.client.controller.LoginController">
 
     <VBox styleClass="header">
-        <Label text="Library" styleClass="header-label"/>
+        <Label text="Veres Library" styleClass="header-label"/>
     </VBox>
 
     <VBox styleClass="login-form" maxWidth="400">

@@ -2,6 +2,7 @@ package com.studyshare.server.controller;
 
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.common.enums.UserRole;
+import com.studyshare.server.exception.ValidationException;
 import com.studyshare.server.security.JwtTokenProvider;
 import com.studyshare.server.security.dto.AuthenticationRequest;
 import com.studyshare.server.security.dto.AuthenticationResponse;
@@ -10,6 +11,7 @@ import com.studyshare.server.service.LoginAttemptService;
 import com.studyshare.server.service.SecurityAuditService;
 import com.studyshare.server.service.UserService;
 import com.studyshare.server.validation.UserValidator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,40 +36,55 @@ public class AuthenticationController {
     private final AuthenticationService authService;
 
   @PostMapping("/login")
-  public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
-      try {
-          UserDTO user = userService.findByUsername(request.getUsername());
-          if (user != null && request.getPassword().equals(user.getPassword())) {
-              return ResponseEntity.ok(AuthenticationResponse.builder()
-                  .token("token-" + user.getUserId())
-                  .username(user.getUsername())
-                  .role(user.getRole())
-                  .userId(user.getUserId())
-                  .build());
-          }
-          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-      } catch (Exception e) {
-          log.error("Login failed: {}", e.getMessage());
-          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-      }
-  }
+public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+    try {
+        // Add debug logging
+        log.info("Login attempt for user: {}", request.getUsername());
 
-  @PostMapping("/register")
-  public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDTO userDTO) {
-      try {
-          userDTO.setRole(UserRole.USER);
-          UserDTO createdUser = userService.createUser(userDTO);
-          return ResponseEntity.ok(AuthenticationResponse.builder()
-              .token("token-" + createdUser.getUserId())
-              .username(createdUser.getUsername())
-              .role(createdUser.getRole())
-              .userId(createdUser.getUserId())
-              .build());
-      } catch (Exception e) {
-          log.error("Registration failed: {}", e.getMessage());
-          return ResponseEntity.badRequest().build();
-      }
-  }
+        UserDTO user = userService.findByUsername(request.getUsername());
+        log.info("User found: {}", user != null);
+
+        if (user != null && userService.authenticate(request.getUsername(), request.getPassword())) {
+            log.info("Authentication successful");
+            return ResponseEntity.ok(AuthenticationResponse.builder()
+                .token("token-" + user.getUserId())
+                .username(user.getUsername())
+                .role(user.getRole())
+                .userId(user.getUserId())
+                .build());
+        }
+        log.warn("Authentication failed");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    } catch (Exception e) {
+        log.error("Login failed: {}", e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+}
+
+@PostMapping("/register")
+public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid UserDTO userDTO) {
+    try {
+        // Set default role
+        userDTO.setRole(UserRole.USER);
+
+        // Create user
+        UserDTO createdUser = userService.createUser(userDTO);
+
+        return ResponseEntity.ok(AuthenticationResponse.builder()
+            .token("token-" + createdUser.getUserId())
+            .username(createdUser.getUsername())
+            .role(createdUser.getRole())
+            .userId(createdUser.getUserId())
+            .build());
+    } catch (ValidationException e) {
+        log.error("Registration failed: {}", e.getMessage());
+        return ResponseEntity.badRequest().build();
+    } catch (Exception e) {
+        log.error("Registration failed: {}", e.getMessage());
+        return ResponseEntity.internalServerError().build();
+    }
+}
+
     @GetMapping("/current")
     public ResponseEntity<CompletableFuture<UserDTO>> getCurrentUser() {
         return ResponseEntity.ok(userService.getCurrentUser());

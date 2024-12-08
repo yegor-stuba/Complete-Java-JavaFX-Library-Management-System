@@ -52,12 +52,15 @@ public class RestClient {
     }
 
     private <T> T deserialize(String response, Class<T> responseType) {
-        try {
-            return objectMapper.readValue(response, responseType);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to deserialize response", e);
-        }
+    try {
+        System.out.println("Deserializing response: " + response); // Debug log
+        return objectMapper.readValue(response, responseType);
+    } catch (Exception e) {
+        System.err.println("Deserialization failed for response: " + response);
+        e.printStackTrace();
+        throw new RuntimeException("Failed to deserialize response: " + e.getMessage(), e);
     }
+}
 
     private <T> T deserializeParameterized(String response, ParameterizedTypeReference<T> responseType) {
         try {

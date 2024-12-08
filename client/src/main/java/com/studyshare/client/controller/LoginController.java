@@ -3,6 +3,7 @@ package com.studyshare.client.controller;
 import com.studyshare.client.service.AuthenticationService;
 import com.studyshare.client.service.UserService;
 import com.studyshare.client.util.AlertUtil;
+import com.studyshare.client.util.ErrorHandler;
 import com.studyshare.client.util.SceneManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -33,27 +34,37 @@ public class LoginController extends BaseController {
         this.authService = authService;
     }
 
-    @FXML
-    public void handleLogin() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+@FXML
+public void handleLogin() {
+    String username = usernameField.getText();
+    String password = passwordField.getText();
 
-        if (validateInput(username, password)) {
-            authService.login(username, password)
-                    .thenAccept(response -> {
-                        if (response != null) {
-                            Platform.runLater(() -> sceneManager.navigateBasedOnRole(response.getRole()));
-                        }
-                    })
-                    .exceptionally(throwable -> {
-                        Platform.runLater(() -> handleLoginError(throwable));
-                        return null;
-                    });
-        } else {
-            handleLoginError(new IllegalArgumentException("Missing credentials"));
-        }
+    if (validateInput(username, password)) {
+        System.out.println("Login attempt: " + username);
+
+        authService.login(username, password)
+                .thenAccept(response -> {
+                    System.out.println("Login response: " + response);
+                    if (response != null) {
+                        Platform.runLater(() -> {
+                            try {
+                                sceneManager.navigateBasedOnRole(response.getRole());
+                            } catch (Exception e) {
+                                System.err.println("Navigation error:");
+                                e.printStackTrace();
+                                ErrorHandler.handle(e);
+                            }
+                        });
+                    }
+                })
+                .exceptionally(throwable -> {
+                    System.err.println("Login error:");
+                    throwable.printStackTrace();
+                    Platform.runLater(() -> ErrorHandler.handle(throwable));
+                    return null;
+                });
     }
-
+}
     @FXML
     private void handleRegisterLink() {
         sceneManager.switchToRegister();

@@ -62,10 +62,16 @@ public class SceneManager {
     }
 
     public void navigateBasedOnRole(UserRole role) {
-        if (role == UserRole.ADMIN) {
-            loadScene("/fxml/admin-dashboard.fxml", "Admin Dashboard");
-        } else {
-            loadScene("/fxml/user-profile.fxml", "User Profile");
+        try {
+            System.out.println("Navigating for role: " + role); // Debug log
+            if (role == UserRole.ADMIN) {
+                loadScene("/fxml/admin-dashboard.fxml", "Admin Dashboard");
+            } else {
+                loadScene("/fxml/user-profile.fxml", "User Profile");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Navigation failed: " + e.getMessage());
         }
     }
 

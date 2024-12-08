@@ -38,15 +38,16 @@ public class ConnectionMonitor {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(serverUrl))
-                    .timeout(Duration.ofSeconds(5))
                     .GET()
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            connected.set(response.statusCode() == 200);
+            boolean isConnected = response.statusCode() == 200;
+            connected.set(isConnected);
+            log.info("Server connection status: {}", isConnected);
         } catch (Exception e) {
             connected.set(false);
-            log.debug("Server connection check failed: {}", e.getMessage());
+            log.error("Connection error: ", e);
         }
     }
 

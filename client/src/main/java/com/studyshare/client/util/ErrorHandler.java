@@ -7,30 +7,33 @@ import java.util.concurrent.CompletionException;
 
 public class ErrorHandler {
     public static void handle(Throwable throwable) {
+        // Log full stack trace
+        System.err.println("Error details:");
+        throwable.printStackTrace();
+
         Throwable cause = throwable instanceof CompletionException ? throwable.getCause() : throwable;
 
         Platform.runLater(() -> {
             if (cause instanceof RestClientException) {
                 RestClientException restError = (RestClientException) cause;
-                switch (restError.getStatusCode()) {
-                    case 401:
-                        AlertUtil.showError("Authentication Error", "Please log in again");
-                        break;
-                    case 403:
-                        AlertUtil.showError("Access Denied", "You don't have permission for this action");
-                        break;
-                    case 404:
-                        AlertUtil.showError("Not Found", "The requested resource was not found");
-                        break;
-                    default:
-                        AlertUtil.showError("Error", restError.getErrorBody());
-                }
+                handleRestError(restError);
             } else {
-                AlertUtil.showError("System Error", "An unexpected error occurred");
+                AlertUtil.showError("System Error",
+                    "Type: " + cause.getClass().getSimpleName() + "\n" +
+                    "Message: " + cause.getMessage());
             }
         });
     }
-    public static void handleException(Throwable throwable) {
+
+    private static void handleRestError(RestClientException error) {
+        String message = switch (error.getStatusCode()) {
+            case 401 -> "Invalid credentials. Please check username and password.";
+            case 403 -> "Access denied. Insufficient permissions.";
+            case 404 -> "Resource not found: " + error.getErrorBody();
+            default -> "Server error: " + error.getErrorBody();
+        };
+        AlertUtil.showError("Server Error", message);
+    }    public static void handleException(Throwable throwable) {
         if (throwable instanceof ValidationException) {
             AlertUtil.showWarning("Validation Error", throwable.getMessage());
         } else {

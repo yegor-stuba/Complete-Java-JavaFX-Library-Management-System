@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CompletableFuture<List<UserDTO>> getAllUsers() {
-        return restClient.get("/api/users", new ParameterizedTypeReference<>() {});
+        return restClient.getList("/api/users", new ParameterizedTypeReference<List<UserDTO>>() {});
     }
 
     @Override
@@ -62,8 +62,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CompletableFuture<List<UserDTO>> searchUsers(String query) {
-        return restClient.get("/api/users/search?query=" + query,
-            new ParameterizedTypeReference<>() {});
+        return restClient.getList("/api/users/search?query=" + query,
+            new ParameterizedTypeReference<List<UserDTO>>() {});
     }
 
     @Override

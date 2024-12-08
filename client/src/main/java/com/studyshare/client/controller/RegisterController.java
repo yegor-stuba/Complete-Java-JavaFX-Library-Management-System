@@ -30,44 +30,48 @@ public class RegisterController {
     }
 
     @FXML
-private void handleRegister() {
-    if (!validateInput()) {
-        return;
+    private void handleRegister() {
+        if (validateInput()) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUsername(usernameField.getText().trim());
+            userDTO.setEmail(emailField.getText().trim());
+            userDTO.setPassword(passwordField.getText());
+            userDTO.setRole(UserRole.USER);
+
+            userService.register(userDTO)
+                    .thenAccept(response -> Platform.runLater(() -> {
+                        AlertUtil.showInfo("Success", "Registration successful!");
+                        sceneManager.switchToLogin();
+                    }))
+                    .exceptionally(throwable -> {
+                        Platform.runLater(() -> showErrorAlert(throwable));
+                        return null;
+                    });
+        }
+    }
+    private void showErrorAlert(Throwable throwable) {
+        String message = throwable.getMessage();
+        if (message.contains("username")) {
+            AlertUtil.showError("Registration Failed", "Username already taken");
+        } else if (message.contains("email")) {
+            AlertUtil.showError("Registration Failed", "Email already registered");
+        } else {
+            AlertUtil.showError("Error", "An unexpected error occurred: " + message);
+        }
     }
 
-    UserDTO userDTO = new UserDTO();
-    userDTO.setUsername(usernameField.getText().trim());
-    userDTO.setEmail(emailField.getText().trim());
-    userDTO.setPassword(passwordField.getText());
-    userDTO.setRole(UserRole.USER);
 
-    userService.register(userDTO)
-        .thenAccept(response -> {
-            Platform.runLater(() -> {
-                AlertUtil.showInfo("Success", "Registration successful!");
-                sceneManager.switchToLogin();
-            });
-        })
-        .exceptionally(throwable -> {
-            Platform.runLater(() -> {
-                String errorMessage = throwable.getCause().getMessage();
-                if (errorMessage.contains("username already exists")) {
-                    AlertUtil.showError("Registration Failed", "Username already taken");
-                } else if (errorMessage.contains("email already exists")) {
-                    AlertUtil.showError("Registration Failed", "Email already registered");
-                } else {
-                    AlertUtil.showError("Registration Failed", "An error occurred: " + errorMessage);
-                }
-            });
-            return null;
-        });
-}
 
     private boolean validateInput() {
         String username = usernameField.getText().trim();
         String email = emailField.getText().trim();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
+
+        if (!password.equals(confirmPassword)) {
+            AlertUtil.showWarning("Validation Error", "Passwords do not match");
+            return false;
+        }
 
         if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             AlertUtil.showWarning("Validation Error", "All fields are required");

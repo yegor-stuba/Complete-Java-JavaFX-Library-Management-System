@@ -1,6 +1,7 @@
 package com.studyshare.server.service.impl;
 
 import com.studyshare.common.dto.BookDTO;
+import com.studyshare.server.mapper.UserMapper;
 import com.studyshare.server.model.Book;
 import com.studyshare.server.repository.BookRepository;
 import com.studyshare.server.repository.UserRepository;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional
@@ -31,6 +33,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new RuntimeException("Owner not found")));
         return convertToDTO(bookRepository.save(book));
     }
+
     @Override
     public List<BookDTO> searchBooks(String query) {
         return bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query)
@@ -40,18 +43,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDTO getBookById(Long id) {
-        return bookRepository.findById(id)
-                .map(this::convertToDTO)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
-    }
-
-    @Override
-    public List<BookDTO> getAllBooks() {
-        return bookRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
+public List<BookDTO> getAllBooks() {
+    return bookRepository.findAll().stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+}
 
     @Override
     public List<BookDTO> getBooksByOwner(Long ownerId) {
@@ -60,25 +56,21 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    @Transactional
-    public BookDTO updateBook(Long id, BookDTO bookDTO) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
 
-        book.setTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setAvailableCopies(bookDTO.getAvailableCopies());
+@Override
+@Transactional
+public BookDTO updateBook(Long id, BookDTO bookDTO) {
+    Book book = bookRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Book not found"));
 
-        return convertToDTO(bookRepository.save(book));
-    }
+    // Update fields
+    if (bookDTO.getTitle() != null) book.setTitle(bookDTO.getTitle());
+    if (bookDTO.getAuthor() != null) book.setAuthor(bookDTO.getAuthor());
+    if (bookDTO.getIsbn() != null) book.setIsbn(bookDTO.getIsbn());
+    if (bookDTO.getAvailableCopies() != null) book.setAvailableCopies(bookDTO.getAvailableCopies());
 
-    @Override
-    @Transactional
-    public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
-    }
+    return convertToDTO(bookRepository.save(book));
+}
 
 
     @Override
@@ -124,6 +116,13 @@ public class BookServiceImpl implements BookService {
         return convertToDTO(bookRepository.save(book));
     }
 
+    @Override
+    public BookDTO getBookById(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+        return convertToDTO(book);
+    }
+
     private BookDTO convertToDTO(Book book) {
         BookDTO dto = new BookDTO();
         dto.setBookId(book.getBookId());
@@ -133,6 +132,14 @@ public class BookServiceImpl implements BookService {
         dto.setAvailableCopies(book.getAvailableCopies());
         dto.setOwnerId(book.getOwner().getUserId());
         return dto;
+    }
+    @Override
+    @Transactional
+    public void deleteBook(Long bookId) {
+        if (!bookRepository.existsById(bookId)) {
+            throw new RuntimeException("Book not found");
+        }
+        bookRepository.deleteById(bookId);
     }
 
     private void validateNewBook(BookDTO bookDTO) {

@@ -1,9 +1,12 @@
 package com.studyshare.server.controller;
 
 import com.studyshare.common.dto.UserDTO;
+import com.studyshare.common.enums.UserRole;
 import com.studyshare.server.exception.ValidationException;
 import com.studyshare.server.security.JwtTokenProvider;
+import com.studyshare.server.security.dto.AuthenticationRequest;
 import com.studyshare.server.security.dto.AuthenticationResponse;
+import com.studyshare.server.service.AuthenticationService;
 import com.studyshare.server.service.LoginAttemptService;
 import com.studyshare.server.service.SecurityAuditService;
 import com.studyshare.server.service.UserService;
@@ -33,57 +36,55 @@ public class AuthenticationController {
     private final UserValidator userValidator;
     private final LoginAttemptService loginAttemptService;
     private final SecurityAuditService securityAuditService;
+    private final AuthenticationService authService;
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody UserDTO userDTO) {
-        if (loginAttemptService.isBlocked(userDTO.getUsername())) {
-            log.warn("User {} is blocked due to too many failed attempts", userDTO.getUsername());
-            securityAuditService.logAccountLock(userDTO.getUsername(), "Too many failed attempts");
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-        }
-
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
+   @PostMapping("/login")
+public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+    try {
+        if (authService.authenticate(request.getUsername(), request.getPassword())) {
+            Authentication auth = new UsernamePasswordAuthenticationToken(
+                request.getUsername(),
+                request.getPassword()
             );
 
-            String jwt = tokenProvider.generateToken(authentication);
-            UserDTO user = userService.findByUsername(userDTO.getUsername());
-            loginAttemptService.loginSucceeded(userDTO.getUsername());
-            securityAuditService.logLoginAttempt(userDTO.getUsername(), true);
+            String token = authService.generateToken(auth);
+            UserDTO user = userService.findByUsername(request.getUsername());
 
             return ResponseEntity.ok(AuthenticationResponse.builder()
-                    .token(jwt)
-                    .username(user.getUsername())
-                    .role(user.getRole())
-                    .userId(user.getUserId())
-                    .build());
-        } catch (Exception e) {
-            loginAttemptService.loginFailed(userDTO.getUsername());
-            securityAuditService.logLoginAttempt(userDTO.getUsername(), false);
-            log.error("Login failed for user {}: {}", userDTO.getUsername(), e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                .token(token)
+                .username(user.getUsername())
+                .role(user.getRole())
+                .userId(user.getUserId())
+                .build());
         }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    } catch (Exception e) {
+        log.error("Login failed: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+}
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) {
+        @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid UserDTO userDTO) {
         try {
-            userValidator.validate(userDTO, bindingResult);
-            if (bindingResult.hasErrors()) {
-                log.warn("Registration validation failed for username {}", userDTO.getUsername());
-                throw new ValidationException("Registration validation failed: " + bindingResult.getAllErrors());
+            // Basic validation
+            if (userService.existsByUsername(userDTO.getUsername())) {
+                throw new ValidationException("Username already exists");
             }
 
-            UserDTO createdUser = userService.createUser(userDTO);
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
-            );
+            // Set default role
+            userDTO.setRole(UserRole.USER);
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Create user
+            UserDTO createdUser = userService.createUser(userDTO);
+
+            // Generate authentication token
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    userDTO.getUsername(),
+                    userDTO.getPassword()
+            );
             String jwt = tokenProvider.generateToken(authentication);
 
-            log.info("User registered successfully: {}", userDTO.getUsername());
             return ResponseEntity.ok(AuthenticationResponse.builder()
                     .token(jwt)
                     .username(createdUser.getUsername())
@@ -91,7 +92,7 @@ public class AuthenticationController {
                     .userId(createdUser.getUserId())
                     .build());
         } catch (Exception e) {
-            log.error("Registration failed for username {}: {}", userDTO.getUsername(), e.getMessage());
+            log.error("Registration failed: {}", e.getMessage());
             throw new ValidationException("Registration failed: " + e.getMessage());
         }
     }

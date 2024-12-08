@@ -1,7 +1,7 @@
 package com.studyshare.client.config;
 
 public class ClientConfig {
-    public static final String BASE_URL = "http://localhost:8080";
+    public static final String BASE_URL = "http://localhost:9080";
     public static final int REQUEST_TIMEOUT = 10000;
     public static final String API_VERSION = "/api/v1";
 

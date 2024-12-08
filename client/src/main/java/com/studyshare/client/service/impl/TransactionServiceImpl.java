@@ -21,14 +21,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public CompletableFuture<List<TransactionDTO>> getUserTransactions(Long userId) {
-        return restClient.get("/api/transactions/user/" + userId,
-                new ParameterizedTypeReference<>() {});
+        return restClient.getList("/api/transactions/user/" + userId,
+                new ParameterizedTypeReference<List<TransactionDTO>>() {});
     }
 
     @Override
     public CompletableFuture<List<TransactionDTO>> getOverdueTransactions() {
-        return restClient.get("/api/transactions/overdue",
-                new ParameterizedTypeReference<>() {});
+        return restClient.getList("/api/transactions/overdue",
+                new ParameterizedTypeReference<List<TransactionDTO>>() {});
     }
 
     @Override

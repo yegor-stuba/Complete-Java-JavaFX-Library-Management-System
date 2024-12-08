@@ -1,9 +1,5 @@
-# Y? StudyShare Library Management System
+#Library Management System
 
-A collaborative platform for students to share and manage their book collections.
-
-## Project Overview
-StudyShare is designed to help students track their book collections and discover books owned by their peers. The system facilitates book borrowing and lending, promoting resource sharing within the academic community.
 
 the project description:
 Library Management System designed to help students keep track of their book collections and know which books their friends possess. This system will allow users to register, view, and manage their books effectively. You can name the application, reflecting its purpose of promoting collaboration and resource sharing among students.

@@ -59,5 +59,5 @@ INSERT OR IGNORE INTO roles (role_name) VALUES ('USER'), ('ADMIN');
 
  -- admin?
 INSERT OR REPLACE INTO users (username, password, email, role)
-VALUES ('admin', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW', 'admin@studyshare.com', 'ADMIN');
+VALUES ('admin', 'admin', 'admin@studyshare.com', 'ADMIN');
 

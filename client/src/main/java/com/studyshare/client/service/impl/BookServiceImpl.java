@@ -22,13 +22,6 @@ public CompletableFuture<Long> getBookCount() {
 
 
     @Override
-    public CompletableFuture<BookDTO> getBookById(Long id) {
-        return restClient.get("/api/books/" + id, BookDTO.class);
-    }
-
-
-
-    @Override
     public CompletableFuture<BookDTO> addBook(BookDTO book) {
         return restClient.post("/api/books", book, BookDTO.class);
     }
@@ -43,21 +36,26 @@ public CompletableFuture<Long> getBookCount() {
         return restClient.delete("/api/books/" + id);
     }
 
-    @Override
+  @Override
 public CompletableFuture<List<BookDTO>> getAllBooks() {
-    return restClient.get("/api/books", new ParameterizedTypeReference<>() {});
+    return restClient.getList("/api/books", new ParameterizedTypeReference<List<BookDTO>>() {});
+}
+
+@Override
+public CompletableFuture<BookDTO> getBookById(Long id) {
+    return restClient.get("/api/books/" + id, BookDTO.class);
 }
 
 @Override
 public CompletableFuture<List<BookDTO>> searchBooks(String query) {
-    return restClient.get("/api/books/search?query=" + query,
-        new ParameterizedTypeReference<>() {});
+    return restClient.getList("/api/books/search?query=" + query,
+        new ParameterizedTypeReference<List<BookDTO>>() {});
 }
 
 @Override
 public CompletableFuture<List<BookDTO>> getAvailableBooks() {
-    return restClient.get("/api/books/available",
-        new ParameterizedTypeReference<>() {});
+        return restClient.getList("/api/books/available",
+            new ParameterizedTypeReference<List<BookDTO>>() {});
 }
 
     @Override

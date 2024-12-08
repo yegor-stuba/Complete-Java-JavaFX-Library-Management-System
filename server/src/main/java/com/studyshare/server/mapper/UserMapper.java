@@ -1,6 +1,8 @@
 package com.studyshare.server.mapper;
 
+import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.dto.UserDTO;
+import com.studyshare.server.model.Book;
 import com.studyshare.server.model.User;
 import org.springframework.stereotype.Component;
 
@@ -41,4 +43,27 @@ public class UserMapper {
             .map(this::toDto)
             .collect(Collectors.toList());
     }
+    public Book mapBookDtoToEntity(BookDTO dto) {
+        Book book = new Book();
+        book.setBookId(dto.getBookId());
+        book.setTitle(dto.getTitle());
+        book.setAuthor(dto.getAuthor());
+        book.setIsbn(dto.getIsbn());
+        book.setAvailableCopies(dto.getAvailableCopies());
+        return book;
+    }
+
+    public BookDTO mapBookToDto(Book book) {
+        BookDTO dto = new BookDTO();
+        dto.setBookId(book.getBookId());
+        dto.setTitle(book.getTitle());
+        dto.setAuthor(book.getAuthor());
+        dto.setIsbn(book.getIsbn());
+        dto.setAvailableCopies(book.getAvailableCopies());
+        if (book.getOwner() != null) {
+            dto.setOwnerId(book.getOwner().getUserId());
+        }
+        return dto;
+    }
+
 }

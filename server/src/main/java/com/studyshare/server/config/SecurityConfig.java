@@ -33,10 +33,12 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .sessionManagement(session ->
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-    .requestMatchers("/api/auth/**", "/api/health").permitAll()
-    .requestMatchers("/api/users/**").hasAuthority("ADMIN")
-    .anyRequest().authenticated()
-)
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/users/**").hasAuthority("ADMIN")
+            .requestMatchers("/api/books/**").authenticated()
+            .requestMatchers("/api/transactions/**").authenticated()
+            .anyRequest().authenticated()
+        )
         .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     return http.build();
 }

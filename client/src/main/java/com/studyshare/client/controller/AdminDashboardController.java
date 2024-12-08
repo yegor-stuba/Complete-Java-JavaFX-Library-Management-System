@@ -85,13 +85,36 @@ public class AdminDashboardController {
     }
     private void loadData() {
         CompletableFuture.allOf(
-                handleAsync(loadUsers()),
-                handleAsync(loadBooks()),
-                handleAsync(updateStatistics())
+                userService.getAllUsers()
+                        .thenAccept(userList -> Platform.runLater(() -> {
+                            users.clear();
+                            users.addAll(userList);
+                        })),
+                bookService.getAllBooks()
+                        .thenAccept(bookList -> Platform.runLater(() -> {
+                            books.clear();
+                            books.addAll(bookList);
+                        })),
+                loadStatistics()
         ).exceptionally(throwable -> {
             log.error("Failed to load data: {}", throwable.getMessage());
+            Platform.runLater(() -> AlertUtil.showError("Loading Error", "Failed to load dashboard data"));
             return null;
         });
+    }
+
+    private CompletableFuture<Void> loadStatistics() {
+        return CompletableFuture.allOf(
+                userService.getUserCount()
+                        .thenAccept(count -> Platform.runLater(() ->
+                                totalUsersLabel.setText("Total Users: " + count))),
+                bookService.getBookCount()
+                        .thenAccept(count -> Platform.runLater(() ->
+                                totalBooksLabel.setText("Total Books: " + count))),
+                transactionService.getActiveLoansCount()
+                        .thenAccept(count -> Platform.runLater(() ->
+                                activeLoansLabel.setText("Active Loans: " + count)))
+        );
     }
 
     private void checkAdminAccess() {
@@ -539,27 +562,6 @@ public class AdminDashboardController {
         }
     }
 
-
-    private void loadStatistics() {
-        CompletableFuture.allOf(
-                userService.getUserCount(),
-                bookService.getBookCount(),
-                transactionService.getActiveLoansCount()
-        ).thenRun(() -> Platform.runLater(() -> {
-            userService.getUserCount().thenCombine(
-                            bookService.getBookCount(),
-                            (uCount, bCount) -> new int[]{uCount.intValue(), bCount.intValue()})
-                    .thenCombine(
-                            transactionService.getActiveLoansCount(),
-                            (userAndBookCounts, lCount) ->
-                                    new int[]{userAndBookCounts[0], userAndBookCounts[1], lCount})
-                    .thenAccept(counts -> {
-                        totalUsersLabel.setText("Total Users: " + counts[0]);
-                        totalBooksLabel.setText("Total Books: " + counts[1]);
-                        activeLoansLabel.setText("Active Loans: " + counts[2]);
-                    });
-        }));
-    }
 
 private void loadInitialData() {
     // Load users separately

@@ -248,3 +248,45 @@
     -fx-background-color: white;
     -fx-border-color: #ddd;
 }
+
+/* Admin Dashboard Specific Styles */
+.admin-tab-pane {
+    -fx-background-color: #fff3e0;
+    -fx-border-color: #ffc107;
+    -fx-border-width: 1px;
+}
+
+.management-container {
+    -fx-padding: 20px;
+    -fx-background-color: #fffde7;
+}
+
+.search-bar {
+    -fx-padding: 10px;
+    -fx-background-color: #fff9e6;
+    -fx-border-color: #ffa726;
+    -fx-border-radius: 4px;
+}
+
+.search-field {
+    -fx-pref-width: 300px;
+    -fx-padding: 8px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #ffc107;
+}
+
+.statistics-container {
+    -fx-padding: 20px;
+    -fx-background-color: #fff3e0;
+}
+
+.stat-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #5d4037;
+    -fx-padding: 10px;
+    -fx-background-color: #ffe0b2;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #ffa726;
+}

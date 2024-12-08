@@ -8,9 +8,20 @@ import org.springframework.stereotype.Service;
 public class SecurityAuditService {
     private static final String AUDIT_FILE = "logs/security.log";
 
-    public void logLoginAttempt(String username, boolean success) {
-        log.info("Login attempt: user={}, success={}", username, success);
+    // In SecurityAuditService.java
+public void logLoginAttempt(String username, boolean success) {
+    log.info("Login attempt: user={}, success={}", username, success);
+    if (!success) {
+        log.warn("Failed login attempt for user: {}", username);
     }
+}
+
+public void logSecurityEvent(String event, String details) {
+    log.info("Security event: {}, details: {}", event, details);
+    if (event.contains("UNAUTHORIZED") || event.contains("FORBIDDEN")) {
+        log.warn("Security violation: {}", details);
+    }
+}
 
     public void logRegistration(String username) {
         log.info("New user registration: {}", username);
@@ -28,7 +39,5 @@ public class SecurityAuditService {
         log.warn("Account locked: user={}, reason={}", username, reason);
     }
 
-    public void logSecurityEvent(String event, String details) {
-        log.info("Security event: {}, details: {}", event, details);
-    }
+
 }

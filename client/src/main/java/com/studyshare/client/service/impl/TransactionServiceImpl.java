@@ -2,10 +2,12 @@ package com.studyshare.client.service.impl;
 
 import com.studyshare.client.service.RestClient;
 import com.studyshare.client.service.TransactionService;
+import com.studyshare.client.service.exception.RestClientException;
 import com.studyshare.common.dto.TransactionDTO;
 import org.springframework.core.ParameterizedTypeReference;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class TransactionServiceImpl implements TransactionService {
     private final RestClient restClient;
@@ -14,10 +16,16 @@ public class TransactionServiceImpl implements TransactionService {
         this.restClient = restClient;
     }
 
-    @Override
-    public CompletableFuture<TransactionDTO> createTransaction(TransactionDTO transactionDTO) {
-        return restClient.post("/api/transactions", transactionDTO, TransactionDTO.class);
-    }
+public CompletableFuture<TransactionDTO> createTransaction(TransactionDTO transactionDTO) {
+    return restClient.post("/api/transactions", transactionDTO, TransactionDTO.class)
+        .exceptionally(throwable -> {
+            if (throwable instanceof RestClientException) {
+                RestClientException restError = (RestClientException) throwable;
+                throw new CompletionException(new RuntimeException("Transaction failed: " + restError.getErrorBody()));
+            }
+            throw new CompletionException(throwable);
+        });
+}
 
     @Override
     public CompletableFuture<List<TransactionDTO>> getUserTransactions(Long userId) {

@@ -3,6 +3,7 @@ package com.studyshare.client.controller;
 import com.studyshare.client.service.UserService;
 import com.studyshare.client.service.BookService;
 import com.studyshare.client.service.TransactionService;
+import com.studyshare.client.service.exception.RestClientException;
 import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.SceneManager;
 import com.studyshare.common.dto.BookDTO;
@@ -76,11 +77,28 @@ public class AdminDashboardController {
             setupTables();
             setupUserManagement();
             loadInitialData();
+            loadData();
         } catch (Exception e) {
             log.error("Failed to initialize dashboard", e);
             AlertUtil.showError("Error", "Failed to initialize dashboard");
         }
     }
+    private void loadData() {
+        CompletableFuture.allOf(
+                handleAsync(loadUsers()),
+                handleAsync(loadBooks()),
+                handleAsync(updateStatistics())
+        ).exceptionally(throwable -> {
+            log.error("Failed to load data: {}", throwable.getMessage());
+            return null;
+        });
+    }
+
+    private void checkAdminAccess() {
+    if (!userService.isAdmin()) {
+        throw new SecurityException("Admin access required");
+    }
+}
 
     private void setupTables() {
         // Setup User Table
@@ -187,20 +205,38 @@ public class AdminDashboardController {
         updateStatistics();
     }
 
-    private CompletableFuture<?> loadUsers() {
-        userService.getAllUsers()
-                .thenAccept(userList -> Platform.runLater(() -> {
-                    users.clear();
-                    users.addAll(userList);
-                }))
-                .exceptionally(throwable -> {
-                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load users"));
-                    return null;
-                });
-        return null;
-    }
+ private CompletableFuture<Void> loadUsers() {
+    log.debug("Loading users...");
+    return userService.getAllUsers()
+        .thenAccept(userList -> {
+            log.debug("Received {} users from server", userList.size());
+            Platform.runLater(() -> {
+                users.clear();
+                users.addAll(userList);
+                log.debug("Users table updated with {} rows", users.size());
+            });
+        })
+        .exceptionally(throwable -> {
+            log.error("Failed to load users: {}", throwable.getMessage(), throwable);
+            Platform.runLater(() -> {
+                if (throwable.getCause() instanceof RestClientException) {
+                    RestClientException restError = (RestClientException) throwable.getCause();
+                    AlertUtil.showError("Loading Error",
+                        String.format("Failed to load users. Status: %d, Details: %s",
+                        restError.getStatusCode(),
+                        restError.getErrorBody()));
+                } else {
+                    AlertUtil.showError("System Error",
+                        String.format("Failed to load users: %s (%s)",
+                        throwable.getMessage(),
+                        throwable.getClass().getSimpleName()));
+                }
+            });
+            return null;
+        });
+}
 
-    private CompletableFuture<?> loadBooks() {
+    private CompletableFuture<Void> loadBooks() {
         bookService.getAllBooks()
                 .thenAccept(bookList -> Platform.runLater(() -> {
                     books.clear();
@@ -213,7 +249,7 @@ public class AdminDashboardController {
         return null;
     }
 
-    private CompletableFuture<?> updateStatistics() {
+    private CompletableFuture<Void> updateStatistics() {
         // Update statistics labels with current system data
         userService.getUserCount().thenAccept(count ->
                 Platform.runLater(() -> totalUsersLabel.setText("Total Users: " + count)));
@@ -525,7 +561,7 @@ public class AdminDashboardController {
         }));
     }
 
-   private void loadInitialData() {
+private void loadInitialData() {
     // Load users separately
     userService.getAllUsers()
         .thenAccept(userList -> Platform.runLater(() -> {
@@ -547,22 +583,7 @@ public class AdminDashboardController {
             totalBooksLabel.setText("Total Books: " + count)));
 }
 
-    private void loadData() {
-        loadUsers().exceptionally(throwable -> {
-            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load users"));
-            return null;
-        });
 
-        loadBooks().exceptionally(throwable -> {
-            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load books"));
-            return null;
-        });
-
-        updateStatistics().exceptionally(throwable -> {
-            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load statistics"));
-            return null;
-        });
-    }
 
     protected CompletableFuture<Void> handleAsync(CompletableFuture<Void> future) {
         return future.exceptionally(throwable -> {
@@ -572,7 +593,7 @@ public class AdminDashboardController {
     }
 
     private void handleLoadingError(Throwable throwable, String message) {
-        log.error("{}: {}", message, throwable.getMessage());
+        log.error("Loading error: {} - {}", message, throwable.getMessage(), throwable);
         Platform.runLater(() -> AlertUtil.showError("Error", message));
     }
 

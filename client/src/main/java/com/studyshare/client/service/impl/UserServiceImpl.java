@@ -5,11 +5,16 @@ import com.studyshare.client.service.UserService;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.common.enums.UserRole;
 import com.studyshare.common.security.dto.AuthenticationResponse;
+import jakarta.validation.ValidationException;
 import org.springframework.core.ParameterizedTypeReference;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserServiceImpl implements UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final RestClient restClient;
     private AuthenticationResponse authResponse;
 
@@ -52,7 +57,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CompletableFuture<UserDTO> updateUser(Long id, UserDTO userDTO) {
-        return restClient.put("/api/users/" + id, userDTO, UserDTO.class);
+        validateUserInput(userDTO);
+
+        return restClient.put("/api/users/" + id, userDTO, UserDTO.class)
+            .thenApply(response -> {
+                log.debug("User updated successfully: {}", response.getUsername());
+                return response;
+            })
+            .exceptionally(throwable -> {
+                log.error("Failed to update user {}: {}", id, throwable.getMessage());
+                throw new CompletionException("Failed to update user: " + throwable.getMessage(), throwable);
+            });
     }
 
     @Override
@@ -85,5 +100,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public CompletableFuture<UserDTO> createUser(UserDTO userDTO) {
         return restClient.post("/api/users", userDTO, UserDTO.class);
+    }
+
+    private void validateUserInput(UserDTO userDTO) {
+        if (userDTO.getUsername().length() < 3) {
+            throw new ValidationException("Username must be at least 3 characters");
+        }
+        if (!userDTO.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new ValidationException("Invalid email format");
+        }
+        if (userDTO.getPassword() != null && userDTO.getPassword().length() < 6) {
+            throw new ValidationException("Password must be at least 6 characters");
+        }
     }
 }

@@ -12,20 +12,21 @@ public class UserValidator implements Validator {
         return UserDTO.class.equals(clazz);
     }
 
-    @Override
-    public void validate(Object target, Errors errors) {
-        UserDTO user = (UserDTO) target;
+    // In UserValidator.java
+@Override
+public void validate(Object target, Errors errors) {
+    UserDTO user = (UserDTO) target;
 
-        if (!user.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            errors.rejectValue("email", "invalid.email", "Invalid email format");
-        }
-
-        if (user.getUsername().length() < 3) {
-            errors.rejectValue("username", "invalid.username", "Username must be at least 3 characters");
-        }
-
-        validatePassword(user.getPassword(), errors);
+    if (!user.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        errors.rejectValue("email", "invalid.email", "Invalid email format");
     }
+
+    if (user.getUsername().length() < 3) {
+        errors.rejectValue("username", "invalid.username", "Username must be at least 3 characters");
+    }
+
+    validatePassword(user.getPassword(), errors);
+}
 
     private void validatePassword(String password, Errors errors) {
     if (password == null || password.length() < 4) {
@@ -42,3 +43,4 @@ public class UserValidator implements Validator {
     }
 }
 }
+

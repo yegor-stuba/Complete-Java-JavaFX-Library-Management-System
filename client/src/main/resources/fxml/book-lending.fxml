@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.studyshare.client.controller.BookLendingController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Lend Book" style="-fx-font-size: 20px;"/>
+
+    <GridPane vgap="10" hgap="10">
+        <Label text="Title:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="titleLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Author:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <Label fx:id="authorLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Duration (days):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="durationField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Lend" onAction="#handleLend"/>
+        <Button text="Cancel" onAction="#handleCancel"/>
+    </HBox>
+</VBox>

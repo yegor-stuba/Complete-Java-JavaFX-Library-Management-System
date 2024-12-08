@@ -5,6 +5,7 @@ import com.studyshare.client.service.impl.AuthenticationServiceImpl;
 import com.studyshare.client.service.impl.TransactionServiceImpl;
 import com.studyshare.client.service.impl.UserServiceImpl;
 import com.studyshare.client.service.impl.BookServiceImpl;
+import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.SceneManager;
 import com.studyshare.client.util.ControllerFactory;
 import javafx.application.Application;
@@ -19,14 +20,25 @@ public class ClientApplication extends Application {
     private ConnectionMonitor connectionMonitor;
 
     @Override
-    public void start(Stage primaryStage) {
-        try {
-            initializeServices(primaryStage);
-        } catch (Exception e) {
-            log.error("Application failed to start: {}", e.getMessage());
-            Platform.exit();
-        }
+public void start(Stage primaryStage) {
+    try {
+        initializeServices(primaryStage);
+        setupErrorHandling();
+        setupConnectionMonitoring(primaryStage);
+    } catch (Exception e) {
+        log.error("Application failed to start: {}", e.getMessage());
+        Platform.exit();
     }
+}
+
+private void setupErrorHandling() {
+    Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+        log.error("Uncaught exception: {}", throwable.getMessage(), throwable);
+        Platform.runLater(() ->
+            AlertUtil.showError("System Error",
+                "An unexpected error occurred: " + throwable.getMessage()));
+    });
+}
 
     private void initializeServices(Stage primaryStage) {
         // Initialize core services

@@ -1,6 +1,11 @@
 package com.studyshare.client.service;
 
 import com.fasterxml.jackson.databind.JavaType;
+import com.studyshare.client.service.exception.AuthorizationException;
+import com.studyshare.client.service.exception.ConflictException;
+import com.studyshare.client.service.exception.ResourceNotFoundException;
+import com.studyshare.client.service.exception.RestClientException;
+import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,8 +13,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.studyshare.client.config.ClientConfig;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.ParameterizedTypeReference;
-import com.fasterxml.jackson.databind.JavaType;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -19,7 +22,6 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-import static org.hibernate.engine.spi.CollectionKey.deserialize;
 
 public class RestClient {
     private static final Logger log = LoggerFactory.getLogger(RestClient.class);
@@ -47,26 +49,26 @@ public class RestClient {
                 .thenApply(body -> deserializeParameterized(body, responseType));
     }
 
-    private void addAuthHeader(HttpRequest.Builder builder) {
-        if (authToken != null) {
-            builder.header("Authorization", "Bearer " + authToken);
-        }
+private void addAuthHeader(HttpRequest.Builder builder) {
+    if (authToken != null) {
+        builder.header("Authorization", "Bearer " + authToken);
     }
+}
 
-    public <T> CompletableFuture<T> get(String path, Class<T> responseType) {
-        HttpRequest.Builder builder = HttpRequest.newBuilder()
-                .uri(URI.create(baseUrl + path));
-        addAuthHeader(builder);
+   public <T> CompletableFuture<T> get(String path, Class<T> responseType) {
+    HttpRequest.Builder builder = HttpRequest.newBuilder()
+        .uri(URI.create(baseUrl + path));
+    addAuthHeader(builder);
 
-        return httpClient.sendAsync(builder.build(), HttpResponse.BodyHandlers.ofString())
-                .thenApply(response -> {
-                    log.debug("Response from {}: {} - {}", path, response.statusCode(), response.body());
-                    if (response.statusCode() == 200) {
-                        return deserialize(response.body(), responseType);
-                    }
-                    throw new RuntimeException("Server returned: " + response.statusCode());
-                });
-    }
+    return httpClient.sendAsync(builder.build(), HttpResponse.BodyHandlers.ofString())
+        .thenApply(response -> {
+            log.debug("Response from {}: {} - {}", path, response.statusCode(), response.body());
+            if (response.statusCode() == 200) {
+                return deserialize(response.body(), responseType);
+            }
+            throw new RestClientException(response.statusCode(), response.body());
+        });
+}
 
 private <T> T deserialize(String response, Class<T> responseType) {
     try {
@@ -150,6 +152,19 @@ private <T> T deserialize(String response, Class<T> responseType) {
             throw new RuntimeException("Failed to serialize request", e);
         }
     }
+private <T> T handleResponse(HttpResponse<String> response, Class<T> responseType, String operation) {
+    log.debug("Response from {}: {} - {}", operation, response.statusCode(), response.body());
 
+    return switch (response.statusCode()) {
+        case 200, 201, 204 -> deserialize(response.body(), responseType);
+        case 400 -> throw new ValidationException("Invalid request data");
+        case 401 -> throw new IllegalStateException("Authentication required");
+        case 403 -> throw new AuthorizationException("Operation not permitted");
+        case 404 -> throw new ResourceNotFoundException("Resource not found");
+        case 409 -> throw new ConflictException("Resource conflict");
+        default -> throw new RestClientException(response.statusCode(),
+            "Operation failed: " + response.body());
+    };
+}
 
 }

@@ -16,19 +16,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.token = null;
     }
 
-    @Override
-    public CompletableFuture<AuthenticationResponse> login(String username, String password) {
-        AuthenticationRequest request = new AuthenticationRequest();
-        request.setUsername(username);
-        request.setPassword(password);
+   // In AuthenticationServiceImpl.java
+public CompletableFuture<AuthenticationResponse> login(String username, String password) {
+    AuthenticationRequest request = new AuthenticationRequest();
+    request.setUsername(username);
+    request.setPassword(password);
 
-        return restClient.post("/api/auth/login", request, AuthenticationResponse.class)
-            .thenApply(response -> {
-                this.token = response.getToken();
-                return response;
-            });
-    }
-
+    return restClient.post("/api/auth/login", request, AuthenticationResponse.class)
+        .thenApply(response -> {
+            this.token = response.getToken();
+            return response;
+        })
+        .exceptionally(throwable -> {
+            throw new SecurityException("Authentication failed: " + throwable.getMessage());
+        });
+}
     @Override
     public CompletableFuture<AuthenticationResponse> register(UserDTO userDTO) {
         return restClient.post("/api/auth/register", userDTO, AuthenticationResponse.class)

@@ -54,7 +54,8 @@
                         <TableColumn fx:id="authorColumn" text="Author" prefWidth="150"/>
                         <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="100"/>
                         <TableColumn fx:id="copiesColumn" text="Available Copies" prefWidth="100"/>
-                        <TableColumn fx:id="bookActionsColumn" text="Actions" prefWidth="150"/>
+                        <TableColumn fx:id="bookActionsColumn" text="Actions" prefWidth="150">
+                        </TableColumn>
                     </columns>
                 </TableView>
             </VBox>

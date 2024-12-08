@@ -26,17 +26,16 @@ public class ControllerFactory {
     this.authService = authService;
 }
 
-   public Object createController(Class<?> controllerClass) {
+ public Object createController(Class<?> controllerClass) {
     if (controllerClass == LoginController.class) {
         return new LoginController(userService, sceneManager, authService);
     } else if (controllerClass == RegisterController.class) {
         return new RegisterController(userService, sceneManager);
-    } else if (controllerClass == AdminDashboardController.class) {  // Add this
+    } else if (controllerClass == AdminDashboardController.class) {
         return new AdminDashboardController(userService, bookService, transactionService, sceneManager);
     } else if (controllerClass == BookManagementController.class) {
         return new BookManagementController(bookService);
-    } // ... other controllers
-
+    }
     throw new IllegalArgumentException("Unknown controller class: " + controllerClass.getName());
 }
 }

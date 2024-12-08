@@ -5,6 +5,7 @@ import com.studyshare.client.service.UserService;
 import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.ErrorHandler;
 import com.studyshare.client.util.SceneManager;
+import com.studyshare.common.enums.UserRole;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -35,35 +36,46 @@ public class LoginController extends BaseController {
     }
 
 @FXML
-public void handleLogin() {
+private void handleLogin() {
+    if (!validateInput()) {
+        return;
+    }
+
     String username = usernameField.getText();
     String password = passwordField.getText();
 
-    if (validateInput(username, password)) {
-        System.out.println("Login attempt: " + username);
+    authService.login(username, password)
+        .thenAccept(response -> Platform.runLater(() -> {
+            if (response != null && response.getRole() != null) {
+                switch (response.getRole()) {
+                    case ADMIN -> sceneManager.switchToAdminDashboard();
+                    case USER -> sceneManager.switchToUserProfile();
+                    default -> handleLoginError("Invalid user role");
+                }
+            } else {
+                handleLoginError("Invalid response from server");
+            }
+        }))
+        .exceptionally(throwable -> {
+            handleLoginError(throwable.getMessage());
+            return null;
+        });
+}
 
-        authService.login(username, password)
-                .thenAccept(response -> {
-                    System.out.println("Login response: " + response);
-                    if (response != null) {
-                        Platform.runLater(() -> {
-                            try {
-                                sceneManager.navigateBasedOnRole(response.getRole());
-                            } catch (Exception e) {
-                                System.err.println("Navigation error:");
-                                e.printStackTrace();
-                                ErrorHandler.handle(e);
-                            }
-                        });
-                    }
-                })
-                .exceptionally(throwable -> {
-                    System.err.println("Login error:");
-                    throwable.printStackTrace();
-                    Platform.runLater(() -> ErrorHandler.handle(throwable));
-                    return null;
-                });
+private boolean validateInput() {
+    if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+        AlertUtil.showWarning("Validation Error", "Username and password are required");
+        return false;
     }
+    return true;
+}
+
+private void handleLoginError(String message) {
+    Platform.runLater(() -> {
+        AlertUtil.showError("Login Failed", message);
+        passwordField.clear();
+        usernameField.requestFocus();
+    });
 }
     @FXML
     private void handleRegisterLink() {

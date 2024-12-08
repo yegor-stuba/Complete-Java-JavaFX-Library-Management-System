@@ -3,6 +3,7 @@ package com.studyshare.client.controller;
 import com.studyshare.client.service.BookService;
 import com.studyshare.client.util.AlertUtil;
 import com.studyshare.common.dto.BookDTO;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -90,14 +91,11 @@ private void initialize() {
                     return null;
                 });
     }
-
     @FXML
     private void handleAddBook() {
         Dialog<BookDTO> dialog = new Dialog<>();
         dialog.setTitle("Add New Book");
         dialog.setHeaderText("Enter book details");
-
-
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add-book-dialog.fxml"));
@@ -125,12 +123,6 @@ private void initialize() {
                         newBook.setIsbn(isbnField.getText());
                         newBook.setAvailableCopies(Integer.parseInt(copiesField.getText()));
 
-                        handleAsync(bookService.addBook(newBook))
-                                .thenAccept(savedBook -> {
-                                    books.add(savedBook);
-                                    AlertUtil.showInfo("Success", "Book added successfully");
-                                });
-
                         return newBook;
                     } catch (NumberFormatException e) {
                         AlertUtil.showWarning("Input Error", "Copies must be a valid number");
@@ -140,19 +132,30 @@ private void initialize() {
                 return null;
             });
 
-            dialog.showAndWait().ifPresent(book -> {
-                bookService.addBook(book)
-                        .thenAccept(savedBook -> {
-                            books.add(savedBook);
-                            AlertUtil.showInfo("Success", "Book added successfully");
-                        })
-                        .exceptionally(throwable -> {
-                            AlertUtil.showError("Error", "Failed to add book");
-                            return null;
-                        });
-            });
+            dialog.showAndWait().ifPresent(this::handleAddBook);
         } catch (IOException e) {
             AlertUtil.showError("Error", "Failed to load add book dialog");
         }
+    }
+
+    private void handleAddBook(BookDTO book) {
+        bookService.addBook(book)
+            .thenAccept(response -> Platform.runLater(() -> {
+                AlertUtil.showInfo("Success", "Book added successfully");
+                loadBooks();
+            }))
+            .exceptionally(throwable -> {
+                Platform.runLater(() -> {
+                    String error = throwable.getMessage();
+                    if (error.contains("ISBN")) {
+                        AlertUtil.showError("Error", "ISBN already exists");
+                    } else if (error.contains("validation")) {
+                        AlertUtil.showError("Error", "Invalid book data");
+                    } else {
+                        AlertUtil.showError("Error", "Failed to add book: " + error);
+                    }
+                });
+                return null;
+            });
     }
 }

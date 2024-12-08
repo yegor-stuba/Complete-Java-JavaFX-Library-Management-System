@@ -9,21 +9,37 @@ import com.studyshare.client.util.SceneManager;
 import com.studyshare.client.util.ControllerFactory;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClientApplication extends Application {
+    private static final Logger log = LoggerFactory.getLogger(ClientApplication.class);
+    private ConnectionMonitor connectionMonitor;
+
     @Override
     public void start(Stage primaryStage) {
+        try {
+            initializeServices(primaryStage);
+        } catch (Exception e) {
+            log.error("Application failed to start: {}", e.getMessage());
+            Platform.exit();
+        }
+    }
+
+    private void initializeServices(Stage primaryStage) {
+        // Initialize core services
         RestClient restClient = new RestClient();
-        ConnectionMonitor connectionMonitor = new ConnectionMonitor();
+        connectionMonitor = new ConnectionMonitor();
+
+        // Initialize business services
         UserService userService = new UserServiceImpl(restClient);
         BookService bookService = new BookServiceImpl(restClient);
         TransactionService transactionService = new TransactionServiceImpl(restClient);
         AuthenticationService authService = new AuthenticationServiceImpl(restClient);
 
+        // Setup scene management
         SceneManager sceneManager = new SceneManager(primaryStage);
         ControllerFactory controllerFactory = new ControllerFactory(
             sceneManager,
@@ -34,30 +50,35 @@ public class ClientApplication extends Application {
         );
         sceneManager.setControllerFactory(controllerFactory);
 
-        connectionMonitor.connectedProperty().addListener((obs, oldVal, newVal) -> {
+        // Setup connection monitoring
+        setupConnectionMonitoring(primaryStage);
+
+        // Start with login scene
+        primaryStage.setTitle("StudyShare Library");
+        sceneManager.switchToLogin();
+        primaryStage.show();
+    }
+
+    private void setupConnectionMonitoring(Stage primaryStage) {
+        connectionMonitor.connectedProperty().addListener((obs, oldVal, newVal) ->
             Platform.runLater(() -> {
-                Scene currentScene = primaryStage.getScene();
-                if (currentScene != null && currentScene.getRoot() instanceof Parent) {
-                    Parent root = (Parent) currentScene.getRoot();
-                    Label connectionLabel = (Label) root.lookup("#connectionStatus");
+                if (primaryStage.getScene() != null) {
+                    Label connectionLabel = (Label) primaryStage.getScene().lookup("#connectionStatus");
                     if (connectionLabel != null) {
                         connectionLabel.setText(newVal ? "Connected" : "Offline");
                         connectionLabel.getStyleClass().setAll("connection-status",
                             newVal ? "connected" : "disconnected");
                     }
                 }
-            });
-        });
-
-        primaryStage.setTitle("StudyShare Library");
-        sceneManager.switchToLogin();
-        primaryStage.show();
+            }));
     }
 
     @Override
     public void stop() {
+        if (connectionMonitor != null) {
+            connectionMonitor.shutdown();
+        }
         Platform.exit();
-        System.exit(0);
     }
 
     public static void main(String[] args) {

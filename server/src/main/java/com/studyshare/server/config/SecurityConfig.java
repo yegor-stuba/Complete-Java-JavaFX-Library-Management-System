@@ -25,19 +25,21 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/health", "/api/auth/**").permitAll()
-                .anyRequest().authenticated()
-            );
-        return http.build();
-    }
-
-
+   @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/auth/**", "/api/health").permitAll()
+            .requestMatchers("/api/users/**").hasAuthority("ADMIN")
+            .anyRequest().authenticated()
+        )
+        .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+}
     // Update CORS configuration
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

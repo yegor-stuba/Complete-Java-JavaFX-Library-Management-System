@@ -11,7 +11,7 @@ public class ClientConfig {
 
 
     // Application settings
-    public static final String APP_TITLE = "StudyShare Library";
+    public static final String APP_TITLE = "Library Management System";
     public static final int WINDOW_WIDTH = 800;
     public static final int WINDOW_HEIGHT = 600;
 

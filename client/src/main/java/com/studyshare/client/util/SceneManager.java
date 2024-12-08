@@ -3,18 +3,24 @@ package com.studyshare.client.util;
 import com.studyshare.client.config.ClientConfig;
 import com.studyshare.client.controller.BaseController;
 import com.studyshare.common.enums.UserRole;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
+import java.net.URL;
+
+
 public class SceneManager {
     private final Stage primaryStage;
     @Setter
     private ControllerFactory controllerFactory;
+    private static final Logger log = LoggerFactory.getLogger(SceneManager.class);
+
 
     public SceneManager(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -32,45 +38,44 @@ public class SceneManager {
         loadScene("/fxml/book-management.fxml", "Book Management");
     }
 
-    public void switchToUserProfile() {
+  public void switchToUserProfile() {
+    try {
         loadScene("/fxml/user-profile.fxml", "User Profile");
+    } catch (Exception e) {
+        log.error("Failed to load user profile: {}", e.getMessage());
+        AlertUtil.showError("Error", "Failed to load user profile");
     }
-
-    private void loadScene(String fxmlPath, String title) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            if (loader.getLocation() == null) {
-                throw new RuntimeException("FXML file not found: " + fxmlPath);
-            }
-            loader.setControllerFactory(controllerFactory::createController);
-            Parent root = loader.load();
-            Scene scene = new Scene(root, ClientConfig.WINDOW_WIDTH, ClientConfig.WINDOW_HEIGHT);
-            scene.setUserData(loader.getController());
-
-            String cssPath = getClass().getResource("/css/style.css").toExternalForm();
-            if (cssPath != null) {
-                scene.getStylesheets().add(cssPath);
-            }
-
-            primaryStage.setTitle(ClientConfig.APP_TITLE + " - " + title);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (Exception e) {
-            log.error("Failed to load scene: {}", e.getMessage(), e);
-            AlertUtil.showError("Error", "Failed to load scene: " + e.getMessage());
+}
+private void loadScene(String fxmlPath, String title) {
+    try {
+        URL resource = SceneManager.class.getResource(fxmlPath);
+        if (resource == null) {
+            throw new RuntimeException("FXML file not found: " + fxmlPath);
         }
+
+        FXMLLoader loader = new FXMLLoader(resource);
+        loader.setControllerFactory(controllerFactory::createController);
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle(title);
+        primaryStage.show();
+    } catch (Exception e) {
+        log.error("Failed to load scene: {}", e.getMessage());
+        throw new RuntimeException("Failed to load scene: " + e.getMessage());
     }
+}
 
     public void navigateBasedOnRole(UserRole role) {
+        log.debug("Navigating based on role: {}", role);
         try {
-            System.out.println("Navigating for role: " + role); // Debug log
             if (role == UserRole.ADMIN) {
                 loadScene("/fxml/admin-dashboard.fxml", "Admin Dashboard");
             } else {
                 loadScene("/fxml/user-profile.fxml", "User Profile");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Navigation failed: {}", e.getMessage(), e);
             throw new RuntimeException("Navigation failed: " + e.getMessage());
         }
     }
@@ -84,4 +89,17 @@ public class SceneManager {
             }
         }
     }
+
+ public void switchToAdminDashboard() {
+    try {
+        loadScene("/fxml/admin-dashboard.fxml", "Admin Dashboard");
+    } catch (Exception e) {
+        handleSceneLoadError(e, "Failed to load admin dashboard");
+    }
+}
+
+private void handleSceneLoadError(Exception e, String message) {
+    log.error(message + ": {}", e.getMessage());
+    Platform.runLater(() -> AlertUtil.showError("Navigation Error", message));
+}
 }

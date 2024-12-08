@@ -200,3 +200,31 @@
     -fx-text-fill: #d32f2f; /* Warm red */
     -fx-background-color: #ffebee;
 }
+
+/* Style for the MenuBar */
+.menu-bar {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+}
+
+/* Style for the 'System' Menu */
+.menu {
+    -fx-background-color: transparent;
+    -fx-border-color: #4CAF50;  /* Green outline */
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+    -fx-text-fill: #4CAF50;  /* Green text */
+}
+
+/* Style for Menu Items */
+.menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4CAF50;
+    -fx-font-size: 14px;
+}
+
+.menu-item:hover {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}

@@ -44,10 +44,11 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookDTO>> getAllBooks() {
-        return ResponseEntity.ok(bookService.getAllBooks());
-    }
-
+public ResponseEntity<List<BookDTO>> getAllBooks() {
+    List<BookDTO> books = bookService.getAllBooks();
+    System.out.println("Returning books: " + books); // Debug log
+    return ResponseEntity.ok(books);
+}
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
         return ResponseEntity.ok(bookService.getBookById(id));

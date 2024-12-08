@@ -9,6 +9,8 @@ import com.studyshare.server.service.TransactionService;
 import com.studyshare.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +24,13 @@ public class UserController {
     private final BookService bookService;
     private final TransactionService transactionService;
 
+
+
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
+        Logger log = LoggerFactory.getLogger(UserController.class);
+        log.debug("Getting all users");
         return ResponseEntity.ok(userService.getAllUsers());
     }
 

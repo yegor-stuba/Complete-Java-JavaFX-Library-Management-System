@@ -57,7 +57,9 @@ CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);
 
 INSERT OR IGNORE INTO roles (role_name) VALUES ('USER'), ('ADMIN');
 
- -- admin?
+-- Update admin role to match security config
+UPDATE users SET role = 'ADMIN' WHERE username = 'admin';
+
 INSERT OR REPLACE INTO users (username, password, email, role)
 VALUES ('admin', 'admin', 'admin@studyshare.com', 'ADMIN');
 

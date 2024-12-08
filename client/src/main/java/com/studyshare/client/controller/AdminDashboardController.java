@@ -3,12 +3,16 @@ package com.studyshare.client.controller;
 import com.studyshare.client.service.UserService;
 import com.studyshare.client.service.BookService;
 import com.studyshare.client.service.TransactionService;
+import com.studyshare.client.service.exception.AuthorizationException;
+import com.studyshare.client.service.exception.ConflictException;
+import com.studyshare.client.service.exception.ResourceNotFoundException;
 import com.studyshare.client.service.exception.RestClientException;
 import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.SceneManager;
 import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.common.enums.UserRole;
+import jakarta.validation.ValidationException;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -20,6 +24,7 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.naming.AuthenticationException;
 import java.util.concurrent.CompletableFuture;
 
 public class AdminDashboardController {
@@ -76,6 +81,7 @@ public class AdminDashboardController {
             setupSearchListeners();
             setupTables();
             setupUserManagement();
+            setupBookManagement();
             loadInitialData();
             loadData();
         } catch (Exception e) {
@@ -84,23 +90,15 @@ public class AdminDashboardController {
         }
     }
     private void loadData() {
-        CompletableFuture.allOf(
-                userService.getAllUsers()
-                        .thenAccept(userList -> Platform.runLater(() -> {
-                            users.clear();
-                            users.addAll(userList);
-                        })),
-                bookService.getAllBooks()
-                        .thenAccept(bookList -> Platform.runLater(() -> {
-                            books.clear();
-                            books.addAll(bookList);
-                        })),
-                loadStatistics()
-        ).exceptionally(throwable -> {
-            log.error("Failed to load data: {}", throwable.getMessage());
-            Platform.runLater(() -> AlertUtil.showError("Loading Error", "Failed to load dashboard data"));
-            return null;
-        });
+        CompletableFuture.runAsync(this::loadUsers)
+                .thenCompose(v -> CompletableFuture.runAsync(this::loadBooks))
+                .thenCompose(v -> CompletableFuture.runAsync(this::loadStatistics))
+                .exceptionally(throwable -> {
+                    log.error("Failed to load dashboard data: {}", throwable.toString());
+                    Platform.runLater(() -> AlertUtil.showError("Loading Error",
+                            "Failed to load dashboard data"));
+                    return null;
+                });
     }
 
     private CompletableFuture<Void> loadStatistics() {
@@ -228,50 +226,118 @@ public class AdminDashboardController {
         updateStatistics();
     }
 
- private CompletableFuture<Void> loadUsers() {
-    log.debug("Loading users...");
-    return userService.getAllUsers()
-        .thenAccept(userList -> {
-            log.debug("Received {} users from server", userList.size());
-            Platform.runLater(() -> {
-                users.clear();
-                users.addAll(userList);
-                log.debug("Users table updated with {} rows", users.size());
-            });
-        })
+private void loadUsers() {
+    userService.getAllUsers()
+        .thenAccept(userList -> Platform.runLater(() -> {
+            users.clear();
+            users.addAll(userList);
+            log.debug("Successfully loaded {} users", userList.size());
+        }))
         .exceptionally(throwable -> {
-            log.error("Failed to load users: {}", throwable.getMessage(), throwable);
-            Platform.runLater(() -> {
-                if (throwable.getCause() instanceof RestClientException) {
-                    RestClientException restError = (RestClientException) throwable.getCause();
-                    AlertUtil.showError("Loading Error",
-                        String.format("Failed to load users. Status: %d, Details: %s",
-                        restError.getStatusCode(),
-                        restError.getErrorBody()));
-                } else {
-                    AlertUtil.showError("System Error",
-                        String.format("Failed to load users: %s (%s)",
-                        throwable.getMessage(),
-                        throwable.getClass().getSimpleName()));
-                }
-            });
+            String errorMessage;
+            Throwable cause = throwable.getCause();
+            if (cause instanceof AuthorizationException) {
+                errorMessage = "You don't have permission to view users";
+            } else if (cause instanceof AuthenticationException) {
+                errorMessage = "Session expired - please log in again";
+            } else if (cause instanceof ResourceNotFoundException) {
+                errorMessage = "No users found";
+            } else {
+                errorMessage = "Failed to load users: " + throwable.getMessage();
+            }
+            log.error("User loading error: {}", errorMessage);
+            Platform.runLater(() -> AlertUtil.showError("Loading Error", errorMessage));
             return null;
         });
 }
 
-    private CompletableFuture<Void> loadBooks() {
-        bookService.getAllBooks()
-                .thenAccept(bookList -> Platform.runLater(() -> {
+private void handleAddBook(BookDTO book) {
+    bookService.addBook(book)        .thenAccept(response -> Platform.runLater(() -> {
+            AlertUtil.showInfo("Success", "Book added successfully");
+            loadBooks();
+        }))
+        .exceptionally(throwable -> {
+            String errorMessage;
+            Throwable cause = throwable.getCause();
+            if (cause instanceof ValidationException) {
+                errorMessage = "Invalid book data: " + cause.getMessage();
+            } else if (cause instanceof ConflictException) {
+                errorMessage = "Book with this ISBN already exists";
+            } else if (cause instanceof AuthorizationException) {
+                errorMessage = "You don't have permission to add books";
+            } else {
+                errorMessage = "Failed to add book: " + throwable.getMessage();
+            }
+            log.error("Book creation error: {}", errorMessage);
+            Platform.runLater(() -> AlertUtil.showError("Book Error", errorMessage));
+            return null;
+        });
+}
+
+   private CompletableFuture<Void> loadBooks() {
+    return bookService.getAllBooks()
+        .thenAccept(bookList -> {
+            if (bookList != null) {
+                Platform.runLater(() -> {
                     books.clear();
                     books.addAll(bookList);
-                }))
-                .exceptionally(throwable -> {
-                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load books"));
-                    return null;
+                    log.debug("Successfully loaded {} books", bookList.size());
                 });
-        return null;
-    }
+            } else {
+                throw new ResourceNotFoundException("No books available");
+            }
+        })
+        .exceptionally(throwable -> {
+            String errorMessage;
+            Throwable cause = throwable.getCause();
+            if (cause instanceof AuthorizationException) {
+                errorMessage = "You don't have permission to view books";
+            } else if (cause instanceof AuthenticationException) {
+                errorMessage = "Session expired - please log in again";
+            } else if (cause instanceof ResourceNotFoundException) {
+                errorMessage = "No books found in the system";
+            } else if (cause instanceof RestClientException) {
+                errorMessage = "Server error: " + cause.getMessage();
+            } else {
+                errorMessage = "Failed to load books: " + throwable.getMessage();
+            }
+            log.error("Book loading error: {}", errorMessage);
+            Platform.runLater(() -> AlertUtil.showError("Loading Error", errorMessage));
+            return null;
+        });
+}
 
+@FXML
+private void handleAddUser() {
+    UserDTO newUser = showUserDialog(null);    if (newUser != null) {
+        userService.createUser(newUser)
+            .thenAccept(user -> {
+                log.debug("User created successfully: {}", user.getUsername());
+                Platform.runLater(() -> {
+                    users.add(user);
+                    AlertUtil.showInfo("Success", "User " + user.getUsername() + " created successfully");
+                });
+            })
+            .exceptionally(throwable -> {
+                String errorMessage;
+                Throwable cause = throwable.getCause();
+                if (cause instanceof ValidationException) {
+                    errorMessage = "Invalid user data: " + cause.getMessage();
+                } else if (cause instanceof ConflictException) {
+                    errorMessage = "Username or email already exists";
+                } else if (cause instanceof AuthorizationException) {
+                    errorMessage = "You don't have permission to create users";
+                } else if (cause instanceof RestClientException) {
+                    errorMessage = "Server error: " + cause.getMessage();
+                } else {
+                    errorMessage = "Failed to create user: " + throwable.getMessage();
+                }
+                log.error("User creation error: {}", errorMessage);
+                Platform.runLater(() -> AlertUtil.showError("User Creation Error", errorMessage));
+                return null;
+            });
+    }
+}
     private CompletableFuture<Void> updateStatistics() {
         // Update statistics labels with current system data
         userService.getUserCount().thenAccept(count ->
@@ -295,22 +361,7 @@ public class AdminDashboardController {
                 });
     }
 
-    // User management methods
-    @FXML
-    private void handleAddUser() {
-        UserDTO newUser = showUserDialog(null);
-        if (newUser != null) {
-            userService.createUser(newUser)
-                    .thenAccept(user -> Platform.runLater(() -> {
-                        users.add(user);
-                        AlertUtil.showInfo("Success", "User created successfully");
-                    }))
-                    .exceptionally(throwable -> {
-                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to create user"));
-                        return null;
-                    });
-        }
-    }
+
 
     private void handleEditUser(UserDTO user) {
         UserDTO updatedUser = showUserDialog(user);
@@ -349,22 +400,7 @@ public class AdminDashboardController {
         });
     }
 
-    // Book management methods
-    @FXML
-    private void handleAddBook() {
-        BookDTO newBook = showBookDialog(null);
-        if (newBook != null) {
-            bookService.addBook(newBook)
-                    .thenAccept(book -> Platform.runLater(() -> {
-                        books.add(book);
-                        AlertUtil.showInfo("Success", "Book added successfully");
-                    }))
-                    .exceptionally(throwable -> {
-                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to add book"));
-                        return null;
-                    });
-        }
-    }
+
 
     private void handleEditBook(BookDTO book) {
         BookDTO updatedBook = showBookDialog(book);
@@ -532,17 +568,6 @@ public class AdminDashboardController {
         return dialog.showAndWait().orElse(null);
     }
 
-    @FXML
-    private void handleBookSearch() {
-        String searchQuery = bookSearchField.getText();
-        if (!searchQuery.isEmpty()) {
-            bookService.searchBooks(searchQuery)
-                    .thenAccept(results -> Platform.runLater(() -> {
-                        books.clear();
-                        books.addAll(results);
-                    }));
-        }
-    }
 
     @FXML
     private void handleUserSearch() {
@@ -658,6 +683,51 @@ private void refreshBooks() {
             return null;
         });
 }
-
+@FXML
+private void handleAddBook() {
+    BookDTO newBook = showBookDialog(null);
+    if (newBook != null) {
+        bookService.addBook(newBook)
+            .thenAccept(book -> Platform.runLater(() -> {
+                books.add(book);
+                AlertUtil.showInfo("Success", "Book added successfully");
+                loadBooks();
+            }))
+            .exceptionally(throwable -> {
+                String errorMessage;
+                Throwable cause = throwable.getCause();
+                if (cause instanceof ValidationException) {
+                    errorMessage = "Invalid book data: " + cause.getMessage();
+                } else if (cause instanceof ConflictException) {
+                    errorMessage = "Book with this ISBN already exists";
+                } else if (cause instanceof AuthorizationException) {
+                    errorMessage = "You don't have permission to add books";
+                } else {
+                    errorMessage = "Failed to add book: " + throwable.getMessage();
+                }
+                log.error("Book creation error: {}", errorMessage);
+                Platform.runLater(() -> AlertUtil.showError("Book Error", errorMessage));
+                return null;
+            });
+    }
+}
+@FXML
+private void handleBookSearch() {
+    String searchQuery = bookSearchField.getText();
+    if (!searchQuery.isEmpty()) {
+        bookService.searchBooks(searchQuery)
+            .thenAccept(results -> Platform.runLater(() -> {
+                books.clear();
+                books.addAll(results);
+            }))
+            .exceptionally(throwable -> {
+                Platform.runLater(() -> AlertUtil.showError("Search Error",
+                    "Failed to search books: " + throwable.getMessage()));
+                return null;
+            });
+    } else {
+        loadBooks();
+    }
+}
 
 }

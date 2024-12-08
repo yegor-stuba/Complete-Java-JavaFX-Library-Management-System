@@ -4,22 +4,26 @@
 <?import javafx.geometry.Insets?>
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.studyshare.client.controller.UserProfileController">
+      fx:controller="com.studyshare.client.controller.UserProfileController"
+      stylesheets="@../css/style.css">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <Label fx:id="usernameLabel" styleClass="header-label"/>
-    <Label fx:id="emailLabel"/>
-    <Label fx:id="roleLabel"/>
+    <VBox styleClass="profile-header">
+        <Label fx:id="usernameLabel" styleClass="header-label"/>
+        <Label fx:id="emailLabel" styleClass="info-label"/>
+        <Label fx:id="roleLabel" styleClass="info-label"/>
+    </VBox>
 
-    <TableView fx:id="borrowedBooksTable" VBox.vgrow="ALWAYS">
+    <Label text="Borrowed Books" styleClass="section-header"/>
+    <TableView fx:id="borrowedBooksTable" VBox.vgrow="ALWAYS" styleClass="book-table">
         <columns>
-            <TableColumn fx:id="titleColumn" text="Title"/>
-            <TableColumn fx:id="authorColumn" text="Author"/>
-            <TableColumn fx:id="dueDateColumn" text="Due Date"/>
+            <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
+            <TableColumn fx:id="authorColumn" text="Author" prefWidth="150"/>
+            <TableColumn fx:id="dueDateColumn" text="Due Date" prefWidth="150"/>
         </columns>
     </TableView>
 
-    <Button text="Logout" onAction="#handleLogout"/>
+    <Button text="Logout" onAction="#handleLogout" styleClass="primary-button"/>
 </VBox>

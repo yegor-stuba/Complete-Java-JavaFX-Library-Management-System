@@ -42,12 +42,23 @@ public CompletableFuture<Long> getBookCount() {
         }
     }
 
+    @Override
+    public CompletableFuture<List<BookDTO>> getAllBooks() {
+        log.debug("Fetching all books");
+        return restClient.getList("/api/books", new ParameterizedTypeReference<List<BookDTO>>() {})
+                .thenApply(books -> {
+                    log.debug("Received {} books", books.size());
+                    return books;
+                });
+    }
+
+    @Override
     public CompletableFuture<BookDTO> addBook(BookDTO book) {
-        validateBookInput(book);
+        log.debug("Adding new book: {}", book.getTitle());
         return restClient.post("/api/books", book, BookDTO.class)
-                .exceptionally(throwable -> {
-                    log.error("Failed to add book: {}", throwable.getMessage());
-                    throw new CompletionException(throwable);
+                .thenApply(createdBook -> {
+                    log.debug("Book added: {}", createdBook.getTitle());
+                    return createdBook;
                 });
     }
 
@@ -61,10 +72,6 @@ public CompletableFuture<Long> getBookCount() {
         return restClient.delete("/api/books/" + id);
     }
 
-  @Override
-public CompletableFuture<List<BookDTO>> getAllBooks() {
-    return restClient.getList("/api/books", new ParameterizedTypeReference<List<BookDTO>>() {});
-}
 
 @Override
 public CompletableFuture<BookDTO> getBookById(Long id) {

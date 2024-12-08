@@ -52,12 +52,28 @@ public class SceneManager {
     }
 
     public void switchToUserProfile() {
-        try {
-            loadScene("/fxml/user-profile.fxml", "User Profile");
-        } catch (Exception e) {
-            handleSceneLoadError(e, "Failed to load user profile");
+    try {
+        URL resource = getClass().getResource("/fxml/user-profile.fxml");
+        if (resource == null) {
+            throw new IOException("FXML file not found: /fxml/user-profile.fxml");
         }
+
+        FXMLLoader loader = new FXMLLoader(resource);
+        loader.setControllerFactory(controllerFactory::createController);
+
+        Scene scene = new Scene(loader.load());
+        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
+        Platform.runLater(() -> {
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("User Profile");
+            primaryStage.show();
+        });
+    } catch (IOException e) {
+        log.error("Failed to load user profile: {}", e.getMessage());
+        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load user profile"));
     }
+}
 
     public void switchToAdminDashboard() {
         try {

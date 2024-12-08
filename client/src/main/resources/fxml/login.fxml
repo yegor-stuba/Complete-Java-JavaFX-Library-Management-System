@@ -17,7 +17,7 @@
     </VBox>
 
     <VBox styleClass="login-form" maxWidth="400">
-        <Label text="Login" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+        <Label text="Login" styleClass="form-title"/>
         <TextField fx:id="usernameField" promptText="Username" styleClass="input-field"/>
         <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
         <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
@@ -25,7 +25,7 @@
         <Hyperlink text="Create new account" onAction="#handleRegisterLink" styleClass="link-button"/>
     </VBox>
 
-    <VBox styleClass="footer" VBox.vgrow="ALWAYS">
+    <VBox styleClass="footer">
         <Label text="© 2024 Copyright: Veres Group"/>
     </VBox>
 </VBox>

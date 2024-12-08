@@ -35,20 +35,22 @@ public class RestClient {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public void setAuthToken(String token) {
-        this.authToken = token;
-    }
+ private HttpRequest.Builder createRequestBuilder(String path) {
+    HttpRequest.Builder builder = HttpRequest.newBuilder()
+        .uri(URI.create(baseUrl + path))
+        .header("Content-Type", "application/json");
 
-    private HttpRequest.Builder createRequestBuilder(String path) {
-        HttpRequest.Builder builder = HttpRequest.newBuilder()
-            .uri(URI.create(baseUrl + path))
-            .header("Content-Type", "application/json");
-
-        if (authToken != null) {
-            builder.header("Authorization", "Bearer " + authToken);
-        }
-        return builder;
+    if (authToken != null) {
+        log.debug("Adding auth token to request: {}", authToken);
+        builder.header("Authorization", "Bearer " + authToken);
     }
+    return builder;
+}
+
+public void setAuthToken(String token) {
+    this.authToken = token;
+    log.debug("Auth token set: {}", token);
+}
 
     public <T> CompletableFuture<T> get(String path, Class<T> responseType) {
         log.debug("GET Request to {}", path);
@@ -98,31 +100,35 @@ public class RestClient {
             });
     }
 
-    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseType, String operation) {
-        log.debug("Response from {}: {} - {}", operation, response.statusCode(), response.body());
+   private <T> T handleResponse(HttpResponse<String> response, Class<T> responseType, String operation) {
+    log.debug("Response from {}: {} - {}", operation, response.statusCode(), response.body());
 
-        return switch (response.statusCode()) {
-            case 200, 201, 204 -> deserialize(response.body(), responseType);
-            case 400 -> throw new ValidationException("Invalid request data");
-            case 401 -> throw new AuthenticationException("Authentication required");
-            case 403 -> throw new AuthorizationException("Operation not permitted");
-            case 404 -> throw new ResourceNotFoundException("Resource not found");
-            case 409 -> throw new ConflictException("Resource conflict");
-            default -> throw new RestClientException(response.statusCode(),
-                "Operation failed: " + response.body());
-        };
-    }
+    return switch (response.statusCode()) {
+        case 200, 201, 204 -> deserialize(response.body(), responseType);
+        case 400 -> throw new ValidationException("Invalid data: " + response.body());
+        case 401 -> throw new AuthenticationException("Authentication required - please log in again");
+        case 403 -> throw new AuthorizationException("You don't have permission to perform this operation");
+        case 404 -> throw new ResourceNotFoundException("Resource not found: " + operation);
+        case 409 -> throw new ConflictException("Resource already exists: " + response.body());
+        default -> throw new RestClientException(response.statusCode(),
+            "Operation failed: " + operation + " - " + response.body());
+    };
+}
 
-    private <T> T handleListResponse(HttpResponse<String> response,
-                                   ParameterizedTypeReference<T> responseType,
-                                   String operation) {
-        log.debug("Response from {}: {} - {}", operation, response.statusCode(), response.body());
+private <T> T handleListResponse(HttpResponse<String> response,
+                               ParameterizedTypeReference<T> responseType,
+                               String operation) {
+    log.debug("Response from {}: {} - {}", operation, response.statusCode(), response.body());
 
-        if (response.statusCode() == 200) {
-            return deserializeParameterized(response.body(), responseType);
-        }
-        throw new RestClientException(response.statusCode(), response.body());
-    }
+    return switch (response.statusCode()) {
+        case 200 -> deserializeParameterized(response.body(), responseType);
+        case 401 -> throw new AuthenticationException("Session expired - please log in again");
+        case 403 -> throw new AuthorizationException("Insufficient permissions to view this data");
+        case 404 -> throw new ResourceNotFoundException("Data not found: " + operation);
+        default -> throw new RestClientException(response.statusCode(),
+            "Failed to fetch data: " + operation + " - " + response.body());
+    };
+}
 
     private <T> T deserialize(String response, Class<T> responseType) {
         try {

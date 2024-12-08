@@ -5,73 +5,69 @@
 
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.studyshare.client.controller.AdminDashboardController"
-      stylesheets="@../css/style.css">
+      stylesheets="@../css/style.css"
+      styleClass="admin-dashboard">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
-    <MenuBar styleClass="menu-bar">
-        <Menu text="System" styleClass="menu">
-            <MenuItem text="Refresh Data" onAction="#refreshData" styleClass="menu-item"/>
-            <MenuItem text="Logout" onAction="#handleLogout" styleClass="menu-item"/>
+    <MenuBar styleClass="admin-menu-bar">
+        <Menu text="System" styleClass="admin-menu">
+            <MenuItem text="Refresh Data" onAction="#refreshData" styleClass="admin-menu-item"/>
+            <MenuItem text="Logout" onAction="#handleLogout" styleClass="admin-menu-item"/>
         </Menu>
     </MenuBar>
 
     <TabPane VBox.vgrow="ALWAYS" styleClass="admin-tab-pane">
         <Tab text="User Management" closable="false">
-            <VBox spacing="10" styleClass="management-container">
-                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="search-bar">
+            <VBox spacing="10" styleClass="admin-section">
+                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="admin-search-bar">
                     <TextField fx:id="userSearchField" promptText="Search users..."
-                               styleClass="search-field" HBox.hgrow="ALWAYS"/>
-                    <Button text="Search" onAction="#handleUserSearch" styleClass="primary-button"/>
-                    <Button text="Add User" onAction="#handleAddUser" styleClass="primary-button"/>
+                             styleClass="admin-search-field" HBox.hgrow="ALWAYS"/>
+                    <Button text="Search" onAction="#handleUserSearch" styleClass="admin-button"/>
+                    <Button text="Add User" onAction="#handleAddUser" styleClass="admin-button"/>
                 </HBox>
-
-                <TableView fx:id="usersTable" VBox.vgrow="ALWAYS">
+                <TableView fx:id="usersTable" VBox.vgrow="ALWAYS" styleClass="admin-table">
                     <columns>
-                        <TableColumn fx:id="userIdColumn" text="ID" prefWidth="50"/>
-                        <TableColumn fx:id="usernameColumn" text="Username" prefWidth="150"/>
-                        <TableColumn fx:id="emailColumn" text="Email" prefWidth="200"/>
-                        <TableColumn fx:id="roleColumn" text="Role" prefWidth="100"/>
-                        <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
+                        <TableColumn fx:id="userIdColumn" text="ID" styleClass="admin-table-column"/>
+                        <TableColumn fx:id="usernameColumn" text="Username" styleClass="admin-table-column"/>
+                        <TableColumn fx:id="emailColumn" text="Email" styleClass="admin-table-column"/>
+                        <TableColumn fx:id="roleColumn" text="Role" styleClass="admin-table-column"/>
+                        <TableColumn fx:id="actionsColumn" text="Actions" styleClass="admin-table-column"/>
                     </columns>
                 </TableView>
             </VBox>
         </Tab>
 
-        <!-- Book Management Tab -->
         <Tab text="Book Management" closable="false">
-            <VBox spacing="10">
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <TextField fx:id="bookSearchField" promptText="Search books..." HBox.hgrow="ALWAYS"/>
-                    <Button text="Search" onAction="#handleBookSearch"/>
-                    <Button text="Add Book" onAction="#handleAddBook"/>
+            <VBox spacing="10" styleClass="admin-section">
+                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="admin-search-bar">
+                    <TextField fx:id="bookSearchField" promptText="Search books..."
+                             styleClass="admin-search-field" HBox.hgrow="ALWAYS"/>
+                    <Button text="Search" onAction="#handleBookSearch" styleClass="admin-button"/>
+                    <Button text="Add Book" onAction="#handleAddBook" styleClass="admin-button"/>
                 </HBox>
-
-                <TableView fx:id="booksTable" VBox.vgrow="ALWAYS">
+                <TableView fx:id="booksTable" VBox.vgrow="ALWAYS" styleClass="admin-table">
                     <columns>
-                        <TableColumn fx:id="bookIdColumn" text="ID" prefWidth="50"/>
-                        <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
-                        <TableColumn fx:id="authorColumn" text="Author" prefWidth="150"/>
-                        <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="100"/>
-                        <TableColumn fx:id="copiesColumn" text="Available Copies" prefWidth="100"/>
-                        <TableColumn fx:id="bookActionsColumn" text="Actions" prefWidth="150">
-                        </TableColumn>
+                        <TableColumn fx:id="bookIdColumn" text="ID" styleClass="admin-table-column"/>
+                        <TableColumn fx:id="titleColumn" text="Title" styleClass="admin-table-column"/>
+                        <TableColumn fx:id="authorColumn" text="Author" styleClass="admin-table-column"/>
+                        <TableColumn fx:id="isbnColumn" text="ISBN" styleClass="admin-table-column"/>
+                        <TableColumn fx:id="copiesColumn" text="Available Copies" styleClass="admin-table-column"/>
+                        <TableColumn fx:id="bookActionsColumn" text="Actions" styleClass="admin-table-column"/>
                     </columns>
                 </TableView>
             </VBox>
         </Tab>
 
-        <!-- System Statistics Tab -->
         <Tab text="Statistics" closable="false">
-            <VBox spacing="20" alignment="CENTER_LEFT">
+            <VBox spacing="20" styleClass="admin-statistics">
                 <padding>
                     <Insets top="20" right="20" bottom="20" left="20"/>
                 </padding>
-                <Label fx:id="totalUsersLabel" styleClass="stat-label"/>
-                <Label fx:id="totalBooksLabel" styleClass="stat-label"/>
-                <Label fx:id="activeLoansLabel" styleClass="stat-label"/>
-                <Label fx:id="totalTransactionsLabel" styleClass="stat-label"/>
+                <Label fx:id="totalUsersLabel" styleClass="admin-stat-label"/>
+                <Label fx:id="totalBooksLabel" styleClass="admin-stat-label"/>
+                <Label fx:id="activeLoansLabel" styleClass="admin-stat-label"/>
             </VBox>
         </Tab>
     </TabPane>

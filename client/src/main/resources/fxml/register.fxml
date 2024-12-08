@@ -3,21 +3,26 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="20" alignment="CENTER" styleClass="register-container" xmlns:fx="http://javafx.com/fxml"
+<VBox spacing="20" alignment="TOP_CENTER" styleClass="auth-container" stylesheets="@../css/style.css"
+      xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.studyshare.client.controller.RegisterController">
-    <padding>
-        <Insets top="30" right="40" bottom="30" left="40"/>
-    </padding>
 
-    <Label text="Create Account" styleClass="header-label"/>
+    <VBox styleClass="header">
+        <Label text="Veres Library" styleClass="header-label"/>
+    </VBox>
 
-    <TextField fx:id="usernameField" promptText="Username" styleClass="input-field"/>
-    <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
-    <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
-    <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" styleClass="input-field"/>
-    <Label fx:id="errorLabel" styleClass="error-label"/>
+    <VBox styleClass="login-form" maxWidth="400">
+        <Label text="Create Account" styleClass="form-title"/>
+        <TextField fx:id="usernameField" promptText="Username" styleClass="input-field"/>
+        <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
+        <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" styleClass="input-field"/>
+        <Label fx:id="errorLabel" styleClass="error-label"/>
+        <Button text="Register" onAction="#handleRegister" styleClass="primary-button"/>
+        <Hyperlink text="Back to Login" onAction="#handleBackToLogin" styleClass="link-button"/>
+    </VBox>
 
-
-    <Button text="Register" onAction="#handleRegister" styleClass="primary-button"/>
-    <Hyperlink text="Back to Login" onAction="#handleBackToLogin" styleClass="link-button"/>
+    <VBox styleClass="footer">
+        <Label text="© 2024 Copyright: Veres Group"/>
+    </VBox>
 </VBox>

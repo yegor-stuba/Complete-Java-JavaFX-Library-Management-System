@@ -52,7 +52,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CompletableFuture<List<UserDTO>> getAllUsers() {
-        return restClient.getList("/api/users", new ParameterizedTypeReference<List<UserDTO>>() {});
+        log.debug("Fetching all users");
+        return restClient.getList("/api/users", new ParameterizedTypeReference<List<UserDTO>>() {})
+                .thenApply(users -> {
+                    log.debug("Received {} users", users.size());
+                    return users;
+                });
+    }
+
+    @Override
+    public CompletableFuture<UserDTO> createUser(UserDTO userDTO) {
+        log.debug("Creating new user: {}", userDTO.getUsername());
+        return restClient.post("/api/users", userDTO, UserDTO.class)
+                .thenApply(user -> {
+                    log.debug("User created: {}", user.getUsername());
+                    return user;
+                });
     }
 
     @Override
@@ -97,10 +112,6 @@ public class UserServiceImpl implements UserService {
         return restClient.get("/api/users/count", Long.class);
     }
 
-    @Override
-    public CompletableFuture<UserDTO> createUser(UserDTO userDTO) {
-        return restClient.post("/api/users", userDTO, UserDTO.class);
-    }
 
     private void validateUserInput(UserDTO userDTO) {
         if (userDTO.getUsername().length() < 3) {

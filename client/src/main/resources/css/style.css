@@ -290,3 +290,34 @@
     -fx-border-radius: 4px;
     -fx-border-color: #ffa726;
 }
+
+
+
+.form-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff8f00;
+    -fx-padding: 0 0 20px 0;
+}
+
+.auth-container {
+    -fx-background-color: #fff9e6;
+    -fx-padding: 30px;
+}
+
+.login-form {
+    -fx-spacing: 15px;
+    -fx-padding: 30px;
+    -fx-background-color: #fff3e0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
+    -fx-background-radius: 5px;
+}
+
+.input-field {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 40px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #ffc107;
+}

@@ -1,5 +1,6 @@
 package com.studyshare.client.service;
 
+import com.studyshare.client.config.ClientConfig;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.URI;
+import java.time.Duration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -16,36 +18,35 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 public class ConnectionMonitor {
-    private final String serverUrl = "http://localhost:8080/api/health";
+    private final String serverUrl = ClientConfig.BASE_URL + "/api/health";
     private final HttpClient httpClient;
     private final BooleanProperty connected = new SimpleBooleanProperty(false);
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     public ConnectionMonitor() {
         this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(java.time.Duration.ofSeconds(5))
+                .connectTimeout(Duration.ofSeconds(5))
                 .build();
         startMonitoring();
     }
 
     private void startMonitoring() {
-        scheduler.scheduleAtFixedRate(this::checkConnection, 0, 5, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::checkConnection, 0, 10, TimeUnit.SECONDS);
     }
 
     private void checkConnection() {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(serverUrl))
+                    .timeout(Duration.ofSeconds(5))
                     .GET()
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            boolean isConnected = response.statusCode() == 200;
-            connected.set(isConnected);
-            log.debug("Server connection status: {}", isConnected);
+            connected.set(response.statusCode() == 200);
         } catch (Exception e) {
             connected.set(false);
-            log.warn("Server connection failed: {}", e.getMessage());
+            log.debug("Server connection check failed: {}", e.getMessage());
         }
     }
 
@@ -61,3 +62,5 @@ public class ConnectionMonitor {
         scheduler.shutdown();
     }
 }
+
+

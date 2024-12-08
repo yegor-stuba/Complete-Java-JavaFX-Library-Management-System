@@ -9,3 +9,7 @@
 2024-12-08 05:56:18 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
 2024-12-08 06:04:22 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
 2024-12-08 12:29:50 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 12:37:46 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 12:41:05 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 12:52:22 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 12:57:31 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use

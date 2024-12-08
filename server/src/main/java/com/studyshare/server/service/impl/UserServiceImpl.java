@@ -132,10 +132,15 @@ public UserDetails loadUserByUsername(String username) throws UsernameNotFoundEx
     }
 
     @Override
-    public boolean authenticate(String username, String password) {
-        UserDTO user = findByUsername(username);
+public boolean authenticate(String username, String password) {
+    try {
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return passwordEncoder.matches(password, user.getPassword());
+    } catch (Exception e) {
+        return false;
     }
+}
 
     @Override
     public void logout() {

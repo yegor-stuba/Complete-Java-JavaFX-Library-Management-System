@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/health")
 public class HealthController {
+
     @GetMapping
-    public ResponseEntity<String> checkHealth() {
-        return ResponseEntity.ok("Service is running");
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("OK");
     }
 }

@@ -1,6 +1,7 @@
 package com.studyshare.server.service;
 
 import com.studyshare.common.dto.UserDTO;
+import com.studyshare.common.enums.UserRole;
 import com.studyshare.server.exception.InvalidTokenException;
 import com.studyshare.server.security.JwtTokenProvider;
 import com.studyshare.server.security.dto.AuthenticationRequest;
@@ -20,10 +21,9 @@ public class AuthenticationService {
     private final SecurityAuditService securityAuditService;
     private final PasswordEncoder passwordEncoder;
 
-    public String generateToken(Authentication authentication) {
-        return tokenProvider.generateToken(authentication);
+    public String generateToken(String username, UserRole role) {
+        return tokenProvider.generateToken(username, role);
     }
-
 
 public boolean authenticate(String username, String password) {
     try {

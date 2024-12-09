@@ -5,27 +5,32 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @Table(name = "transactions")
+@Data
 public class Transaction {
     @Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-@Column(name = "transaction_id", columnDefinition = "INTEGER")
-private Long transactionId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long transactionId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TransactionType type;
 
+    @Column(nullable = false)
     private LocalDateTime date;
 
+    @Column(name = "due_date")
     private LocalDateTime dueDate;
+
+    @Column(name = "active")
+    private boolean active;
 }

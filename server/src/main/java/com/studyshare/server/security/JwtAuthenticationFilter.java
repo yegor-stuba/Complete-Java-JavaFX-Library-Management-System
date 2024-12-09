@@ -33,38 +33,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.userService = userService;
     }
 
-@Override
+   @Override
 protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
     FilterChain chain) throws ServletException, IOException {
     try {
         String token = getJwtFromRequest(request);
-        log.debug("Processing request to: {} with token present: {}",
-            request.getRequestURI(), token != null);
-
-        if (StringUtils.hasText(token)) {
-            if (!tokenProvider.validateToken(token)) {
-                log.warn("Invalid token provided");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-
+        if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
             String username = tokenProvider.getUsernameFromToken(token);
             UserDetails userDetails = userService.loadUserByUsername(username);
-
             UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities()
+                );
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug("Successfully authenticated user: {}", username);
         }
-
         chain.doFilter(request, response);
     } catch (Exception ex) {
-        log.error("Authentication error: {}", ex.getMessage(), ex);
+        log.error("Authentication error: {}", ex.getMessage());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("Authentication failed: " + ex.getMessage());
+    }
+}
+
+
+private void logAuthenticationAttempt(String token, String requestUri) {
+    if (token != null) {
+        try {
+            String username = tokenProvider.getUsernameFromToken(token);
+            log.debug("Authentication attempt - User: {}, URI: {}, Token Valid: {}",
+                username, requestUri, tokenProvider.validateToken(token));
+        } catch (Exception e) {
+            log.warn("Failed to process authentication attempt: {}", e.getMessage());
+        }
     }
 }
 

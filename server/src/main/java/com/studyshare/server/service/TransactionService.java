@@ -9,4 +9,6 @@ public interface TransactionService {
     List<TransactionDTO> getUserTransactions(Long userId);
     List<TransactionDTO> getBookTransactions(Long bookId);
     void completeTransaction(Long id);
+    Long getActiveLoansCount();
+    List<TransactionDTO> getActiveTransactions();
 }

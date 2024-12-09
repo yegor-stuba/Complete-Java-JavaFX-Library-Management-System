@@ -103,27 +103,25 @@ public class UserServiceImpl implements UserService {
         return CompletableFuture.completedFuture(findByUsername(username));
     }
 
-        @Override
-public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    if ("admin".equals(username)) {
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        if ("admin".equals(username)) {
+            return org.springframework.security.core.userdetails.User.builder()
+                    .username("admin")
+                    .password(passwordEncoder.encode("admin"))
+                    .roles("ADMIN")
+                    .build();
+        }
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
         return org.springframework.security.core.userdetails.User.builder()
-                  .username("admin")
-                  .password(passwordEncoder.encode("admin"))
-                  .roles("ADMIN")
-                  .build();
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .roles(user.getRole().name())
+                .build();
     }
-
-    UserDTO user = findByUsername(username);
-    if (user == null) {
-        throw new UsernameNotFoundException("User not found");
-    }
-
-    return org.springframework.security.core.userdetails.User.builder()
-              .username(user.getUsername())
-              .password(user.getPassword())
-              .roles(user.getRole().name())
-              .build();
-}
 
     @Override
     public void validateToken(String token) {
@@ -159,7 +157,10 @@ public boolean authenticate(String username, String password) {
         return false;
     }
 }
-
+@Override
+public Long getUserCount() {
+    return userRepository.count();
+}
     @Override
     public void logout() {
         SecurityContextHolder.clearContext();

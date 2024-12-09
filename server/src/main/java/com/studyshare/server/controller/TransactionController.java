@@ -3,11 +3,13 @@ package com.studyshare.server.controller;
 import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.server.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/transactions")
 @RequiredArgsConstructor
@@ -38,5 +40,15 @@ public class TransactionController {
     public ResponseEntity<Void> completeTransaction(@PathVariable Long id) {
         transactionService.completeTransaction(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/count/active")
+    public ResponseEntity<Long> getActiveLoansCount() {
+        try {
+            return ResponseEntity.ok(transactionService.getActiveLoansCount());
+        } catch (Exception e) {
+            log.error("Failed to get active loans count", e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

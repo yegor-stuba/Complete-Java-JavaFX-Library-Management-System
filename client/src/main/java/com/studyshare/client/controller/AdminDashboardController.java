@@ -25,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.naming.AuthenticationException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 
 public class AdminDashboardController {
@@ -73,6 +75,13 @@ public class AdminDashboardController {
     @FXML
     public void initialize() {
         log.debug("Initializing AdminDashboardController");
+        Timer sessionCheckTimer = new Timer(true);
+        sessionCheckTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                checkSessionStatus();
+            }
+        }, 0, 30000);
         try {
             Thread.sleep(100);
             setupTables();
@@ -83,7 +92,6 @@ public class AdminDashboardController {
             setupSearchListeners();
             setupUserManagement();
             setupBookManagement();
-            loadInitialData();
             loadData();
         } catch (Exception e) {
             log.error("Failed to initialize dashboard", e);
@@ -92,7 +100,8 @@ public class AdminDashboardController {
     }
 
 
-  private void loadInitialData() {
+
+   private void loadInitialData() {
     if (!userService.isAdmin()) {
         Platform.runLater(() -> {
             AlertUtil.showError("Access Denied", "Admin privileges required");
@@ -106,28 +115,110 @@ public class AdminDashboardController {
         loadBooks(),
         updateStatistics()
     ).exceptionally(throwable -> {
-        log.error("Failed to load initial data", throwable);
-        Platform.runLater(() -> {
-            if (throwable.getCause() instanceof AuthenticationException) {
-                sceneManager.switchToLogin();
-            }
-            AlertUtil.showError("Error", "Failed to load data: " + throwable.getMessage());
-        });
+        handleLoadError(throwable);
         return null;
     });
 }
 
-    private void loadData() {
-        CompletableFuture.runAsync(this::loadUsers)
-                .thenCompose(v -> CompletableFuture.runAsync(this::loadBooks))
-                .thenCompose(v -> CompletableFuture.runAsync(this::loadStatistics))
-                .exceptionally(throwable -> {
-                    log.error("Failed to load dashboard data: {}", throwable.toString());
-                    Platform.runLater(() -> AlertUtil.showError("Loading Error",
-                            "Failed to load dashboard data"));
-                    return null;
-                });
+private void handleLoadError(Throwable throwable) {
+    String errorMessage;
+    if (throwable.getCause() instanceof AuthenticationException) {
+        errorMessage = "Session expired - please log in again";
+        Platform.runLater(sceneManager::switchToLogin);
+    } else if (throwable.getCause() instanceof AuthorizationException) {
+        errorMessage = "You don't have permission to view this data";
+    } else {
+        errorMessage = "Failed to load data: " + throwable.getMessage();
     }
+    Platform.runLater(() -> AlertUtil.showError("Error", errorMessage));
+}
+
+private void checkSessionStatus() {
+    userService.getCurrentUser()
+        .thenAccept(user -> {
+            if (!user.getRole().equals(UserRole.ADMIN)) {
+                Platform.runLater(() -> {
+                    AlertUtil.showWarning("Access Denied", "Admin privileges required");
+                    sceneManager.switchToLogin();
+                });
+            }
+        })
+        .exceptionally(throwable -> {
+            Platform.runLater(() -> {
+                AlertUtil.showError("Session Expired", "Please log in again");
+                sceneManager.switchToLogin();
+            });
+            return null;
+        });
+}
+
+
+
+
+  private CompletableFuture<Void> loadData() {
+    return userService.getCurrentUser()
+        .thenCompose(user -> {
+            if (!UserRole.ADMIN.equals(user.getRole())) {
+                throw new AuthorizationException("Admin privileges required");
+            }
+            return CompletableFuture.allOf(
+                loadUsers(),
+                loadBooks(),
+                updateStatistics()
+            );
+        })
+        .exceptionally(throwable -> {
+            Platform.runLater(() -> {
+                if (throwable instanceof AuthenticationException) {
+                    sceneManager.switchToLogin();
+                } else {
+                    AlertUtil.showError("Error", throwable.getMessage());
+                }
+            });
+            return null;
+        });
+}
+
+private void checkAdminAccess() {
+    userService.getCurrentUser()
+        .thenAccept(user -> {
+            if (user == null || !UserRole.ADMIN.equals(user.getRole())) {
+                log.warn("Non-admin user attempted to access admin dashboard");
+                Platform.runLater(() -> {
+                    AlertUtil.showWarning(
+                        "Access Restricted",
+                        "This section requires administrator privileges.\nPlease log in with an admin account."
+                    );
+                    sceneManager.switchToLogin();
+                });
+            } else {
+                log.debug("Admin access verified for user: {}", user.getUsername());
+            }
+        })
+        .exceptionally(throwable -> {
+            log.error("Authentication check failed: {}", throwable.getMessage());
+            Platform.runLater(() -> {
+                if (throwable.getCause() instanceof AuthenticationException) {
+                    AlertUtil.showError(
+                        "Session Expired",
+                        "Your session has expired.\nPlease log in again to continue."
+                    );
+                } else if (throwable.getCause() instanceof AuthorizationException) {
+                    AlertUtil.showError(
+                        "Access Denied",
+                        "You don't have permission to access this section."
+                    );
+                } else {
+                    AlertUtil.showError(
+                        "System Error",
+                        "Failed to verify admin access.\nPlease try logging in again."
+                    );
+                }
+                sceneManager.switchToLogin();
+            });
+            return null;
+        });
+}
 
     private CompletableFuture<Void> loadStatistics() {
         return CompletableFuture.allOf(
@@ -143,11 +234,7 @@ public class AdminDashboardController {
         );
     }
 
-    private void checkAdminAccess() {
-    if (!userService.isAdmin()) {
-        throw new SecurityException("Admin access required");
-    }
-}
+
 
     private void setupTables() {
         // Setup User Table

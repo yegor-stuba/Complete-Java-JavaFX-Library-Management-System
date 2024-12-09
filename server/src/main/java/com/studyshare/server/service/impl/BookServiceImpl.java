@@ -127,16 +127,19 @@ public BookDTO updateBook(Long id, BookDTO bookDTO) {
         return convertToDTO(book);
     }
 
-    private BookDTO convertToDTO(Book book) {
-        BookDTO dto = new BookDTO();
-        dto.setBookId(book.getBookId());
-        dto.setTitle(book.getTitle());
-        dto.setAuthor(book.getAuthor());
-        dto.setIsbn(book.getIsbn());
-        dto.setAvailableCopies(book.getAvailableCopies());
+   private BookDTO convertToDTO(Book book) {
+    BookDTO dto = new BookDTO();
+    dto.setBookId(book.getBookId());
+    dto.setTitle(book.getTitle());
+    dto.setAuthor(book.getAuthor());
+    dto.setIsbn(book.getIsbn());
+    dto.setAvailableCopies(book.getAvailableCopies());
+    // Add null check for owner
+    if (book.getOwner() != null) {
         dto.setOwnerId(book.getOwner().getUserId());
-        return dto;
     }
+    return dto;
+}
     @Override
     @Transactional
     public void deleteBook(Long bookId) {

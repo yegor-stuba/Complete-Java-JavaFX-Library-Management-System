@@ -61,23 +61,24 @@ public boolean isAdmin() {
         UserDTO currentUser = getCurrentUser().join();
         return currentUser != null && UserRole.ADMIN.equals(currentUser.getRole());
     } catch (Exception e) {
-        log.error("Error checking admin status", e);
+        log.error("Error checking admin status: {}", e.getMessage());
         return false;
     }
 }
 
 @Override
 public CompletableFuture<List<UserDTO>> getAllUsers() {
-    if (!isAdmin()) {
-        CompletableFuture<List<UserDTO>> future = new CompletableFuture<>();
-        future.completeExceptionally(new AuthorizationException("Admin access required"));
-        return future;
-    }
-
     return restClient.getList("/api/users",
-            new ParameterizedTypeReference<>() {
-            });
+        new ParameterizedTypeReference<List<UserDTO>>() {});
 }
+
+@Override
+public CompletableFuture<List<UserDTO>> searchUsers(String query) {
+    return restClient.getList("/api/users/search?query=" + query,
+        new ParameterizedTypeReference<List<UserDTO>>() {});
+}
+
+
 
     @Override
     public CompletableFuture<UserDTO> createUser(UserDTO userDTO) {
@@ -88,6 +89,8 @@ public CompletableFuture<List<UserDTO>> getAllUsers() {
                     return user;
                 });
     }
+
+
 
     @Override
     public CompletableFuture<UserDTO> updateUser(Long id, UserDTO userDTO) {
@@ -109,11 +112,7 @@ public CompletableFuture<List<UserDTO>> getAllUsers() {
         return restClient.delete("/api/users/" + id);
     }
 
-    @Override
-    public CompletableFuture<List<UserDTO>> searchUsers(String query) {
-        return restClient.getList("/api/users/search?query=" + query,
-            new ParameterizedTypeReference<List<UserDTO>>() {});
-    }
+
 
     @Override
     public CompletableFuture<Void> logout() {

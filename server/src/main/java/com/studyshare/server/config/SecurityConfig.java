@@ -1,5 +1,4 @@
 package com.studyshare.server.config;
-
 import com.studyshare.server.security.JwtAuthenticationFilter;
 import com.studyshare.server.security.JwtTokenProvider;
 import com.studyshare.server.service.UserService;
@@ -7,7 +6,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,7 +25,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -34,26 +34,27 @@ public class SecurityConfig {
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider, UserService userService) throws Exception {
     http
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .csrf(csrf -> csrf.disable())
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")
-            .requestMatchers("/api/users/**").hasAnyRole("ADMIN", "USER")
-            .requestMatchers("/api/books/**").authenticated()
+            .requestMatchers("/api/auth/**", "/api/health").permitAll()
+            .requestMatchers("/api/admin/**", "/api/users/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers("/api/transactions/**").authenticated()
+            .requestMatchers(HttpMethod.GET, "/api/books/**").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/books/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/api/books/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasAuthority("ROLE_ADMIN")
             .anyRequest().authenticated()
         )
-        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userService),
-            UsernamePasswordAuthenticationFilter.class)
-        .exceptionHandling(handling -> handling
-            .authenticationEntryPoint((request, response, ex) -> {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Unauthorized: " + ex.getMessage());
-            })
+        .addFilterBefore(
+            new JwtAuthenticationFilter(jwtTokenProvider, userService),
+            UsernamePasswordAuthenticationFilter.class
         );
-
     return http.build();
 }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

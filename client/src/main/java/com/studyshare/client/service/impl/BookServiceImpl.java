@@ -8,6 +8,7 @@ import com.studyshare.client.service.exception.ResourceNotFoundException;
 import com.studyshare.common.dto.BookDTO;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 import org.springframework.core.ParameterizedTypeReference;
 
@@ -18,6 +19,8 @@ import com.studyshare.common.dto.UserDTO;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.naming.AuthenticationException;
 
 
 public class BookServiceImpl implements BookService {
@@ -49,11 +52,19 @@ public CompletableFuture<Long> getBookCount() {
 @Override
 public CompletableFuture<List<BookDTO>> getAllBooks() {
     return restClient.getList("/api/books",
-        new ParameterizedTypeReference<List<BookDTO>>() {})
-            .exceptionally(throwable -> {
-                log.error("Failed to fetch books", throwable);
-                throw new BookOperationException("FETCH", null, "Failed to fetch books: " + throwable.getMessage());
-            });
+        new ParameterizedTypeReference<List<BookDTO>>() {});
+}
+
+@Override
+public CompletableFuture<List<BookDTO>> searchBooks(String query) {
+    return restClient.getList("/api/books/search?query=" + query,
+        new ParameterizedTypeReference<List<BookDTO>>() {});
+}
+
+@Override
+public CompletableFuture<List<BookDTO>> getAvailableBooks() {
+    return restClient.getList("/api/books/available",
+        new ParameterizedTypeReference<List<BookDTO>>() {});
 }
 
     @Override
@@ -82,19 +93,9 @@ public CompletableFuture<BookDTO> getBookById(Long id) {
     return restClient.get("/api/books/" + id, BookDTO.class);
 }
 
-@Override
-public CompletableFuture<List<BookDTO>> searchBooks(String query) {
-    return restClient.getList("/api/books/search?query=" + query,
-        new ParameterizedTypeReference<List<BookDTO>>() {});
-}
+
 
 @Override
-public CompletableFuture<List<BookDTO>> getAvailableBooks() {
-        return restClient.getList("/api/books/available",
-            new ParameterizedTypeReference<List<BookDTO>>() {});
-}
-
-    @Override
 public CompletableFuture<BookDTO> borrowBook(Long bookId) {
     return restClient.post("/api/books/" + bookId + "/borrow", null, BookDTO.class)
         .exceptionally(throwable -> {
@@ -108,8 +109,8 @@ public CompletableFuture<BookDTO> borrowBook(Long bookId) {
         });
 }
 
-    @Override
-    public CompletableFuture<BookDTO> returnBook(Long bookId) {
-        return restClient.post("/api/books/" + bookId + "/return", null, BookDTO.class);
-    }
+@Override
+public CompletableFuture<BookDTO> returnBook(Long bookId) {
+    return restClient.post("/api/books/" + bookId + "/return", null, BookDTO.class);
+}
 }

@@ -20,7 +20,7 @@ public class TransactionUtil {
             TableColumn<TransactionDTO, String> statusColumn) {
 
         bookTitleColumn.setCellValueFactory(data ->
-            new SimpleStringProperty(data.getValue().getBook().getTitle()));
+            new SimpleStringProperty(data.getValue().getBookTitle()));
 
         typeColumn.setCellValueFactory(data ->
             new SimpleStringProperty(data.getValue().getType().toString()));

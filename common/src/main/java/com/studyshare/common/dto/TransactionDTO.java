@@ -17,10 +17,11 @@ public class TransactionDTO {
     private Long transactionId;
     private Long userId;
     private Long bookId;
-    private String bookTitle;  // Added field
+    private String bookTitle;
     private TransactionType type;
     private LocalDateTime date;
     private LocalDateTime dueDate;
-    private boolean completed;  // Added field
-    private BookDTO book;      // Added field for book details
+    private boolean active;
+    private boolean completed;
+    private BookDTO book;
 }

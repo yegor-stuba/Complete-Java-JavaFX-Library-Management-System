@@ -8,10 +8,8 @@ import lombok.Data;
 @Table(name = "books")
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "book_generator")
-    @TableGenerator(name = "book_generator", table = "hibernate_sequences",
-            pkColumnName = "sequence_name", valueColumnName = "next_val",
-            pkColumnValue = "books", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "book_id") // Match the column name in schema
     private Long bookId;
 
     @Column(nullable = false)
@@ -23,9 +21,10 @@ public class Book {
     @Column(unique = true)
     private String isbn;
 
+    @Column(name = "available_copies")
     private Integer availableCopies;
 
-   @ManyToOne
-@JoinColumn(name = "owner_id", columnDefinition = "INTEGER")
-private User owner;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
 }

@@ -29,18 +29,20 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private int jwtExpiration;
 
- public String generateToken(String username, UserRole role) {
+
+    public String generateToken(String username, UserRole role) {
     Date now = new Date();
     Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
     return Jwts.builder()
         .setSubject(username)
-        .claim("role", role.name())
+        .claim("roles", "ROLE_" + role.name())
         .setIssuedAt(now)
         .setExpiration(expiryDate)
         .signWith(getSigningKey())
         .compact();
 }
+
 
     public boolean validateToken(String token) {
         try {

@@ -19,4 +19,5 @@ public interface UserService extends UserDetailsService {
     void validateToken(String token);
     boolean authenticate(String username, String password);
     void logout();
+    Long getUserCount();
 }

@@ -30,19 +30,20 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider tokenProvider;
     private final UserService userService;
+    private final JwtTokenProvider tokenProvider;
     private final UserValidator userValidator;
     private final LoginAttemptService loginAttemptService;
     private final SecurityAuditService securityAuditService;
     private final AuthenticationService authService;
 
-  @PostMapping("/login")
+    @PostMapping("/login")
 public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
     try {
         String username = request.getUsername().trim();
-        UserDTO user = userService.findByUsername(username);
+        log.debug("Login attempt for user: '{}'", username);
 
+        UserDTO user = userService.findByUsername(username);
         if (user != null && userService.authenticate(username, request.getPassword())) {
             String token = tokenProvider.generateToken(username, user.getRole());
             return ResponseEntity.ok(AuthenticationResponse.builder()

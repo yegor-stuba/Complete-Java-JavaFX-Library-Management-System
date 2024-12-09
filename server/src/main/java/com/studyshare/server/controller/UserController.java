@@ -33,19 +33,23 @@ public class UserController {
 
 
 
- @GetMapping
-@PreAuthorize("hasRole('ADMIN')")
+@GetMapping
+@PreAuthorize("hasRole('ADMIN')")  // Ensure this annotation is present
 public ResponseEntity<List<UserDTO>> getAllUsers() {
     try {
-        log.debug("Fetching all users");
         List<UserDTO> users = userService.getAllUsers();
-        log.debug("Found {} users", users.size());
         return ResponseEntity.ok(users);
     } catch (Exception e) {
         log.error("Failed to fetch users", e);
-        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch users");
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+
+    @GetMapping("/count")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Long> getUserCount() {
+        return ResponseEntity.ok(userService.getUserCount());
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")

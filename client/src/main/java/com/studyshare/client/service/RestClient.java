@@ -1,6 +1,8 @@
 package com.studyshare.client.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.studyshare.client.service.exception.*;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
@@ -40,6 +43,38 @@ public void setAuthToken(String token) {
     log.debug("Auth token set: {}", token); // Add logging
 }
 
+private static final int MAX_RETRIES = 3;
+private static final Duration RETRY_DELAY = Duration.ofSeconds(1);
+
+public <T> CompletableFuture<T> getWithRetry(String path, Class<T> responseType) {
+    return CompletableFuture.supplyAsync(() -> {
+        Exception lastException = null;
+        for (int i = 0; i < MAX_RETRIES; i++) {
+            try {
+                log.debug("Attempt {} for path: {}", i + 1, path);
+                return get(path, responseType).join();
+            } catch (Exception e) {
+                lastException = e;
+                log.warn("Retry {} failed: {}", i + 1, e.getMessage());
+                try {
+                    Thread.sleep(RETRY_DELAY.toMillis());
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new CompletionException(ie);
+                }
+            }
+        }
+        throw new CompletionException(lastException);
+    });
+}
+
+public <T> CompletableFuture<T> getList(String path, ParameterizedTypeReference<T> responseType) {
+    log.debug("GET List Request to {}", path);
+    return httpClient.sendAsync(createRequestBuilder(path).GET().build(),
+        HttpResponse.BodyHandlers.ofString())
+        .thenApply(response -> handleListResponse(response, responseType, "GET List " + path));
+}
+
     private HttpRequest.Builder createRequestBuilder(String path) {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(URI.create(baseUrl + path))
@@ -59,12 +94,7 @@ public void setAuthToken(String token) {
             .thenApply(response -> handleResponse(response, responseType, "GET " + path));
     }
 
-    public <T> CompletableFuture<T> getList(String path, ParameterizedTypeReference<T> responseType) {
-        log.debug("GET List Request to {}", path);
-        return httpClient.sendAsync(createRequestBuilder(path).GET().build(),
-            HttpResponse.BodyHandlers.ofString())
-            .thenApply(response -> handleListResponse(response, responseType, "GET List " + path));
-    }
+
 
     public <T> CompletableFuture<T> post(String path, Object requestBody, Class<T> responseType) {
         String serializedBody = serializeRequest(requestBody);
@@ -100,18 +130,19 @@ public void setAuthToken(String token) {
             });
     }
 
+public CompletableFuture<Long> getActiveLoansCount() {
+    return get("/api/transactions/count/active", Long.class);
+}
+
 
 private <T> T handleResponse(HttpResponse<String> response, Class<T> responseType, String operation) {
     log.debug("Response from {}: {} - {}", operation, response.statusCode(), response.body());
 
     return switch (response.statusCode()) {
         case 200, 201, 204 -> deserialize(response.body(), responseType);
-        case 401 -> {
-            log.error("Authentication failed for {}: {}", operation, response.body());
-            this.authToken = null;
-            throw new AuthenticationException("Session expired - please log in again");
-        }
-        case 403 -> throw new AuthorizationException("Access denied");
+        case 401 -> throw new AuthenticationException("Session expired - please log in again");
+        case 403 -> throw new AuthorizationException("You don't have permission for this operation");
+        case 404 -> throw new ResourceNotFoundException("Resource not found: " + operation);
         default -> throw new RestClientException(response.statusCode(),
             "Request failed: " + response.body());
     };

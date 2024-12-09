@@ -28,21 +28,18 @@ public class DatabaseConfig {
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(dataSourceUrl);
-        config.setDriverClassName(driverClassName);
-        config.setMaximumPoolSize(1);
-        config.setMinimumIdle(1);
-        config.setIdleTimeout(300000);
-        config.setConnectionTimeout(20000);
-        config.setMaxLifetime(1200000);
-
+        config.setJdbcUrl("jdbc:sqlite:library.db");
+        config.setDriverClassName("org.sqlite.JDBC");
+        config.setMaximumPoolSize(5);
+        config.setMinimumIdle(2);
+        config.setConnectionTimeout(30000);
         return new HikariDataSource(config);
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource());
+        em.setDataSource(dataSource);
         em.setPackagesToScan("com.studyshare.server.model");
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();

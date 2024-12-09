@@ -1,12 +1,17 @@
 package com.studyshare.server.repository;
 
+import com.studyshare.common.enums.TransactionType;
 import com.studyshare.server.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 
+@Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    List<Transaction> findByUserUserId(Long userId);
-    List<Transaction> findByBookBookId(Long bookId);
-    List<Transaction> findByUserUserIdAndBookBookId(Long userId, Long bookId);
+    List<Transaction> findByActiveTrue();
+    List<Transaction> findByUser_UserId(Long userId);
+    List<Transaction> findByBook_BookId(Long bookId);
+    Long countByTypeAndActiveTrue(TransactionType type);
 }

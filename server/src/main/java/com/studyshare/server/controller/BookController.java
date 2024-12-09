@@ -9,6 +9,7 @@ import com.studyshare.server.service.UserService;
 import com.studyshare.server.validation.BookValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,10 +25,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
@@ -49,11 +51,14 @@ public class BookController {
         try {
             log.debug("Fetching all books");
             List<BookDTO> books = bookService.getAllBooks();
-            log.debug("Found {} books", books.size());
             return ResponseEntity.ok(books);
+        } catch (NullPointerException e) {
+            log.error("Null pointer while fetching books", e);
+            return ResponseEntity.ok(Collections.emptyList()); // Return empty list instead of error
         } catch (Exception e) {
             log.error("Failed to fetch books", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch books: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Failed to fetch books");
         }
     }
 

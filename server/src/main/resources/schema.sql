@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS roles (
     role_name TEXT NOT NULL UNIQUE
 );
 
--- 5. Create books table
 CREATE TABLE IF NOT EXISTS books (
     book_id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
@@ -33,7 +32,6 @@ CREATE TABLE IF NOT EXISTS books (
     isbn TEXT UNIQUE,
     available_copies INTEGER NOT NULL DEFAULT 1,
     owner_id INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
@@ -42,18 +40,16 @@ CREATE INDEX IF NOT EXISTS idx_books_title ON books(title);
 CREATE INDEX IF NOT EXISTS idx_books_isbn ON books(isbn);
 CREATE INDEX IF NOT EXISTS idx_books_owner ON books(owner_id);
 
--- 7. Create transactions table
 CREATE TABLE IF NOT EXISTS transactions (
     transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     book_id INTEGER NOT NULL,
     type TEXT NOT NULL,
-    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    date TIMESTAMP NOT NULL,
     due_date TIMESTAMP,
     return_date TIMESTAMP,
-    status TEXT NOT NULL DEFAULT 'ACTIVE',
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id)
 );
 
 -- 8. Create transaction indexes
@@ -67,8 +63,8 @@ INSERT OR IGNORE INTO roles (role_name) VALUES ('USER'), ('ADMIN');
 
 -- 10. Create admin user
 DELETE FROM users WHERE username = 'admin';
-INSERT INTO users (username, password, email, role)
+-- Ensure admin user exists with proper role
+INSERT OR REPLACE INTO users (username, password, email, role)
 VALUES ('admin', 'admin', 'admin@studyshare.com', 'ADMIN');
-
 INSERT OR REPLACE INTO books (book_id, title, author, isbn, available_copies, owner_id)
 VALUES (1, 'The Great Gatsby', 'F. Scott Fitzgerald', '9780743273565', 3, 2);

@@ -29,14 +29,12 @@ public CompletableFuture<TransactionDTO> createTransaction(TransactionDTO transa
 
     @Override
     public CompletableFuture<List<TransactionDTO>> getUserTransactions(Long userId) {
-        return restClient.getList("/api/transactions/user/" + userId,
-                new ParameterizedTypeReference<List<TransactionDTO>>() {});
+        return restClient.getList("/api/transactions/user/" + userId, new ParameterizedTypeReference<List<TransactionDTO>>() {});
     }
 
     @Override
     public CompletableFuture<List<TransactionDTO>> getOverdueTransactions() {
-        return restClient.getList("/api/transactions/overdue",
-                new ParameterizedTypeReference<List<TransactionDTO>>() {});
+        return restClient.getList("/api/transactions/overdue", new ParameterizedTypeReference<List<TransactionDTO>>() {});
     }
 
     @Override
@@ -53,4 +51,11 @@ public CompletableFuture<TransactionDTO> createTransaction(TransactionDTO transa
     public CompletableFuture<TransactionDTO> completeTransaction(Long transactionId) {
         return restClient.post("/api/transactions/" + transactionId + "/complete", null, TransactionDTO.class);
     }
+
+
+
+public CompletableFuture<List<TransactionDTO>> getBookTransactions(Long bookId) {
+    return restClient.getList("/api/transactions/book/" + bookId,
+        new ParameterizedTypeReference<List<TransactionDTO>>() {});
+}
 }

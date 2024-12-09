@@ -40,19 +40,17 @@ public void setAuthToken(String token) {
     log.debug("Auth token set: {}", token); // Add logging
 }
 
-private HttpRequest.Builder createRequestBuilder(String path) {
-    HttpRequest.Builder builder = HttpRequest.newBuilder()
-        .uri(URI.create(baseUrl + path))
-        .header("Content-Type", "application/json");
+    private HttpRequest.Builder createRequestBuilder(String path) {
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(URI.create(baseUrl + path))
+                .header("Content-Type", "application/json");
 
-    if (authToken != null && !authToken.isEmpty()) {
-        log.debug("Adding auth token to request for path {}: {}", path, authToken);
-        builder.header("Authorization", "Bearer " + authToken);
-    } else {
-        log.warn("No auth token available for request to: {}", path);
+        if (authToken != null && !authToken.isEmpty()) {
+            log.debug("Adding auth token to request for path {}", path);
+            builder.header("Authorization", "Bearer " + authToken);
+        }
+        return builder;
     }
-    return builder;
-}
 
     public <T> CompletableFuture<T> get(String path, Class<T> responseType) {
         log.debug("GET Request to {}", path);
@@ -101,29 +99,21 @@ private HttpRequest.Builder createRequestBuilder(String path) {
                 return null;
             });
     }
+
+
 private <T> T handleResponse(HttpResponse<String> response, Class<T> responseType, String operation) {
     log.debug("Response from {}: {} - {}", operation, response.statusCode(), response.body());
 
     return switch (response.statusCode()) {
         case 200, 201, 204 -> deserialize(response.body(), responseType);
         case 401 -> {
-            log.error("Authentication failed for {}: Response body: {}", operation, response.body());
+            log.error("Authentication failed for {}: {}", operation, response.body());
             this.authToken = null;
-            if (operation.contains("/api/auth/login")) {
-                throw new AuthenticationException("Invalid username or password");
-            }
             throw new AuthenticationException("Session expired - please log in again");
         }
-        case 403 -> {
-            log.error("Authorization failed for {}: {}", operation, response.body());
-            throw new AuthorizationException("Access denied");
-        }
-        default -> {
-            log.error("Request failed: {} - Status: {} Body: {}",
-                operation, response.statusCode(), response.body());
-            throw new RestClientException(response.statusCode(),
-                "Request failed: " + response.body());
-        }
+        case 403 -> throw new AuthorizationException("Access denied");
+        default -> throw new RestClientException(response.statusCode(),
+            "Request failed: " + response.body());
     };
 }
 

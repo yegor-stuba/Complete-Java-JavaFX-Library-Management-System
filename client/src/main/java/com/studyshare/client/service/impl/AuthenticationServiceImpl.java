@@ -28,14 +28,23 @@ public CompletableFuture<AuthenticationResponse> login(String username, String p
     return restClient.post("/api/auth/login", request, AuthenticationResponse.class)
         .thenApply(response -> {
             if (response == null || response.getToken() == null) {
-                log.error("Received invalid authentication response");
-                throw new AuthenticationException("Invalid server response");
+                log.error("Received null authentication response");
+                throw new AuthenticationException("Invalid authentication response");
             }
             this.token = response.getToken();
-            restClient.setAuthToken(response.getToken());
-            log.debug("Login successful for user: {}", username);
+            restClient.setAuthToken(this.token);
+            log.debug("Successfully set auth token: {}", this.token);
             return response;
         });
+}
+
+@Override
+public String getToken() {
+    if (token == null) {
+        log.warn("Attempting to get null token");
+        throw new AuthenticationException("No valid token found");
+    }
+    return token;
 }
 
 @Override
@@ -58,10 +67,6 @@ public CompletableFuture<AuthenticationResponse> login(String username, String p
             .thenRun(() -> this.token = null);
     }
 
-    @Override
-    public String getToken() {
-        return token;
-    }
 
     @Override
     public boolean isAuthenticated() {

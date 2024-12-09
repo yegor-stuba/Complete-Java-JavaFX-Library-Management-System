@@ -8,13 +8,17 @@ import com.studyshare.client.service.exception.ResourceNotFoundException;
 import com.studyshare.common.dto.BookDTO;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
+
+import org.springframework.core.ParameterizedTypeReference;
+
+import com.studyshare.common.dto.UserDTO;
+
+
 
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.core.ParameterizedTypeReference;
 
 public class BookServiceImpl implements BookService {
     private static final Logger log = LoggerFactory.getLogger(BookServiceImpl.class);
@@ -42,15 +46,15 @@ public CompletableFuture<Long> getBookCount() {
         }
     }
 
-    @Override
-    public CompletableFuture<List<BookDTO>> getAllBooks() {
-        log.debug("Fetching all books");
-        return restClient.getList("/api/books", new ParameterizedTypeReference<List<BookDTO>>() {})
-                .thenApply(books -> {
-                    log.debug("Received {} books", books.size());
-                    return books;
-                });
-    }
+@Override
+public CompletableFuture<List<BookDTO>> getAllBooks() {
+    return restClient.getList("/api/books",
+        new ParameterizedTypeReference<List<BookDTO>>() {})
+            .exceptionally(throwable -> {
+                log.error("Failed to fetch books", throwable);
+                throw new BookOperationException("FETCH", null, "Failed to fetch books: " + throwable.getMessage());
+            });
+}
 
     @Override
     public CompletableFuture<BookDTO> addBook(BookDTO book) {

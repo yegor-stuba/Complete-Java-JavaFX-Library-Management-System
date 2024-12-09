@@ -37,24 +37,20 @@ public class AuthenticationController {
     private final SecurityAuditService securityAuditService;
     private final AuthenticationService authService;
 
-@PostMapping("/login")
+  @PostMapping("/login")
 public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
     try {
-        // Remove any extra spaces from username
         String username = request.getUsername().trim();
-        log.debug("Login attempt for user: '{}' with password: '{}'", username, request.getPassword());
-
         UserDTO user = userService.findByUsername(username);
-        if (user != null) {
-            log.debug("Found user with details: {}", user);
-            if (userService.authenticate(username, request.getPassword())) {
-                return ResponseEntity.ok(AuthenticationResponse.builder()
-                    .token("token-" + user.getUserId())
-                    .username(user.getUsername())
-                    .role(user.getRole())
-                    .userId(user.getUserId())
-                    .build());
-            }
+
+        if (user != null && userService.authenticate(username, request.getPassword())) {
+            String token = tokenProvider.generateToken(username, user.getRole());
+            return ResponseEntity.ok(AuthenticationResponse.builder()
+                .token(token)
+                .username(user.getUsername())
+                .role(user.getRole())
+                .userId(user.getUserId())
+                .build());
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     } catch (Exception e) {
@@ -62,6 +58,7 @@ public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationR
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
+
 
 @PostMapping("/register")
 public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid UserDTO userDTO) {

@@ -93,13 +93,26 @@ public class AdminDashboardController {
 
 
   private void loadInitialData() {
+    if (!userService.isAdmin()) {
+        Platform.runLater(() -> {
+            AlertUtil.showError("Access Denied", "Admin privileges required");
+            sceneManager.switchToLogin();
+        });
+        return;
+    }
+
     CompletableFuture.allOf(
         loadUsers(),
         loadBooks(),
         updateStatistics()
     ).exceptionally(throwable -> {
         log.error("Failed to load initial data", throwable);
-        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load data"));
+        Platform.runLater(() -> {
+            if (throwable.getCause() instanceof AuthenticationException) {
+                sceneManager.switchToLogin();
+            }
+            AlertUtil.showError("Error", "Failed to load data: " + throwable.getMessage());
+        });
         return null;
     });
 }

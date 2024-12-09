@@ -346,3 +346,795 @@
 2024-12-09 12:17:27 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
 2024-12-09 12:17:37 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
 2024-12-09 12:17:37 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:47 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:47 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:57 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:57 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:07 [http-nio-9080-exec-12] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:07 [http-nio-9080-exec-12] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:17 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:17 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:27 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:27 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:37 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:37 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:47 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:47 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:57 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:18:57 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:19:07 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:19:07 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:20:40 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 12:20:46 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:20:46 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:20:53 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token: null
+2024-12-09 12:20:53 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token: null
+2024-12-09 12:20:54 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-4] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-3] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-5] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-3] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-5] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-2] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token: null
+2024-12-09 12:20:54 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token: null
+2024-12-09 12:20:54 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token: null
+2024-12-09 12:20:54 [http-nio-9080-exec-4] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-8] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-6] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-9] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token: token-4
+2024-12-09 12:20:54 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token: null
+2024-12-09 12:20:54 [http-nio-9080-exec-12] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token: null
+2024-12-09 12:20:54 [http-nio-9080-exec-1] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-7] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-10] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:54 [http-nio-9080-exec-11] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 4
+2024-12-09 12:20:55 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:20:55 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:05 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:05 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:16 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:16 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:25 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:25 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:35 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:35 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:45 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:45 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:55 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:21:55 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:22:06 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:22:06 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:22:15 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:22:16 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:22:25 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:22:25 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:22:35 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:22:35 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:22:45 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:22:45 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:36:32 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 12:36:40 [http-nio-9080-exec-6] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 12:36:40 [http-nio-9080-exec-5] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 12:36:40 [http-nio-9080-exec-3] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 12:36:40 [http-nio-9080-exec-7] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 12:36:40 [http-nio-9080-exec-4] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 12:40:27 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 12:40:33 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:40:43 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:40:48 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 12:40:48 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 12:40:48 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: true
+2024-12-09 12:40:48 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: true
+2024-12-09 12:40:48 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: true
+2024-12-09 12:40:48 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: true
+2024-12-09 12:40:48 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/current with token present: true
+2024-12-09 12:40:48 [http-nio-9080-exec-5] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:275)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:529)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:589)
+	at io.jsonwebtoken.impl.ImmutableJwtParser.parseClaimsJws(ImmutableJwtParser.java:173)
+	at com.studyshare.server.security.JwtTokenProvider.getUsernameFromToken(JwtTokenProvider.java:49)
+	at com.studyshare.server.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-12-09 12:40:48 [http-nio-9080-exec-8] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:275)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:529)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:589)
+	at io.jsonwebtoken.impl.ImmutableJwtParser.parseClaimsJws(ImmutableJwtParser.java:173)
+	at com.studyshare.server.security.JwtTokenProvider.getUsernameFromToken(JwtTokenProvider.java:49)
+	at com.studyshare.server.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-12-09 12:40:48 [http-nio-9080-exec-6] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:275)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:529)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:589)
+	at io.jsonwebtoken.impl.ImmutableJwtParser.parseClaimsJws(ImmutableJwtParser.java:173)
+	at com.studyshare.server.security.JwtTokenProvider.getUsernameFromToken(JwtTokenProvider.java:49)
+	at com.studyshare.server.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-12-09 12:40:48 [http-nio-9080-exec-4] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:275)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:529)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:589)
+	at io.jsonwebtoken.impl.ImmutableJwtParser.parseClaimsJws(ImmutableJwtParser.java:173)
+	at com.studyshare.server.security.JwtTokenProvider.getUsernameFromToken(JwtTokenProvider.java:49)
+	at com.studyshare.server.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-12-09 12:40:48 [http-nio-9080-exec-7] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:275)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:529)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:589)
+	at io.jsonwebtoken.impl.ImmutableJwtParser.parseClaimsJws(ImmutableJwtParser.java:173)
+	at com.studyshare.server.security.JwtTokenProvider.getUsernameFromToken(JwtTokenProvider.java:49)
+	at com.studyshare.server.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-12-09 12:40:48 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/current with token present: false
+2024-12-09 12:40:48 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/current with token present: false
+2024-12-09 12:40:48 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/current with token present: false
+2024-12-09 12:40:48 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/current with token present: false
+2024-12-09 12:40:48 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: false
+2024-12-09 12:40:48 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: false
+2024-12-09 12:40:48 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: false
+2024-12-09 12:40:48 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: false
+2024-12-09 12:40:53 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:41:03 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:42:30 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 12:42:36 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:42:40 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 12:42:40 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 12:42:41 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: true
+2024-12-09 12:42:41 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: true
+2024-12-09 12:42:41 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: true
+2024-12-09 12:42:41 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/current with token present: true
+2024-12-09 12:42:41 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: true
+2024-12-09 12:42:41 [http-nio-9080-exec-7] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:275)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:529)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:589)
+	at io.jsonwebtoken.impl.ImmutableJwtParser.parseClaimsJws(ImmutableJwtParser.java:173)
+	at com.studyshare.server.security.JwtTokenProvider.getUsernameFromToken(JwtTokenProvider.java:49)
+	at com.studyshare.server.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-12-09 12:42:41 [http-nio-9080-exec-5] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:275)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:529)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:589)
+	at io.jsonwebtoken.impl.ImmutableJwtParser.parseClaimsJws(ImmutableJwtParser.java:173)
+	at com.studyshare.server.security.JwtTokenProvider.getUsernameFromToken(JwtTokenProvider.java:49)
+	at com.studyshare.server.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-12-09 12:42:41 [http-nio-9080-exec-4] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:275)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:529)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:589)
+	at io.jsonwebtoken.impl.ImmutableJwtParser.parseClaimsJws(ImmutableJwtParser.java:173)
+	at com.studyshare.server.security.JwtTokenProvider.getUsernameFromToken(JwtTokenProvider.java:49)
+	at com.studyshare.server.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-12-09 12:42:41 [http-nio-9080-exec-6] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:275)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:529)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:589)
+	at io.jsonwebtoken.impl.ImmutableJwtParser.parseClaimsJws(ImmutableJwtParser.java:173)
+	at com.studyshare.server.security.JwtTokenProvider.getUsernameFromToken(JwtTokenProvider.java:49)
+	at com.studyshare.server.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-12-09 12:42:41 [http-nio-9080-exec-3] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: JWT strings must contain exactly 2 period characters. Found: 0
+io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:275)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:529)
+	at io.jsonwebtoken.impl.DefaultJwtParser.parseClaimsJws(DefaultJwtParser.java:589)
+	at io.jsonwebtoken.impl.ImmutableJwtParser.parseClaimsJws(ImmutableJwtParser.java:173)
+	at com.studyshare.server.security.JwtTokenProvider.getUsernameFromToken(JwtTokenProvider.java:49)
+	at com.studyshare.server.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-12-09 12:42:41 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/current with token present: false
+2024-12-09 12:42:41 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/current with token present: false
+2024-12-09 12:42:41 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/current with token present: false
+2024-12-09 12:42:41 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/current with token present: false
+2024-12-09 12:42:41 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: false
+2024-12-09 12:42:41 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: false
+2024-12-09 12:42:41 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: false
+2024-12-09 12:42:41 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: false
+2024-12-09 12:42:46 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:42:56 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:43:06 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:43:16 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:43:26 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:43:36 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:43:46 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:43:56 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:44:06 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:44:16 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:44:26 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:44:36 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:44:46 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:44:56 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:45:06 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:45:16 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:45:26 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:45:36 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:45:46 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:45:56 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:54:43 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 12:54:45 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:54:55 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:55:00 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:00 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:02 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 12:55:05 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 12:55:15 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false

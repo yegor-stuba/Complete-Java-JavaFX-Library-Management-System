@@ -38,28 +38,33 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
     FilterChain chain) throws ServletException, IOException {
     try {
         String token = getJwtFromRequest(request);
-        String requestPath = request.getRequestURI();
-        log.debug("Processing request to: {} with token: {}", requestPath, token);
+        log.debug("Processing request to: {} with token present: {}",
+            request.getRequestURI(), token != null);
 
-        if (token != null && token.startsWith("token-")) {
-            String username = token.substring(6); // Remove "token-" prefix
+        if (StringUtils.hasText(token)) {
+            if (!tokenProvider.validateToken(token)) {
+                log.warn("Invalid token provided");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
+            String username = tokenProvider.getUsernameFromToken(token);
             UserDetails userDetails = userService.loadUserByUsername(username);
 
             UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
-                );
+                    userDetails, null, userDetails.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug("Set authentication for user: {}", username);
+            log.debug("Successfully authenticated user: {}", username);
         }
 
         chain.doFilter(request, response);
     } catch (Exception ex) {
-        log.error("Authentication error: {}", ex.getMessage());
+        log.error("Authentication error: {}", ex.getMessage(), ex);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write("Authentication failed: " + ex.getMessage());
     }
 }
 

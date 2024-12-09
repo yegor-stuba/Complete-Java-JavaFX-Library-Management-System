@@ -1,5 +1,6 @@
 package com.studyshare.server.security;
 
+import com.studyshare.common.enums.UserRole;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
@@ -28,14 +29,32 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private int jwtExpiration;
 
-public String generateToken(Authentication authentication) {
-    UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-    return "token-" + userPrincipal.getUsername();
+ public String generateToken(String username, UserRole role) {
+    Date now = new Date();
+    Date expiryDate = new Date(now.getTime() + jwtExpiration);
+
+    return Jwts.builder()
+        .setSubject(username)
+        .claim("role", role.name())
+        .setIssuedAt(now)
+        .setExpiration(expiryDate)
+        .signWith(getSigningKey())
+        .compact();
 }
 
-public boolean validateToken(String token) {
-    return token != null && token.startsWith("token-");
-}
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            log.error("JWT validation failed: {}", e.getMessage());
+            return false;
+        }
+    }
+
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);

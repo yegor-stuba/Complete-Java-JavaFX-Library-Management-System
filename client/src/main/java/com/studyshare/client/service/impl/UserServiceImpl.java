@@ -1,7 +1,9 @@
 package com.studyshare.client.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.studyshare.client.service.RestClient;
 import com.studyshare.client.service.UserService;
+import com.studyshare.client.service.exception.AuthorizationException;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.common.enums.UserRole;
 import com.studyshare.common.security.dto.AuthenticationResponse;
@@ -9,6 +11,7 @@ import jakarta.validation.ValidationException;
 import org.springframework.core.ParameterizedTypeReference;
 import java.util.List;
 import java.util.concurrent.*;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,16 +56,27 @@ public class UserServiceImpl implements UserService {
     }
 
 @Override
+public boolean isAdmin() {
+    try {
+        UserDTO currentUser = getCurrentUser().join();
+        return currentUser != null && UserRole.ADMIN.equals(currentUser.getRole());
+    } catch (Exception e) {
+        log.error("Error checking admin status", e);
+        return false;
+    }
+}
+
+@Override
 public CompletableFuture<List<UserDTO>> getAllUsers() {
-    return restClient.getList("/api/users", new ParameterizedTypeReference<List<UserDTO>>() {})
-        .thenApply(users -> {
-            log.debug("Successfully fetched {} users", users.size());
-            return users;
-        })
-        .exceptionally(throwable -> {
-            log.error("Failed to fetch users: {}", throwable.getMessage());
-            throw new CompletionException(throwable);
-        });
+    if (!isAdmin()) {
+        CompletableFuture<List<UserDTO>> future = new CompletableFuture<>();
+        future.completeExceptionally(new AuthorizationException("Admin access required"));
+        return future;
+    }
+
+    return restClient.getList("/api/users",
+            new ParameterizedTypeReference<>() {
+            });
 }
 
     @Override
@@ -107,10 +121,6 @@ public CompletableFuture<List<UserDTO>> getAllUsers() {
             .thenRun(() -> this.authResponse = null);
     }
 
-    @Override
-    public boolean isAdmin() {
-        return authResponse != null && UserRole.ADMIN.equals(authResponse.getRole());
-    }
 
     @Override
     public CompletableFuture<Long> getUserCount() {

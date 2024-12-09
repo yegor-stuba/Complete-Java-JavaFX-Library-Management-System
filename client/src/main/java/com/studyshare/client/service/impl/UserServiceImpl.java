@@ -8,10 +8,12 @@ import com.studyshare.common.security.dto.AuthenticationResponse;
 import jakarta.validation.ValidationException;
 import org.springframework.core.ParameterizedTypeReference;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
+import java.util.concurrent.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.naming.AuthenticationException;
 
 public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -50,15 +52,18 @@ public class UserServiceImpl implements UserService {
         return restClient.get("/api/auth/current", UserDTO.class);
     }
 
-    @Override
-    public CompletableFuture<List<UserDTO>> getAllUsers() {
-        log.debug("Fetching all users");
-        return restClient.getList("/api/users", new ParameterizedTypeReference<List<UserDTO>>() {})
-                .thenApply(users -> {
-                    log.debug("Received {} users", users.size());
-                    return users;
-                });
-    }
+@Override
+public CompletableFuture<List<UserDTO>> getAllUsers() {
+    return restClient.getList("/api/users", new ParameterizedTypeReference<List<UserDTO>>() {})
+        .thenApply(users -> {
+            log.debug("Successfully fetched {} users", users.size());
+            return users;
+        })
+        .exceptionally(throwable -> {
+            log.error("Failed to fetch users: {}", throwable.getMessage());
+            throw new CompletionException(throwable);
+        });
+}
 
     @Override
     public CompletableFuture<UserDTO> createUser(UserDTO userDTO) {

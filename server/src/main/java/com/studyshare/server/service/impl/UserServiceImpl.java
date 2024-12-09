@@ -1,11 +1,15 @@
 package com.studyshare.server.service.impl;
 
+import com.studyshare.client.controller.AdminDashboardController;
 import com.studyshare.server.exception.ValidationException;
 import com.studyshare.server.service.UserService;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.server.repository.UserRepository;
 import com.studyshare.server.model.User;
 import com.studyshare.server.mapper.UserMapper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private static final int MIN_PASSWORD_LENGTH = 4;
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
 
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
@@ -62,11 +68,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDtoList(userRepository.findAll());
     }
 
-    @Override
-    public UserDTO findByUsername(String username) {
-        return userMapper.toDto(userRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found")));
-    }
 
     @Override
     public UserDTO updateUser(Long id, UserDTO userDTO) {
@@ -131,13 +132,30 @@ public UserDetails loadUserByUsername(String username) throws UsernameNotFoundEx
         }
     }
 
-    @Override
+@Override
+public UserDTO findByUsername(String username) {
+    log.debug("Finding user by username: '{}'", username);
+    try {
+        User user = userRepository.findByUsername(username.trim())
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        log.debug("Found user in database: {}", user);
+        return userMapper.toDto(user);
+    } catch (Exception e) {
+        log.error("Error finding user {}: {}", username, e.getMessage());
+        throw e;
+    }
+}
+
+@Override
 public boolean authenticate(String username, String password) {
     try {
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username.trim())
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return passwordEncoder.matches(password, user.getPassword());
+        log.debug("Authenticating user: {} with stored password: {}",
+            username, user.getPassword());
+        return password.equals(user.getPassword());
     } catch (Exception e) {
+        log.error("Authentication failed for {}: {}", username, e.getMessage());
         return false;
     }
 }

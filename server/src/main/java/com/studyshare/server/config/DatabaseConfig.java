@@ -30,8 +30,8 @@ public class DatabaseConfig {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dataSourceUrl);
         config.setDriverClassName(driverClassName);
-        config.setMaximumPoolSize(10);
-        config.setMinimumIdle(5);
+        config.setMaximumPoolSize(1);
+        config.setMinimumIdle(1);
         config.setIdleTimeout(300000);
         config.setConnectionTimeout(20000);
         config.setMaxLifetime(1200000);

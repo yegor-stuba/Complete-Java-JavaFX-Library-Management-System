@@ -10,18 +10,15 @@ public class AuthenticationInterceptor {
         this.authenticationService = authenticationService;
     }
 
-    public HttpRequest intercept(HttpRequest request) {
-        if (authenticationService.getToken() != null) {
-            HttpRequest.Builder builder = HttpRequest.newBuilder()
-                .uri(request.uri())
-                .header("Authorization", "Bearer " + authenticationService.getToken())
-                .method(request.method(), request.bodyPublisher().orElse(HttpRequest.BodyPublishers.noBody()));
-
-            request.headers().map().forEach((name, values) ->
-                values.forEach(value -> builder.header(name, value)));
-
-            return builder.build();
-        }
-        return request;
+ public HttpRequest intercept(HttpRequest request) {
+    String token = authenticationService.getToken();
+    if (token != null) {
+        return HttpRequest.newBuilder()
+            .uri(request.uri())
+            .header("Authorization", "Bearer " + token)
+            .method(request.method(), request.bodyPublisher().orElse(HttpRequest.BodyPublishers.noBody()))
+            .build();
     }
+    return request;
+}
 }

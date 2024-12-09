@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,28 +37,28 @@ public class AuthenticationController {
     private final SecurityAuditService securityAuditService;
     private final AuthenticationService authService;
 
-  @PostMapping("/login")
+@PostMapping("/login")
 public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
     try {
-        // Add debug logging
-        log.info("Login attempt for user: {}", request.getUsername());
+        // Remove any extra spaces from username
+        String username = request.getUsername().trim();
+        log.debug("Login attempt for user: '{}' with password: '{}'", username, request.getPassword());
 
-        UserDTO user = userService.findByUsername(request.getUsername());
-        log.info("User found: {}", user != null);
-
-        if (user != null && userService.authenticate(request.getUsername(), request.getPassword())) {
-            log.info("Authentication successful");
-            return ResponseEntity.ok(AuthenticationResponse.builder()
-                .token("token-" + user.getUserId())
-                .username(user.getUsername())
-                .role(user.getRole())
-                .userId(user.getUserId())
-                .build());
+        UserDTO user = userService.findByUsername(username);
+        if (user != null) {
+            log.debug("Found user with details: {}", user);
+            if (userService.authenticate(username, request.getPassword())) {
+                return ResponseEntity.ok(AuthenticationResponse.builder()
+                    .token("token-" + user.getUserId())
+                    .username(user.getUsername())
+                    .role(user.getRole())
+                    .userId(user.getUserId())
+                    .build());
+            }
         }
-        log.warn("Authentication failed");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     } catch (Exception e) {
-        log.error("Login failed: {}", e.getMessage(), e);
+        log.error("Login failed: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

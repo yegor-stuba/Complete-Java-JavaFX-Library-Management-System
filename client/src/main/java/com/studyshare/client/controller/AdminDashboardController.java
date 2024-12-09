@@ -74,12 +74,13 @@ public class AdminDashboardController {
     public void initialize() {
         log.debug("Initializing AdminDashboardController");
         try {
+            Thread.sleep(100);
+            setupTables();
             updateStatistics();
             setupUserTable();
             setupBookTable();
             loadInitialData();
             setupSearchListeners();
-            setupTables();
             setupUserManagement();
             setupBookManagement();
             loadInitialData();
@@ -89,6 +90,20 @@ public class AdminDashboardController {
             AlertUtil.showError("Error", "Failed to initialize dashboard");
         }
     }
+
+
+  private void loadInitialData() {
+    CompletableFuture.allOf(
+        loadUsers(),
+        loadBooks(),
+        updateStatistics()
+    ).exceptionally(throwable -> {
+        log.error("Failed to load initial data", throwable);
+        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load data"));
+        return null;
+    });
+}
+
     private void loadData() {
         CompletableFuture.runAsync(this::loadUsers)
                 .thenCompose(v -> CompletableFuture.runAsync(this::loadBooks))
@@ -226,8 +241,8 @@ public class AdminDashboardController {
         updateStatistics();
     }
 
-private void loadUsers() {
-    userService.getAllUsers()
+private CompletableFuture<Void> loadUsers() {
+    return userService.getAllUsers()
         .thenAccept(userList -> Platform.runLater(() -> {
             users.clear();
             users.addAll(userList);
@@ -338,19 +353,19 @@ private void handleAddUser() {
             });
     }
 }
-    private CompletableFuture<Void> updateStatistics() {
-        // Update statistics labels with current system data
-        userService.getUserCount().thenAccept(count ->
-                Platform.runLater(() -> totalUsersLabel.setText("Total Users: " + count)));
-
-        bookService.getBookCount().thenAccept(count ->
-                Platform.runLater(() -> totalBooksLabel.setText("Total Books: " + count)));
-
-        transactionService.getActiveLoansCount().thenAccept(count ->
-                Platform.runLater(() -> activeLoansLabel.setText("Active Loans: " + count)));
-        return null;
-    }
-
+private CompletableFuture<Void> updateStatistics() {
+    return CompletableFuture.allOf(
+        userService.getUserCount()
+            .thenAccept(count -> Platform.runLater(() ->
+                totalUsersLabel.setText("Total Users: " + count))),
+        bookService.getBookCount()
+            .thenAccept(count -> Platform.runLater(() ->
+                totalBooksLabel.setText("Total Books: " + count))),
+        transactionService.getActiveLoansCount()
+            .thenAccept(count -> Platform.runLater(() ->
+                activeLoansLabel.setText("Active Loans: " + count)))
+    );
+}
     @FXML
     private void handleLogout() {
         userService.logout()
@@ -587,28 +602,6 @@ private void handleAddUser() {
         }
     }
 
-
-private void loadInitialData() {
-    // Load users separately
-    userService.getAllUsers()
-        .thenAccept(userList -> Platform.runLater(() -> {
-            users.clear();
-            users.addAll(userList);
-        }))
-        .exceptionally(throwable -> {
-            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load users"));
-            return null;
-        });
-
-    // Load statistics separately
-    userService.getUserCount()
-        .thenAccept(count -> Platform.runLater(() ->
-            totalUsersLabel.setText("Total Users: " + count)));
-
-    bookService.getBookCount()
-        .thenAccept(count -> Platform.runLater(() ->
-            totalBooksLabel.setText("Total Books: " + count)));
-}
 
 
 

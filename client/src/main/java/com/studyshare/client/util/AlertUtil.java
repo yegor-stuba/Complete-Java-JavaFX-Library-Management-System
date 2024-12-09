@@ -1,13 +1,30 @@
 package com.studyshare.client.util;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.Region;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AlertUtil {
+    private static final Logger log = LoggerFactory.getLogger(AlertUtil.class);
     public static void showError(String title, String content) {
-        showAlert(AlertType.ERROR, title, content);
-    }
+    Platform.runLater(() -> {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.showAndWait();
+    });
+}
 
+public static void showLoginError(String message) {
+    showError("Login Failed", message);
+    log.error("Login error: {}", message);
+}
     public static void showInfo(String title, String content) {
         showAlert(AlertType.INFORMATION, title, content);
     }

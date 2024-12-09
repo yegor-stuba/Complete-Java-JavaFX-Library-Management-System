@@ -35,21 +35,23 @@ public class RestClient {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
- private HttpRequest.Builder createRequestBuilder(String path) {
+public void setAuthToken(String token) {
+    this.authToken = token;
+    log.debug("Auth token set: {}", token); // Add logging
+}
+
+private HttpRequest.Builder createRequestBuilder(String path) {
     HttpRequest.Builder builder = HttpRequest.newBuilder()
         .uri(URI.create(baseUrl + path))
         .header("Content-Type", "application/json");
 
-    if (authToken != null) {
-        log.debug("Adding auth token to request: {}", authToken);
+    if (authToken != null && !authToken.isEmpty()) {
+        log.debug("Adding auth token to request for path {}: {}", path, authToken);
         builder.header("Authorization", "Bearer " + authToken);
+    } else {
+        log.warn("No auth token available for request to: {}", path);
     }
     return builder;
-}
-
-public void setAuthToken(String token) {
-    this.authToken = token;
-    log.debug("Auth token set: {}", token);
 }
 
     public <T> CompletableFuture<T> get(String path, Class<T> responseType) {
@@ -99,19 +101,29 @@ public void setAuthToken(String token) {
                 return null;
             });
     }
-
-   private <T> T handleResponse(HttpResponse<String> response, Class<T> responseType, String operation) {
+private <T> T handleResponse(HttpResponse<String> response, Class<T> responseType, String operation) {
     log.debug("Response from {}: {} - {}", operation, response.statusCode(), response.body());
 
     return switch (response.statusCode()) {
         case 200, 201, 204 -> deserialize(response.body(), responseType);
-        case 400 -> throw new ValidationException("Invalid data: " + response.body());
-        case 401 -> throw new AuthenticationException("Authentication required - please log in again");
-        case 403 -> throw new AuthorizationException("You don't have permission to perform this operation");
-        case 404 -> throw new ResourceNotFoundException("Resource not found: " + operation);
-        case 409 -> throw new ConflictException("Resource already exists: " + response.body());
-        default -> throw new RestClientException(response.statusCode(),
-            "Operation failed: " + operation + " - " + response.body());
+        case 401 -> {
+            log.error("Authentication failed for {}: Response body: {}", operation, response.body());
+            this.authToken = null;
+            if (operation.contains("/api/auth/login")) {
+                throw new AuthenticationException("Invalid username or password");
+            }
+            throw new AuthenticationException("Session expired - please log in again");
+        }
+        case 403 -> {
+            log.error("Authorization failed for {}: {}", operation, response.body());
+            throw new AuthorizationException("Access denied");
+        }
+        default -> {
+            log.error("Request failed: {} - Status: {} Body: {}",
+                operation, response.statusCode(), response.body());
+            throw new RestClientException(response.statusCode(),
+                "Request failed: " + response.body());
+        }
     };
 }
 

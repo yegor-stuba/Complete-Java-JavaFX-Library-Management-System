@@ -16,6 +16,7 @@ public class LoginController extends BaseController {
     private final AuthenticationService authService;
     private final UserService userService;
     private final SceneManager sceneManager;
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LoginController.class);
 
     @FXML
     private TextField usernameField;
@@ -43,20 +44,23 @@ private void handleLogin() {
 
     String username = usernameField.getText();
     String password = passwordField.getText();
+    log.debug("Processing login for user: {}", username);
 
     authService.login(username, password)
         .thenAccept(response -> Platform.runLater(() -> {
             if (response != null && response.getRole() != null) {
+                log.debug("Login successful, role: {}", response.getRole());
                 switch (response.getRole()) {
                     case ADMIN -> sceneManager.switchToAdminDashboard();
                     case USER -> sceneManager.switchToUserProfile();
                     default -> handleLoginError("Invalid user role");
                 }
             } else {
-                handleLoginError("Invalid response from server");
+                handleLoginError("Invalid server response");
             }
         }))
         .exceptionally(throwable -> {
+            log.error("Login failed: {}", throwable.getMessage());
             handleLoginError(throwable.getMessage());
             return null;
         });

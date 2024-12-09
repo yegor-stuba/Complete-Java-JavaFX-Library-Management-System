@@ -1,0 +1,69 @@
+2024-12-08 00:30:55 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 00:33:34 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 01:00:24 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 01:07:12 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 01:14:38 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 01:23:01 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 01:30:12 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 01:45:02 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 05:56:18 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 06:04:22 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 12:29:50 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 12:37:46 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 12:41:05 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 12:52:22 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 12:57:31 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 13:07:10 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 13:15:00 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 13:20:00 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 13:24:20 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 13:29:04 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 13:36:26 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 13:50:01 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 13:54:42 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 13:58:34 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 14:11:58 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 14:44:55 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 14:52:07 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 14:52:19 [http-nio-9080-exec-6] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:19 [http-nio-9080-exec-8] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:19 [http-nio-9080-exec-1] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:19 [http-nio-9080-exec-7] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:19 [http-nio-9080-exec-9] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:19 [http-nio-9080-exec-10] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:45 [http-nio-9080-exec-9] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:45 [http-nio-9080-exec-2] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:45 [http-nio-9080-exec-6] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:45 [http-nio-9080-exec-5] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:45 [http-nio-9080-exec-10] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:45 [http-nio-9080-exec-7] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:51 [http-nio-9080-exec-6] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:51 [http-nio-9080-exec-1] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:52:51 [http-nio-9080-exec-4] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:55:25 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 14:55:46 [http-nio-9080-exec-1] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:55:46 [http-nio-9080-exec-2] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:55:46 [http-nio-9080-exec-9] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:55:46 [http-nio-9080-exec-7] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:55:46 [http-nio-9080-exec-8] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 14:55:46 [http-nio-9080-exec-10] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
+2024-12-08 15:25:38 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 15:33:57 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 16:41:22 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 16:50:56 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 16:54:48 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 16:57:19 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 17:03:47 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 17:14:59 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 18:28:02 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 18:31:53 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 18:45:15 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 18:51:01 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 19:10:25 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 19:35:34 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 19:37:26 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 20:36:20 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 20:46:44 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 20:47:46 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 20:48:39 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-08 21:11:06 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use

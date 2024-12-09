@@ -1,27 +1,31 @@
+-- 1. Create sequences first
 CREATE TABLE IF NOT EXISTS hibernate_sequences (
     sequence_name TEXT PRIMARY KEY,
     next_val BIGINT
 );
 
-INSERT OR IGNORE INTO hibernate_sequences (sequence_name, next_val) VALUES ('books', 1);
 
+
+-- 2. Create users table before its indexes
+CREATE TABLE IF NOT EXISTS users (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'USER'
+);
+
+-- 3. Create indexes after table exists
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
+-- 4. Create roles table
 CREATE TABLE IF NOT EXISTS roles (
     role_id INTEGER PRIMARY KEY AUTOINCREMENT,
     role_name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS users (
-    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    role TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
-CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-
+-- 5. Create books table
 CREATE TABLE IF NOT EXISTS books (
     book_id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
@@ -33,10 +37,12 @@ CREATE TABLE IF NOT EXISTS books (
     FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
+-- 6. Create book indexes
 CREATE INDEX IF NOT EXISTS idx_books_title ON books(title);
 CREATE INDEX IF NOT EXISTS idx_books_isbn ON books(isbn);
 CREATE INDEX IF NOT EXISTS idx_books_owner ON books(owner_id);
 
+-- 7. Create transactions table
 CREATE TABLE IF NOT EXISTS transactions (
     transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -50,16 +56,19 @@ CREATE TABLE IF NOT EXISTS transactions (
     FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE
 );
 
+-- 8. Create transaction indexes
 CREATE INDEX IF NOT EXISTS idx_transactions_user ON transactions(user_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_book ON transactions(book_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);
 
-
+-- 9. Insert initial data
+INSERT OR IGNORE INTO hibernate_sequences (sequence_name, next_val) VALUES ('books', 1);
 INSERT OR IGNORE INTO roles (role_name) VALUES ('USER'), ('ADMIN');
 
--- Update admin role to match security config
-UPDATE users SET role = 'ADMIN' WHERE username = 'admin';
-
-INSERT OR REPLACE INTO users (username, password, email, role)
+-- 10. Create admin user
+DELETE FROM users WHERE username = 'admin';
+INSERT INTO users (username, password, email, role)
 VALUES ('admin', 'admin', 'admin@studyshare.com', 'ADMIN');
 
+INSERT OR REPLACE INTO books (book_id, title, author, isbn, available_copies, owner_id)
+VALUES (1, 'The Great Gatsby', 'F. Scott Fitzgerald', '9780743273565', 3, 2);

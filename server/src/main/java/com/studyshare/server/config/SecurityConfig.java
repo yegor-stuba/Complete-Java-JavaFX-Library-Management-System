@@ -2,6 +2,7 @@ package com.studyshare.server.config;
 
 import com.studyshare.server.security.JwtAuthenticationFilter;
 import com.studyshare.server.security.JwtTokenProvider;
+import com.studyshare.server.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,34 +27,25 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-   @Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider, UserService userService) throws Exception {
     http
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session ->
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/users/**").hasAuthority("ADMIN")
+            .requestMatchers("/api/auth/**", "/api/health").permitAll()
+            .requestMatchers("/api/users/**").hasAuthority("ROLE_ADMIN")
             .requestMatchers("/api/books/**").authenticated()
-            .requestMatchers("/api/transactions/**").authenticated()
             .anyRequest().authenticated()
         )
-        .exceptionHandling(ex -> ex
-            .authenticationEntryPoint((request, response, authException) -> {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Authentication required: " + authException.getMessage());
-            })
-            .accessDeniedHandler((request, response, accessDeniedException) -> {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.getWriter().write("Access denied: Insufficient permissions");
-            })
-        )
-        .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userService), UsernamePasswordAuthenticationFilter.class);
+
     return http.build();
 }
-    // Update CORS configuration
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -71,9 +63,10 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         return new SimplePasswordEncoder();
     }
 
+
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider());
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserService userService) {
+        return new JwtAuthenticationFilter(jwtTokenProvider, userService);
     }
 
     @Bean

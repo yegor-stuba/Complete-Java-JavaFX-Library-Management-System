@@ -3,10 +3,14 @@ package com.studyshare.server.service;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.server.exception.InvalidTokenException;
 import com.studyshare.server.security.JwtTokenProvider;
+import com.studyshare.server.security.dto.AuthenticationRequest;
+import com.studyshare.server.security.dto.AuthenticationResponse;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.Authentication;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -20,23 +24,13 @@ public class AuthenticationService {
         return tokenProvider.generateToken(authentication);
     }
 
-    public boolean authenticate(String username, String password) {
-        try {
-            if ("admin".equals(username) && "admin".equals(password)) {
-                securityAuditService.logLoginAttempt(username, true);
-                return true;
-            }
 
-            UserDTO user = userService.findByUsername(username);
-            if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-                securityAuditService.logLoginAttempt(username, true);
-                return true;
-            }
-            securityAuditService.logLoginAttempt(username, false);
-            return false;
-        } catch (Exception e) {
-            securityAuditService.logLoginAttempt(username, false);
-            return false;
-        }
+public boolean authenticate(String username, String password) {
+    try {
+        UserDTO user = userService.findByUsername(username);
+        return user != null && password.equals(user.getPassword());
+    } catch (Exception e) {
+        return false;
     }
+}
 }

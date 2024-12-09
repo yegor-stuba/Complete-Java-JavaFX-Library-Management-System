@@ -1,69 +1,348 @@
-2024-12-08 00:30:55 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 00:33:34 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 01:00:24 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 01:07:12 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 01:14:38 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 01:23:01 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 01:30:12 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 01:45:02 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 05:56:18 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 06:04:22 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 12:29:50 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 12:37:46 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 12:41:05 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 12:52:22 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 12:57:31 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 13:07:10 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 13:15:00 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 13:20:00 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 13:24:20 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 13:29:04 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 13:36:26 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 13:50:01 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 13:54:42 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 13:58:34 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 14:11:58 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 14:44:55 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 14:52:07 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 14:52:19 [http-nio-9080-exec-6] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:19 [http-nio-9080-exec-8] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:19 [http-nio-9080-exec-1] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:19 [http-nio-9080-exec-7] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:19 [http-nio-9080-exec-9] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:19 [http-nio-9080-exec-10] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:45 [http-nio-9080-exec-9] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:45 [http-nio-9080-exec-2] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:45 [http-nio-9080-exec-6] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:45 [http-nio-9080-exec-5] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:45 [http-nio-9080-exec-10] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:45 [http-nio-9080-exec-7] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:51 [http-nio-9080-exec-6] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:51 [http-nio-9080-exec-1] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:52:51 [http-nio-9080-exec-4] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:55:25 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 14:55:46 [http-nio-9080-exec-1] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:55:46 [http-nio-9080-exec-2] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:55:46 [http-nio-9080-exec-9] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:55:46 [http-nio-9080-exec-7] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:55:46 [http-nio-9080-exec-8] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 14:55:46 [http-nio-9080-exec-10] ERROR c.s.server.security.JwtTokenProvider - Invalid JWT token
-2024-12-08 15:25:38 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 15:33:57 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 16:41:22 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 16:50:56 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 16:54:48 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 16:57:19 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 17:03:47 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 17:14:59 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 18:28:02 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 18:31:53 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 18:45:15 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 18:51:01 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 19:10:25 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 19:35:34 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 19:37:26 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 20:36:20 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 20:46:44 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 20:47:46 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 20:48:39 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2024-12-08 21:11:06 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 07:18:04 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 07:31:38 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 07:44:36 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 07:44:41 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:44:41 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:44:46 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 07:44:46 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/auth/login
+2024-12-09 07:44:47 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-12] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-16] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-14] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-15] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-17] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-18] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-19] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: true
+2024-12-09 07:44:47 [http-nio-9080-exec-3] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-9] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-3] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/users/count
+2024-12-09 07:44:47 [http-nio-9080-exec-9] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/users
+2024-12-09 07:44:47 [http-nio-9080-exec-10] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-7] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-7] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/books
+2024-12-09 07:44:47 [http-nio-9080-exec-6] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-6] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/books
+2024-12-09 07:44:47 [http-nio-9080-exec-14] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-15] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-14] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/books/count
+2024-12-09 07:44:47 [http-nio-9080-exec-5] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-13] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-2] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-18] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-17] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-19] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-1] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-4] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-12] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-15] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/users/count
+2024-12-09 07:44:47 [http-nio-9080-exec-10] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/books/count
+2024-12-09 07:44:47 [http-nio-9080-exec-11] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-11] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/users
+2024-12-09 07:44:47 [http-nio-9080-exec-8] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-8] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/users/count
+2024-12-09 07:44:47 [http-nio-9080-exec-16] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:44:47 [http-nio-9080-exec-16] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/books/count
+2024-12-09 07:44:47 [http-nio-9080-exec-13] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/users
+2024-12-09 07:44:47 [http-nio-9080-exec-2] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/transactions/active-loans-count
+2024-12-09 07:44:47 [http-nio-9080-exec-5] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/transactions/active-loans-count
+2024-12-09 07:44:47 [http-nio-9080-exec-18] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/transactions/active-loans-count
+2024-12-09 07:44:47 [http-nio-9080-exec-17] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/users/count
+2024-12-09 07:44:47 [http-nio-9080-exec-19] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/books
+2024-12-09 07:44:47 [http-nio-9080-exec-1] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/transactions/active-loans-count
+2024-12-09 07:44:47 [http-nio-9080-exec-4] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/books/count
+2024-12-09 07:44:47 [http-nio-9080-exec-12] WARN  c.s.s.s.JwtAuthenticationFilter - Invalid token received for request to: /api/books
+2024-12-09 07:44:51 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:44:51 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:45:01 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:45:01 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:45:11 [http-nio-9080-exec-15] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:45:11 [http-nio-9080-exec-15] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:45:21 [http-nio-9080-exec-14] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:45:21 [http-nio-9080-exec-14] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:45:31 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:45:31 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:45:41 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:45:41 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:45:51 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:45:51 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:46:01 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:46:01 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:46:11 [http-nio-9080-exec-16] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:46:11 [http-nio-9080-exec-16] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:46:21 [http-nio-9080-exec-14] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:46:21 [http-nio-9080-exec-14] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:46:31 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:46:31 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - No token found in request to: /api/health
+2024-12-09 07:49:43 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 07:49:49 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 07:49:55 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 07:49:55 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-12] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-15] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-17] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-16] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-19] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-14] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-18] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token present: true
+2024-12-09 07:49:55 [http-nio-9080-exec-13] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-10] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-9] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-1] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-11] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-12] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-17] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-19] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-3] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-8] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-15] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-5] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-18] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-4] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-14] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-2] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-6] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-16] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:55 [http-nio-9080-exec-7] ERROR c.s.server.security.JwtTokenProvider - Token validation failed: JWT strings must contain exactly 2 period characters. Found: 0
+2024-12-09 07:49:59 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:36:09 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 09:36:13 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:36:19 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 09:36:23 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:36:33 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:36:43 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:36:53 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:37:03 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:37:13 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:37:23 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:37:33 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:37:44 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 09:37:51 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:37:56 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 09:38:01 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:38:11 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:38:21 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:38:31 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:38:41 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:38:51 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:39:01 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:39:11 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:39:21 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:39:31 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:39:41 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:39:51 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:40:01 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:40:11 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:40:21 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:40:31 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:40:41 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:40:51 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:41:01 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:41:11 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:41:21 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:41:31 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:41:41 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:41:51 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:42:01 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:42:11 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:42:21 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:42:31 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:42:41 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:42:51 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:43:01 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:43:14 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 09:43:18 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:43:23 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 09:43:28 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:43:38 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:43:48 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:43:58 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:44:08 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:44:18 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:44:28 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:44:38 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:44:48 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:51:43 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 09:51:50 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:52:00 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:52:05 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 09:52:10 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:52:20 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:52:23 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 09:52:30 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:52:40 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:52:50 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:53:00 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:53:10 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:53:20 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:53:30 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:53:40 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:53:50 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:54:00 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:54:10 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:54:20 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:54:30 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:54:40 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:54:50 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:55:00 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:55:10 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 09:55:20 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:00:03 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 10:00:06 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:00:10 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 10:00:16 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:00:26 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:00:36 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:00:46 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:00:46 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/register with token present: false
+2024-12-09 10:00:56 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:01:06 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:01:16 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:01:26 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:01:36 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:01:46 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:01:56 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:02:06 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:14:50 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 10:14:57 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:15:02 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token present: false
+2024-12-09 10:15:07 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:15:17 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:15:27 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:15:37 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:15:47 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:15:57 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:16:07 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:16:17 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:16:27 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:16:37 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:16:47 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:16:57 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:17:07 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:17:17 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:17:27 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:17:37 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:17:47 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:17:57 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:18:07 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:18:17 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:18:27 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:18:37 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:18:47 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:18:57 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:19:07 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:19:17 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:19:27 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:19:37 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token present: false
+2024-12-09 10:19:51 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 10:25:52 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 10:30:03 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 10:36:02 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 10:44:49 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 10:52:10 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 10:59:48 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:08:15 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:09:10 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:09:56 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:12:12 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:16:24 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:24:08 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:28:18 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:33:01 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:37:51 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:42:36 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:43:29 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:44:31 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:45:15 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:45:27 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:47:21 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:50:34 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 11:53:51 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 12:00:58 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 12:15:14 [main] DEBUG c.s.s.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2024-12-09 12:15:17 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:15:17 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:15:23 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token: null
+2024-12-09 12:15:23 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/auth/login with token: null
+2024-12-09 12:15:23 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-3] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-4] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-6] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-2] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-5] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-8] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-7] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-9] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-3] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-2] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-12] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token: token-3
+2024-12-09 12:15:23 [http-nio-9080-exec-11] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-4] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-5] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users with token: null
+2024-12-09 12:15:23 [http-nio-9080-exec-12] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-7] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books/count with token: null
+2024-12-09 12:15:23 [http-nio-9080-exec-1] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:23 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/users/count with token: null
+2024-12-09 12:15:23 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/books with token: null
+2024-12-09 12:15:23 [http-nio-9080-exec-3] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/transactions/active-loans-count with token: null
+2024-12-09 12:15:23 [http-nio-9080-exec-10] ERROR c.s.s.s.JwtAuthenticationFilter - Authentication error: User not found: 3
+2024-12-09 12:15:27 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:15:27 [http-nio-9080-exec-8] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:15:37 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:15:37 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:15:47 [http-nio-9080-exec-12] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:15:47 [http-nio-9080-exec-12] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:15:57 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:15:57 [http-nio-9080-exec-4] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:07 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:07 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:17 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:17 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:27 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:27 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:37 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:37 [http-nio-9080-exec-11] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:47 [http-nio-9080-exec-12] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:47 [http-nio-9080-exec-12] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:57 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:16:57 [http-nio-9080-exec-10] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:07 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:07 [http-nio-9080-exec-1] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:17 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:17 [http-nio-9080-exec-6] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:27 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:27 [http-nio-9080-exec-13] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:37 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null
+2024-12-09 12:17:37 [http-nio-9080-exec-9] DEBUG c.s.s.s.JwtAuthenticationFilter - Processing request to: /api/health with token: null

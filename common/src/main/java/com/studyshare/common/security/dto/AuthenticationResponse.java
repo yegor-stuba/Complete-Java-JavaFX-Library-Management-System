@@ -1,5 +1,6 @@
 package com.studyshare.common.security.dto;
 
+import com.studyshare.common.dto.UserDTO;
 import com.studyshare.common.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,4 +18,5 @@ public class AuthenticationResponse {
     private Long userId;
     private String message;
     private String error;
+    private UserDTO user;
 }

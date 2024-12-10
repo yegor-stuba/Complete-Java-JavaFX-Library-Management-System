@@ -1,12 +1,19 @@
 package com.studyshare.server.service.impl;
 
 import com.studyshare.common.dto.BookDTO;
+import com.studyshare.common.dto.UserDTO;
+import com.studyshare.server.exception.ResourceNotFoundException;
+import com.studyshare.server.exception.ValidationException;
+import com.studyshare.server.mapper.BookMapper;
 import com.studyshare.server.mapper.UserMapper;
 import com.studyshare.server.model.Book;
+import com.studyshare.server.model.User;
 import com.studyshare.server.repository.BookRepository;
 import com.studyshare.server.repository.UserRepository;
 import com.studyshare.server.service.BookService;
+import com.studyshare.server.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,64 +25,60 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
-    private final UserRepository userRepository;
+    private final BookMapper bookMapper;
     private final UserMapper userMapper;
+    private final UserService userService;
 
     @Override
     @Transactional
     public BookDTO createBook(BookDTO bookDTO) {
-        validateNewBook(bookDTO);
-        Book book = new Book();
-        book.setTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setAvailableCopies(bookDTO.getAvailableCopies());
-        book.setOwner(userRepository.findById(bookDTO.getOwnerId())
-                .orElseThrow(() -> new RuntimeException("Owner not found")));
-        return convertToDTO(bookRepository.save(book));
+        Book book = bookMapper.toEntity(bookDTO);
+        book.setOwner(userService.getCurrentUserEntity());
+        book.setAvailable(true);
+        return bookMapper.toDto(bookRepository.save(book));
+    }
+    @Override
+    public void validateBookAvailability(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+        if (!book.isAvailable()) {
+            throw new ValidationException("Book is not available");
+        }
     }
 
     @Override
-    public List<BookDTO> searchBooks(String query) {
-        return bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query)
-                .stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-public List<BookDTO> getAllBooks() {
-    return bookRepository.findAll().stream()
-            .map(this::convertToDTO)
-            .collect(Collectors.toList());
-}
-
-    @Override
-    public List<BookDTO> getBooksByOwner(Long ownerId) {
-        return bookRepository.findByOwnerUserId(ownerId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<BookDTO> getAllBooks() {
+        return bookMapper.toDtoList(bookRepository.findAll());
     }
 
 
-@Override
-@Transactional
-public BookDTO updateBook(Long id, BookDTO bookDTO) {
-    Book book = bookRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Book not found"));
+    @Override
+    public List<BookDTO> getBorrowedBooks(Long userId) {
+        UserDTO userDTO = userService.getUserById(userId);
+        User user = userMapper.toEntity(userDTO);
+        List<Book> books = bookRepository.findByBorrowerAndAvailableFalse(user);
+        return bookMapper.toDtoList(books);
+    }
 
-    // Update fields
-    if (bookDTO.getTitle() != null) book.setTitle(bookDTO.getTitle());
-    if (bookDTO.getAuthor() != null) book.setAuthor(bookDTO.getAuthor());
-    if (bookDTO.getIsbn() != null) book.setIsbn(bookDTO.getIsbn());
-    if (bookDTO.getAvailableCopies() != null) book.setAvailableCopies(bookDTO.getAvailableCopies());
+    @Override
+    public List<BookDTO> getLentBooks() {
+        User currentUser = userService.getCurrentUserEntity();
+        return bookMapper.toDtoList(
+            bookRepository.findByOwnerAndAvailableFalse(currentUser)
+        );
+    }
 
-    return convertToDTO(bookRepository.save(book));
-}
-
+    @Override
+    public BookDTO updateBookStatus(Long id, boolean available) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+        book.setAvailable(available);
+        return bookMapper.toDto(bookRepository.save(book));
+    }
 
     @Override
     public Long getBookCount() {
@@ -83,75 +86,42 @@ public BookDTO updateBook(Long id, BookDTO bookDTO) {
     }
 
     @Override
-    public boolean isBookAvailable(Long bookId) {
-        return bookRepository.findById(bookId)
-                .map(book -> book.getAvailableCopies() > 0)
-                .orElse(false);
-    }
-
-    @Override
     public List<BookDTO> getAvailableBooks() {
-        return bookRepository.findByAvailableCopiesGreaterThan(0).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        return bookMapper.toDtoList(
+                bookRepository.findByAvailableTrue()
+        );
     }
 
     @Override
-    @Transactional
-    public BookDTO borrowBook(Long bookId, Long userId) {
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
-
-        if (book.getAvailableCopies() <= 0) {
-            throw new RuntimeException("Book is not available");
-        }
-
-        book.setAvailableCopies(book.getAvailableCopies() - 1);
-        return convertToDTO(bookRepository.save(book));
+    public List<Book> getBooksByUserId(Long userId) {
+        return bookRepository.findByOwner_UserId(userId);
     }
 
     @Override
-    @Transactional
-    public BookDTO returnBook(Long bookId, Long userId) {
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
-
-        book.setAvailableCopies(book.getAvailableCopies() + 1);
-        return convertToDTO(bookRepository.save(book));
-    }
-
-    @Override
-    public BookDTO getBookById(Long bookId) {
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found"));
-        return convertToDTO(book);
-    }
-
-   private BookDTO convertToDTO(Book book) {
-    BookDTO dto = new BookDTO();
-    dto.setBookId(book.getBookId());
-    dto.setTitle(book.getTitle());
-    dto.setAuthor(book.getAuthor());
-    dto.setIsbn(book.getIsbn());
-    dto.setAvailableCopies(book.getAvailableCopies());
-    // Add null check for owner
-    if (book.getOwner() != null) {
-        dto.setOwnerId(book.getOwner().getUserId());
-    }
-    return dto;
+public BookDTO getBookById(Long id) {
+    return bookMapper.toDto(
+        bookRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found"))
+    );
 }
-    @Override
-    @Transactional
-    public void deleteBook(Long bookId) {
-        if (!bookRepository.existsById(bookId)) {
-            throw new RuntimeException("Book not found");
-        }
-        bookRepository.deleteById(bookId);
-    }
-
-    private void validateNewBook(BookDTO bookDTO) {
-        if (bookDTO.getIsbn() != null && bookRepository.existsByIsbn(bookDTO.getIsbn())) {
-            throw new RuntimeException("Book with this ISBN already exists");
-        }
-    }
+@Override
+public List<BookDTO> searchBooks(String query) {
+    return bookMapper.toDtoList(
+        bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query)
+    );
+}
+@Override
+public void deleteBook(Long id) {
+    bookRepository.deleteById(id);
+}
+@Override
+public BookDTO updateBook(Long id, BookDTO bookDTO) {
+    Book book = bookRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+    book.setTitle(bookDTO.getTitle());
+    book.setAuthor(bookDTO.getAuthor());
+    book.setIsbn(bookDTO.getIsbn());
+    book.setAvailable(bookDTO.isAvailable());
+    return bookMapper.toDto(bookRepository.save(book));
+}
 }

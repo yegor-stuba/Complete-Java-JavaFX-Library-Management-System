@@ -2,6 +2,8 @@ package com.studyshare.client.controller;
 
 import com.studyshare.client.service.AuthenticationService;
 import com.studyshare.client.service.UserService;
+import com.studyshare.client.service.exception.AuthenticationException;
+import com.studyshare.client.service.exception.RestClientException;
 import com.studyshare.client.util.AlertUtil;
 import com.studyshare.client.util.ErrorHandler;
 import com.studyshare.client.util.SceneManager;
@@ -38,32 +40,63 @@ public class LoginController extends BaseController {
 
 @FXML
 private void handleLogin() {
-    if (!validateInput()) {
+    String username = usernameField.getText().trim();
+    String password = passwordField.getText();
+
+    log.debug("Attempting login with username: '{}', password length: {}",
+            username, password.length());
+
+
+    if (username.isEmpty() || password.isEmpty()) {
+        AlertUtil.showError("Login Error", "Username and password are required");
         return;
     }
 
-    String username = usernameField.getText();
-    String password = passwordField.getText();
-    log.debug("Processing login for user: {}", username);
 
     authService.login(username, password)
-        .thenAccept(response -> Platform.runLater(() -> {
-            if (response != null && response.getRole() != null) {
-                log.debug("Login successful, role: {}", response.getRole());
-                switch (response.getRole()) {
-                    case ADMIN -> sceneManager.switchToAdminDashboard();
-                    case USER -> sceneManager.switchToUserProfile();
-                    default -> handleLoginError("Invalid user role");
+            .thenAccept(response -> Platform.runLater(() -> {
+                log.debug("Login response received: {}", response);
+
+                if (response == null) {
+                    log.error("Received null response from authentication service");
+                    AlertUtil.showError("Login Error", "Authentication failed - no response");
+                    return;
                 }
-            } else {
-                handleLoginError("Invalid server response");
-            }
-        }))
-        .exceptionally(throwable -> {
-            log.error("Login failed: {}", throwable.getMessage());
-            handleLoginError(throwable.getMessage());
-            return null;
-        });
+
+                UserRole role = response.getRole();
+                log.debug("User authenticated with role: {}", role);
+
+                switch (role) {
+                    case ADMIN -> {
+                        log.info("Admin user logged in: {}", response.getUsername());
+                        sceneManager.switchToAdminDashboard();
+                    }
+                    case USER -> {
+                        log.info("Regular user logged in: {}", response.getUsername());
+                        sceneManager.switchToUserProfile();
+                    }
+                    default -> {
+                        log.error("Unknown user role: {}", role);
+                        AlertUtil.showError("Login Error", "Invalid user role");
+                    }
+                }
+            }))
+            .exceptionally(throwable -> {
+                log.error("Login failed: {}", throwable.getMessage());
+                Platform.runLater(() -> AlertUtil.showError("Login Failed", throwable.getMessage()));
+                return null;
+            });
+}
+
+private String extractErrorMessage(Throwable throwable) {
+    Throwable cause = throwable.getCause();
+    if (cause instanceof AuthenticationException) {
+        return "Invalid username or password";
+    } else if (cause instanceof RestClientException) {
+        RestClientException rce = (RestClientException) cause;
+        return rce.getErrorBody();
+    }
+    return "Connection error. Please try again.";
 }
 
 private boolean validateInput() {

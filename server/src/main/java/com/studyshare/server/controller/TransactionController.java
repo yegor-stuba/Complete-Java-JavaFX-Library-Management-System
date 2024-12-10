@@ -5,6 +5,7 @@ import com.studyshare.server.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,20 +17,40 @@ import java.util.List;
 public class TransactionController {
     private final TransactionService transactionService;
 
-    @PostMapping
-    public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDTO) {
-        return ResponseEntity.ok(transactionService.createTransaction(transactionDTO));
-    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<TransactionDTO> getTransaction(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.getTransactionById(id));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long userId) {
-        return ResponseEntity.ok(transactionService.getUserTransactions(userId));
+@PostMapping
+public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDTO) {
+    return ResponseEntity.ok(transactionService.createTransaction(
+        transactionDTO.getBookId(),
+        transactionDTO.getType()
+    ));
+}
+
+    @PostMapping("/borrow")
+    public ResponseEntity<TransactionDTO> borrowBook(@RequestBody TransactionDTO transactionDTO) {
+        return ResponseEntity.ok(transactionService.createTransaction(
+            transactionDTO.getBookId(),
+            transactionDTO.getType()
+        ));
     }
+
+    @PostMapping("/return/{id}")
+    public ResponseEntity<Void> returnBook(@PathVariable Long id) {
+        transactionService.completeTransaction(id);
+        return ResponseEntity.ok().build();
+    }
+
+@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+@GetMapping("/user/{userId}")
+public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long userId) {
+    return ResponseEntity.ok(transactionService.getUserTransactions(userId));
+}
 
     @GetMapping("/book/{bookId}")
     public ResponseEntity<List<TransactionDTO>> getBookTransactions(@PathVariable Long bookId) {

@@ -1,20 +1,30 @@
 package com.studyshare.server.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Builder;
-import lombok.Value;
+import lombok.NoArgsConstructor;
 
-@Value
-@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ErrorResponse {
-    String message;
-    String details;
-    int status;
+    private String code;
+    private String message;
+    private String details;
 
-    public static ErrorResponse of(String message, String details, int status) {
-        return ErrorResponse.builder()
-            .message(message)
-            .details(details)
-            .status(status)
-            .build();
+    // Add convenience constructor for simple error messages
+    public ErrorResponse(String message) {
+        this.code = "ERROR";
+        this.message = message;
+        this.details = null;
+    }
+
+    // Add convenience constructor for error code and message
+    public ErrorResponse(String code, String message) {
+        this.code = code;
+        this.message = message;
+        this.details = null;
     }
 }
+

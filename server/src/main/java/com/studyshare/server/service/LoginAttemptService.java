@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 @Service
 @Slf4j
 public class LoginAttemptService {
-    private static final int MAX_ATTEMPT = 3;
+    private static final int MAX_ATTEMPT = 20;
     private final LoadingCache<String, Integer> attemptsCache;
 
     public LoginAttemptService() {

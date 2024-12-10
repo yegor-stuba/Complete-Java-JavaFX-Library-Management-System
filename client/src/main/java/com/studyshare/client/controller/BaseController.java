@@ -2,6 +2,8 @@ package com.studyshare.client.controller;
 
 import com.studyshare.client.service.impl.BookServiceImpl;
 import com.studyshare.client.util.ErrorHandler;
+import com.studyshare.common.dto.BookDTO;
+import com.studyshare.common.dto.TransactionDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import org.slf4j.Logger;
@@ -29,6 +31,6 @@ protected <T> CompletableFuture<T> handleAsync(CompletableFuture<T> future) {
     });
 }
 
-    public void initData(Object data) {
-    }
+
+
 }

@@ -1,8 +1,11 @@
 package com.studyshare.client.controller;
 
 import com.studyshare.client.service.TransactionService;
+import com.studyshare.client.util.AlertUtil;
+import com.studyshare.client.util.ErrorHandler;
 import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.common.enums.TransactionType;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -89,6 +92,23 @@ public class TransactionDetailsController extends BaseController {
     @FXML
 private void handleClose() {
     dialogStage.close();
+}
+
+@FXML
+private void handleCompleteTransaction() {
+    transactionService.completeTransaction(transaction.getTransactionId())
+        .thenAccept(updatedTransaction -> Platform.runLater(() -> {
+            AlertUtil.showInfo("Success", "Transaction completed successfully");
+            dialogStage.close();
+        }))
+        .exceptionally(throwable -> {
+            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to complete transaction"));
+            return null;
+        })
+        .exceptionally(throwable -> {
+            ErrorHandler.handle(throwable);
+            return null;
+        });
 }
 }
 

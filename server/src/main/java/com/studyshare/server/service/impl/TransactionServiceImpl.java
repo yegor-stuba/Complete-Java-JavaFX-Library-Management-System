@@ -1,105 +1,148 @@
 package com.studyshare.server.service.impl;
 
+import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.common.enums.TransactionType;
 import com.studyshare.server.exception.ResourceNotFoundException;
 import com.studyshare.server.exception.ValidationException;
+import com.studyshare.server.mapper.TransactionMapper;
 import com.studyshare.server.model.Book;
 import com.studyshare.server.model.Transaction;
 import com.studyshare.server.model.User;
 import com.studyshare.server.repository.TransactionRepository;
 import com.studyshare.server.repository.BookRepository;
 import com.studyshare.server.repository.UserRepository;
+import com.studyshare.server.service.BookService;
 import com.studyshare.server.service.TransactionService;
+import com.studyshare.server.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
+    private final BookService bookService;
+    private final UserService userService;
+    private final TransactionMapper transactionMapper;
+      private final BookRepository bookRepository;
     private final UserRepository userRepository;
-    private final BookRepository bookRepository;
-    private static final Logger log = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
-    @Override
-    public List<TransactionDTO> getUserTransactions(Long userId) {
-        return transactionRepository.findByUser_UserId(userId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+
+    @Transactional
+    public TransactionDTO borrowBook(Long bookId) {
+        BookDTO book = bookService.getBookById(bookId);
+        if (!book.isAvailable()) {
+            throw new ValidationException("Book is not available for borrowing");
+        }
+
+        Transaction transaction = new Transaction();
+
+        transaction.setUser(userService.getCurrentUserEntity());
+        transaction.setType(TransactionType.BORROW);
+        transaction.setDate(LocalDateTime.now());
+        transaction.setDueDate(LocalDateTime.now().plusDays(14));
+        transaction.setActive(true);
+
+        bookService.updateBookStatus(bookId, false);
+        return transactionMapper.toDto(transactionRepository.save(transaction));
     }
 
-    @Override
-    public List<TransactionDTO> getBookTransactions(Long bookId) {
-        return transactionRepository.findByBook_BookId(bookId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+@Override
+public List<TransactionDTO> getBookTransactions(Long bookId) {
+    return transactionMapper.toDtoList(
+        transactionRepository.findByBook_BookId(bookId)
+    );
+}
+    public List<TransactionDTO> findByBook_BookId(Long bookId) {
+        return transactionMapper.toDtoList(transactionRepository.findByBook_BookId(bookId));
     }
 
-    @Override
-    public Long getActiveLoansCount() {
-        return transactionRepository.countByTypeAndActiveTrue(TransactionType.BORROW);
+    public Optional<Transaction> findByBook_BookIdAndActiveTrue(Long bookId) {
+        return transactionRepository.findByBook_BookIdAndActiveTrue(bookId);
     }
 
-    @Override
-    public TransactionDTO getTransactionById(Long id) {
-        return convertToDTO(transactionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found")));
+    @Transactional
+    public TransactionDTO returnBook(Long bookId) {
+        Transaction activeTransaction = transactionRepository
+            .findByBook_BookIdAndActiveTrue(bookId)
+            .orElseThrow(() -> new ValidationException("No active borrowing found for this book"));
+
+        activeTransaction.setActive(false);
+        activeTransaction.setReturnDate(LocalDateTime.now());
+
+        bookService.updateBookStatus(bookId, true);
+        return transactionMapper.toDto(transactionRepository.save(activeTransaction));
     }
 
-    @Override
-    public void completeTransaction(Long id) {
-        Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
-        transaction.setActive(false);
-        transactionRepository.save(transaction);
+
+    public List<TransactionDTO> getUserTransactions() {
+        User currentUser = userService.getCurrentUserEntity();
+        return transactionMapper.toDtoList(
+            transactionRepository.findByUserOrderByDateDesc(currentUser)
+        );
     }
 
     @Override
     public List<TransactionDTO> getActiveTransactions() {
-        return transactionRepository.findByActiveTrue().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        return transactionMapper.toDtoList(
+            transactionRepository.findByActiveTrue()
+        );
     }
 
     @Override
-    public TransactionDTO createTransaction(TransactionDTO transactionDTO) {
-        User user = userRepository.findById(transactionDTO.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        Book book = bookRepository.findById(transactionDTO.getBookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-
-        Transaction transaction = new Transaction();
-        transaction.setUser(user);
-        transaction.setBook(book);
-        transaction.setType(transactionDTO.getType());
-        transaction.setDate(LocalDateTime.now());
-        transaction.setDueDate(transactionDTO.getDueDate());
-        transaction.setActive(true);
-
-        return convertToDTO(transactionRepository.save(transaction));
+    public Long getActiveLoansCount() {
+        return transactionRepository.countByActiveTrue();
     }
 
-    private TransactionDTO convertToDTO(Transaction transaction) {
-        return TransactionDTO.builder()
-                .transactionId(transaction.getTransactionId())
-                .userId(transaction.getUser().getUserId())
-                .bookId(transaction.getBook().getBookId())
-                .bookTitle(transaction.getBook().getTitle())
-                .type(transaction.getType())
-                .date(transaction.getDate())
-                .dueDate(transaction.getDueDate())
-                .active(transaction.isActive())
-                .build();
-    }
+    @Override
+public TransactionDTO createTransaction(Long bookId, TransactionType type) {
+    Book book = bookRepository.findById(bookId)
+        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+    Transaction transaction = new Transaction();
+    transaction.setBook(book);
+    transaction.setUser(userService.getCurrentUserEntity());
+    transaction.setType(type);
+    transaction.setDate(LocalDateTime.now());
+
+    return transactionMapper.toDto(transactionRepository.save(transaction));
+}
+
+@Override
+public TransactionDTO completeTransaction(Long transactionId) {
+    Transaction transaction = transactionRepository.findById(transactionId)
+        .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+    transaction.setActive(false);
+    transaction.setReturnDate(LocalDateTime.now());
+    return transactionMapper.toDto(transactionRepository.save(transaction));
+}
+@Override
+public TransactionDTO getTransactionById(Long id) {
+    return transactionMapper.toDto(
+        transactionRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"))
+    );
+}
+
+@Override
+public List<TransactionDTO> getUserTransactions(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    return transactionMapper.toDtoList(
+        transactionRepository.findByUserOrderByDateDesc(user)
+    );
 }
 
 
-
+}

@@ -3,24 +3,57 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.studyshare.client.controller.BookManagementController">
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.studyshare.client.controller.BookManagementController">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 
     <HBox spacing="10">
-        <TextField fx:id="searchField" promptText="Search books..." HBox.hgrow="ALWAYS"/>
-        <Button text="Search" onAction="#handleSearch"/>
-        <Button text="Add Book" onAction="#handleAddBook"/>
+        <VBox spacing="10" HBox.hgrow="ALWAYS">
+            <Label text="All Books" styleClass="section-header"/>
+            <TableView fx:id="allBooksTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
+                    <TableColumn fx:id="authorColumn" text="Author" prefWidth="150"/>
+                    <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="100"/>
+                    <TableColumn fx:id="copiesColumn" text="Copies" prefWidth="80"/>
+                    <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+        <VBox spacing="10" minWidth="300">
+            <Label text="My Books" styleClass="section-header"/>
+            <TabPane>
+                <tabs>
+                    <Tab text="Borrowed">
+                        <content>
+                            <TableView fx:id="borrowedBooksTable" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="borrowedTitleColumn" text="Title" prefWidth="150"/>
+                                    <TableColumn fx:id="borrowedAuthorColumn" text="Author" prefWidth="150"/>
+                                </columns>
+                            </TableView>
+                        </content>
+                    </Tab>
+                    <Tab text="Lent">
+                        <content>
+                            <TableView fx:id="lentBooksTable" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="lentTitleColumn" text="Title" prefWidth="150"/>
+                                    <TableColumn fx:id="lentAuthorColumn" text="Author" prefWidth="150"/>
+                                </columns>
+                            </TableView>
+                        </content>
+                    </Tab>
+                </tabs>
+            </TabPane>
+        </VBox>
     </HBox>
 
-    <TableView fx:id="booksTable" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="titleColumn" text="Title"/>
-            <TableColumn fx:id="authorColumn" text="Author"/>
-            <TableColumn fx:id="isbnColumn" text="ISBN"/>
-            <TableColumn fx:id="copiesColumn" text="Available Copies"/>
-        </columns>
-    </TableView>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="View Transaction History" onAction="#showTransactionHistory"/>
+    </HBox>
+
+    <Label fx:id="borrowedBooksLabel" styleClass="info-label"/>
 </VBox>

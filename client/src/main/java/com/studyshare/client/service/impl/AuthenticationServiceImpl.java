@@ -2,10 +2,13 @@ package com.studyshare.client.service.impl;
 
 import com.studyshare.client.service.AuthenticationService;
 import com.studyshare.client.service.RestClient;
+import com.studyshare.client.service.UserService;
 import com.studyshare.client.service.exception.AuthenticationException;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.common.security.dto.AuthenticationRequest;
 import com.studyshare.common.security.dto.AuthenticationResponse;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+
 import java.util.concurrent.CompletableFuture;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -13,29 +16,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private String token;
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 
+
+
+
     public AuthenticationServiceImpl(RestClient restClient) {
         this.restClient = restClient;
-        this.token = null;
     }
 
-@Override
-public CompletableFuture<AuthenticationResponse> login(String username, String password) {
-    AuthenticationRequest request = new AuthenticationRequest();
-    request.setUsername(username);
-    request.setPassword(password);
-    log.debug("Attempting login for user: {}", username);
 
-    return restClient.post("/api/auth/login", request, AuthenticationResponse.class)
-        .thenApply(response -> {
-            if (response == null || response.getToken() == null) {
-                throw new AuthenticationException("Invalid authentication response");
-            }
-            this.token = response.getToken();
-            restClient.setAuthToken(this.token);
-            log.debug("Successfully authenticated user: {}", username);
-            return response;
-        });
+@Override
+public CompletableFuture<UserDTO> login(String username, String password) {
+    AuthenticationRequest request = new AuthenticationRequest(username.trim(), password);
+    return restClient.post("/api/auth/login", request, UserDTO.class);
 }
+
+    @Override
+    public CompletableFuture<Void> logout() {
+        return restClient.post("/api/auth/logout", null, Void.class);
+    }
+
 
 @Override
 public String getToken() {
@@ -75,15 +74,8 @@ private boolean isTokenValid(String token) {
     }
 
     @Override
-    public CompletableFuture<Void> logout() {
-        return restClient.post("/api/auth/logout", null, Void.class)
-            .thenRun(() -> this.token = null);
-    }
-
-
-    @Override
     public boolean isAuthenticated() {
-        return token != null;
+        return restClient.isAuthenticated();
     }
 }
 

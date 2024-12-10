@@ -13,38 +13,37 @@ import java.util.concurrent.CompletionException;
 public class ErrorHandler {
     private static final Logger log = LoggerFactory.getLogger(ErrorHandler.class);
 
-    public static void handle(Throwable throwable) {
-        // Log full stack trace
-        System.err.println("Error details:");
-        throwable.printStackTrace();
 
+    public static void handle(Throwable throwable) {
         Throwable cause = throwable instanceof CompletionException ? throwable.getCause() : throwable;
 
         Platform.runLater(() -> {
             if (cause instanceof RestClientException) {
-                RestClientException restError = (RestClientException) cause;
-                handleRestError(restError);
+                handleRestError((RestClientException) cause);
+            } else if (cause instanceof ValidationException) {
+                AlertUtil.showWarning("Validation Error", cause.getMessage());
             } else {
                 AlertUtil.showError("System Error",
-                    "Type: " + cause.getClass().getSimpleName() + "\n" +
-                    "Message: " + cause.getMessage());
+                        "Type: " + cause.getClass().getSimpleName() + "\n" +
+                                "Message: " + cause.getMessage());
             }
         });
     }
 
     private static void handleRestError(RestClientException error) {
-    String message = switch (error.getStatusCode()) {
-        case 400 -> "Invalid request: " + error.getErrorBody();
-        case 401 -> "Invalid credentials. Please check username and password.";
-        case 403 -> "Access denied. Insufficient permissions.";
-        case 404 -> "Resource not found: " + error.getErrorBody();
-        case 409 -> "Conflict: " + error.getErrorBody();
-        case 422 -> "Validation error: " + error.getErrorBody();
-        case 500 -> "Server error: " + error.getErrorBody();
-        default -> "Error " + error.getStatusCode() + ": " + error.getErrorBody();
-    };
-    AlertUtil.showError("Server Error", message);
-}  public static void handleException(Throwable throwable) {
+        String message = switch (error.getStatusCode()) {
+            case 400 -> "Invalid request: " + error.getErrorBody();
+            case 401 -> "Authentication required";
+            case 403 -> "Access denied";
+            case 404 -> "Resource not found";
+            default -> "Error " + error.getStatusCode() + ": " + error.getErrorBody();
+        };
+        AlertUtil.showError("Server Error", message);
+    }
+
+
+
+public static void handleException(Throwable throwable) {
         if (throwable instanceof ValidationException) {
             AlertUtil.showWarning("Validation Error", throwable.getMessage());
         } else {

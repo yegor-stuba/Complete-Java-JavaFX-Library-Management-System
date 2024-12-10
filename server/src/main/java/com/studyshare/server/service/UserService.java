@@ -1,6 +1,7 @@
 package com.studyshare.server.service;
 
 import com.studyshare.common.dto.UserDTO;
+import com.studyshare.server.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -20,4 +21,5 @@ public interface UserService extends UserDetailsService {
     boolean authenticate(String username, String password);
     void logout();
     Long getUserCount();
+    User getCurrentUserEntity();
 }

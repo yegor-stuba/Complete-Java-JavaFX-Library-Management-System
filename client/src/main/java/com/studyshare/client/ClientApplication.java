@@ -66,7 +66,7 @@ private void setupErrorHandling() {
         setupConnectionMonitoring(primaryStage);
 
         // Start with login scene
-        primaryStage.setTitle("StudyShare Library");
+        primaryStage.setTitle("Library Management System");
         sceneManager.switchToLogin();
         primaryStage.show();
     }

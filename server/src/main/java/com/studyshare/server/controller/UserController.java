@@ -1,9 +1,9 @@
 package com.studyshare.server.controller;
 
-import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.common.enums.UserRole;
+import com.studyshare.server.model.Book;
 import com.studyshare.server.service.BookService;
 import com.studyshare.server.service.TransactionService;
 import com.studyshare.server.service.UserService;
@@ -45,6 +45,8 @@ public ResponseEntity<List<UserDTO>> getAllUsers() {
     }
 }
 
+
+
     @GetMapping("/count")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Long> getUserCount() {
@@ -73,16 +75,14 @@ public ResponseEntity<List<UserDTO>> getAllUsers() {
         log.warn("Access denied", e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied: Insufficient privileges");
     }
-
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.userId")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.updateUser(id, userDTO));
     }
@@ -114,8 +114,8 @@ public ResponseEntity<List<UserDTO>> getAllUsers() {
     }
 
     @GetMapping("/{id}/books")
-    public ResponseEntity<List<BookDTO>> getUserBooks(@PathVariable Long id) {
-        return ResponseEntity.ok(bookService.getBooksByOwner(id));
+    public ResponseEntity<List<Book>> getUserBooks(@PathVariable Long id) {
+        return ResponseEntity.ok(bookService.getBooksByUserId(id));
     }
 
     @GetMapping("/{id}/transactions")

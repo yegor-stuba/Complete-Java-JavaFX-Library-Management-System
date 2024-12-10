@@ -4,6 +4,8 @@ import com.studyshare.client.config.ClientConfig;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.net.http.HttpClient;
@@ -22,6 +24,8 @@ public class ConnectionMonitor {
     private final HttpClient httpClient;
     private final BooleanProperty connected = new SimpleBooleanProperty(false);
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionMonitor.class);
+
 
     public ConnectionMonitor() {
         this.httpClient = HttpClient.newBuilder()
@@ -53,10 +57,6 @@ public class ConnectionMonitor {
 
     public BooleanProperty connectedProperty() {
         return connected;
-    }
-
-    public boolean isConnected() {
-        return connected.get();
     }
 
     public void shutdown() {

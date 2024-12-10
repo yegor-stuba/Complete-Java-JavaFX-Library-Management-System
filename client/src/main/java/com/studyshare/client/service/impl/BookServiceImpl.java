@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 
 import com.studyshare.common.dto.UserDTO;
@@ -23,58 +24,36 @@ import org.slf4j.LoggerFactory;
 import javax.naming.AuthenticationException;
 
 
+@Slf4j
 public class BookServiceImpl implements BookService {
-    private static final Logger log = LoggerFactory.getLogger(BookServiceImpl.class);
     private final RestClient restClient;
-
-    @Override
-public CompletableFuture<Long> getBookCount() {
-    return restClient.get("/api/books/count", Long.class);
-}
 
     public BookServiceImpl(RestClient restClient) {
         this.restClient = restClient;
     }
 
-    // Add validation method
-    private void validateBookInput(BookDTO book) {
-        if (book.getTitle() == null || book.getTitle().trim().isEmpty()) {
-            throw new ValidationException("Book title is required");
-        }
-        if (book.getAuthor() == null || book.getAuthor().trim().isEmpty()) {
-            throw new ValidationException("Book author is required");
-        }
-        if (book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
-            throw new ValidationException("Book ISBN is required");
-        }
+    @Override
+    public CompletableFuture<List<BookDTO>> getAllBooks() {
+        return restClient.getList("/api/books", new ParameterizedTypeReference<List<BookDTO>>() {});
     }
 
-@Override
-public CompletableFuture<List<BookDTO>> getAllBooks() {
-    return restClient.getList("/api/books",
-        new ParameterizedTypeReference<List<BookDTO>>() {});
-}
-
-@Override
-public CompletableFuture<List<BookDTO>> searchBooks(String query) {
-    return restClient.getList("/api/books/search?query=" + query,
-        new ParameterizedTypeReference<List<BookDTO>>() {});
-}
-
-@Override
-public CompletableFuture<List<BookDTO>> getAvailableBooks() {
-    return restClient.getList("/api/books/available",
-        new ParameterizedTypeReference<List<BookDTO>>() {});
-}
+    @Override
+    public CompletableFuture<BookDTO> createBook(BookDTO book) {
+        return restClient.post("/api/books", book, BookDTO.class);
+    }
+    @Override
+    public CompletableFuture<List<BookDTO>> getBorrowedBooks() {
+        return restClient.getList("/api/books/borrowed", new ParameterizedTypeReference<List<BookDTO>>() {});
+    }
 
     @Override
-    public CompletableFuture<BookDTO> addBook(BookDTO book) {
-        log.debug("Adding new book: {}", book.getTitle());
-        return restClient.post("/api/books", book, BookDTO.class)
-                .thenApply(createdBook -> {
-                    log.debug("Book added: {}", createdBook.getTitle());
-                    return createdBook;
-                });
+    public CompletableFuture<List<BookDTO>> getLentBooks() {
+        return restClient.getList("/api/books/lent", new ParameterizedTypeReference<List<BookDTO>>() {});
+    }
+
+    @Override
+    public CompletableFuture<BookDTO> getBookById(Long id) {
+        return restClient.get("/api/books/" + id, BookDTO.class);
     }
 
     @Override
@@ -87,30 +66,31 @@ public CompletableFuture<List<BookDTO>> getAvailableBooks() {
         return restClient.delete("/api/books/" + id);
     }
 
-
-@Override
-public CompletableFuture<BookDTO> getBookById(Long id) {
-    return restClient.get("/api/books/" + id, BookDTO.class);
+    @Override
+public CompletableFuture<List<BookDTO>> searchBooks(String query) {
+    return restClient.getList("/api/books/search?query=" + query,
+        new ParameterizedTypeReference<List<BookDTO>>() {});
 }
-
-
-
-@Override
+    @Override
 public CompletableFuture<BookDTO> borrowBook(Long bookId) {
-    return restClient.post("/api/books/" + bookId + "/borrow", null, BookDTO.class)
-        .exceptionally(throwable -> {
-            if (throwable instanceof ResourceNotFoundException) {
-                throw new BookOperationException("borrow", bookId, "Book not found");
-            }
-            if (throwable instanceof ConflictException) {
-                throw new BookOperationException("borrow", bookId, "Book already borrowed");
-            }
-            throw new BookOperationException("borrow", bookId, "Failed to borrow book");
-        });
+    return restClient.post("/api/books/" + bookId + "/borrow", null, BookDTO.class);
 }
 
 @Override
 public CompletableFuture<BookDTO> returnBook(Long bookId) {
     return restClient.post("/api/books/" + bookId + "/return", null, BookDTO.class);
+}
+
+    public CompletableFuture<Boolean> isBookAvailable(Long bookId) {
+        return restClient.get("/api/books/" + bookId + "/available", Boolean.class);
+    }
+    @Override
+public CompletableFuture<Long> getBookCount() {
+    return restClient.get("/api/books/count", Long.class);
+}
+
+@Override
+public CompletableFuture<BookDTO> addBook(BookDTO bookDTO) {
+    return restClient.post("/api/books", bookDTO, BookDTO.class);
 }
 }

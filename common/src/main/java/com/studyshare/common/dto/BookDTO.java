@@ -16,4 +16,9 @@ public class BookDTO {
     private String isbn;
     private Integer availableCopies;
     private Long ownerId;
+    private boolean available;
+
+    public String getStatusDisplay() {
+        return available ? "Available" : "Borrowed";
+    }
 }

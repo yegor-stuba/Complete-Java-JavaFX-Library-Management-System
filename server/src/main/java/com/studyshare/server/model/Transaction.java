@@ -33,4 +33,7 @@ public class Transaction {
 
     @Column(name = "active")
     private boolean active;
+
+    @Column(name = "return_date")
+    private LocalDateTime returnDate;
 }

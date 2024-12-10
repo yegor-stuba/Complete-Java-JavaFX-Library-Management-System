@@ -1,5 +1,6 @@
 package com.studyshare.server.model;
 
+import com.studyshare.common.dto.BookDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import lombok.Data;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_id") // Match the column name in schema
+    @Column(name = "book_id")
     private Long bookId;
 
     @Column(nullable = false)
@@ -27,4 +28,11 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
+
+
+    @ManyToOne
+    @JoinColumn(name = "borrower_id")
+    private User borrower;
+
+    private boolean available;
 }

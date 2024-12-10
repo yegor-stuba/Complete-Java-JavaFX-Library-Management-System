@@ -8,13 +8,14 @@ CREATE TABLE IF NOT EXISTS hibernate_sequences (
 
 -- 2. Create users table before its indexes
 CREATE TABLE IF NOT EXISTS users (
-    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    role VARCHAR(20) NOT NULL DEFAULT 'USER'
+                                     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                     username VARCHAR(50) UNIQUE NOT NULL,
+                                     password VARCHAR(100) NOT NULL,
+                                     email VARCHAR(100) UNIQUE NOT NULL,
+                                     role VARCHAR(20) NOT NULL DEFAULT 'USER',
+                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                     last_login TIMESTAMP
 );
-
 -- 3. Create indexes after table exists
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
@@ -26,14 +27,19 @@ CREATE TABLE IF NOT EXISTS roles (
 );
 
 CREATE TABLE IF NOT EXISTS books (
-    book_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    author TEXT NOT NULL,
-    isbn TEXT UNIQUE,
-    available_copies INTEGER NOT NULL DEFAULT 1,
-    owner_id INTEGER,
-    FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE SET NULL
+                                     book_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                     title TEXT NOT NULL,
+                                     author TEXT NOT NULL,
+                                     isbn TEXT UNIQUE,
+                                     available_copies INTEGER NOT NULL DEFAULT 1,
+                                     owner_id INTEGER,
+                                     borrower_id INTEGER,
+                                     FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE SET NULL,
+                                     FOREIGN KEY (borrower_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
+
+
+
 
 -- 6. Create book indexes
 CREATE INDEX IF NOT EXISTS idx_books_title ON books(title);
@@ -63,8 +69,14 @@ INSERT OR IGNORE INTO roles (role_name) VALUES ('USER'), ('ADMIN');
 
 -- 10. Create admin user
 DELETE FROM users WHERE username = 'admin';
--- Ensure admin user exists with proper role
+-- Ensure admin user exists
 INSERT OR REPLACE INTO users (username, password, email, role)
 VALUES ('admin', 'admin', 'admin@studyshare.com', 'ADMIN');
+
+-- Add a test user
+INSERT OR REPLACE INTO users (username, password, email, role)
+VALUES ('user', 'password', 'user@studyshare.com', 'USER');
+
+
 INSERT OR REPLACE INTO books (book_id, title, author, isbn, available_copies, owner_id)
 VALUES (1, 'The Great Gatsby', 'F. Scott Fitzgerald', '9780743273565', 3, 2);

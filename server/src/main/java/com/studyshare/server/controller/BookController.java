@@ -3,13 +3,13 @@ package com.studyshare.server.controller;
 import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.server.exception.ResourceNotFoundException;
-import com.studyshare.server.exception.ValidationException;
+import com.studyshare.server.model.Book;
+import com.studyshare.server.model.User;
 import com.studyshare.server.service.BookService;
 import com.studyshare.server.service.UserService;
 import com.studyshare.server.validation.BookValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
@@ -29,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
@@ -95,7 +94,6 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
         return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
     }
@@ -122,20 +120,21 @@ public class BookController {
         return ResponseEntity.ok(bookService.getAvailableBooks());
     }
 
-    @PostMapping("/{id}/borrow")
-    public ResponseEntity<BookDTO> borrowBook(@PathVariable Long id) {
-        return ResponseEntity.ok(bookService.borrowBook(id, getCurrentUserId()));
+
+    @GetMapping("/borrowed/{userId}")
+    public ResponseEntity<List<BookDTO>> getBorrowedBooks(@PathVariable Long userId) {
+        return ResponseEntity.ok(bookService.getBorrowedBooks(userId));
     }
 
-    @PostMapping("/{id}/return")
-    public ResponseEntity<BookDTO> returnBook(@PathVariable Long id) {
-        return ResponseEntity.ok(bookService.returnBook(id, getCurrentUserId()));
+    @GetMapping("/lent")
+    public ResponseEntity<List<BookDTO>> getLentBooks() {
+        return ResponseEntity.ok(bookService.getLentBooks());
     }
 
     @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<BookDTO>> getBooksByOwner(@PathVariable Long ownerId) {
+    public ResponseEntity<List<Book>> getBooksByUserId(@PathVariable Long ownerId) {
         userService.getUserById(ownerId);
-        return ResponseEntity.ok(bookService.getBooksByOwner(ownerId));
+        return ResponseEntity.ok(bookService.getBooksByUserId(ownerId));
     }
 
     private Long getCurrentUserId() {

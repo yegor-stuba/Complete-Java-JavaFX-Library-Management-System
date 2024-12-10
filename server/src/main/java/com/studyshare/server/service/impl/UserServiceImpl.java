@@ -1,6 +1,8 @@
 package com.studyshare.server.service.impl;
 
 import com.studyshare.client.controller.AdminDashboardController;
+import com.studyshare.client.service.exception.AuthenticationException;
+import com.studyshare.server.exception.ResourceNotFoundException;
 import com.studyshare.server.exception.ValidationException;
 import com.studyshare.server.service.UserService;
 import com.studyshare.common.dto.UserDTO;
@@ -8,38 +10,41 @@ import com.studyshare.server.repository.UserRepository;
 import com.studyshare.server.model.User;
 import com.studyshare.server.mapper.UserMapper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
     private static final int MIN_PASSWORD_LENGTH = 4;
+
+
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public UserDTO createUser(UserDTO userDTO) {
         validateNewUser(userDTO);
-        String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
         User user = userMapper.toEntity(userDTO);
-        user.setPassword(hashedPassword);
         userRepository.save(user);
         return userMapper.toDto(user);
     }
@@ -97,31 +102,29 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDtoList(userRepository.findByUsernameContainingIgnoreCase(query));
     }
 
-    @Override
-    public CompletableFuture<UserDTO> getCurrentUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return CompletableFuture.completedFuture(findByUsername(username));
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if ("admin".equals(username)) {
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username("admin")
-                    .password(passwordEncoder.encode("admin"))
-                    .roles("ADMIN")
-                    .build();
+@Override
+public CompletableFuture<UserDTO> getCurrentUser() {
+    return CompletableFuture.supplyAsync(() -> {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+            return findByUsername(auth.getName());
         }
+        throw new AuthenticationException("User not authenticated");
+    });
+}
 
-        User user = userRepository.findByUsername(username)
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .roles(user.getRole().name())
-                .build();
-    }
+            return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
+            );
+        }
+
 
     @Override
     public void validateToken(String token) {
@@ -129,34 +132,36 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Invalid token");
         }
     }
-
 @Override
+public User getCurrentUserEntity() {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    return userRepository.findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+}
+
+
+   @Override
 public UserDTO findByUsername(String username) {
-    log.debug("Finding user by username: '{}'", username);
+    User user = userRepository.findByUsername(username.trim())
+        .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    UserDTO userDTO = userMapper.toDto(user);
+    userDTO.setPassword(user.getPassword()); // Add this line
+    return userDTO;
+}
+@Override
+public boolean authenticate(String username, String password) {
+    log.debug("Authenticating user: {}", username);
     try {
         User user = userRepository.findByUsername(username.trim())
             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-        log.debug("Found user in database: {}", user);
-        return userMapper.toDto(user);
+        return user.getPassword().equals(password);
     } catch (Exception e) {
-        log.error("Error finding user {}: {}", username, e.getMessage());
-        throw e;
-    }
-}
-
-@Override
-public boolean authenticate(String username, String password) {
-    try {
-        User user = userRepository.findByUsername(username.trim())
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        log.debug("Authenticating user: {} with stored password: {}",
-            username, user.getPassword());
-        return password.equals(user.getPassword());
-    } catch (Exception e) {
-        log.error("Authentication failed for {}: {}", username, e.getMessage());
+        log.error("Authentication error for user {}: {}", username, e.getMessage(), e);
         return false;
     }
 }
+
+
 @Override
 public Long getUserCount() {
     return userRepository.count();
@@ -164,5 +169,29 @@ public Long getUserCount() {
     @Override
     public void logout() {
         SecurityContextHolder.clearContext();
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserDTO> getAllUsersForAdmin() {
+        log.debug("Admin requesting all users");
+        return userRepository.findAll().stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserDTO updateUserAsAdmin(Long id, UserDTO userDTO) {
+        log.debug("Admin updating user: {}", id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        userMapper.updateEntity(user, userDTO);
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteUserAsAdmin(Long id) {
+        log.debug("Admin deleting user: {}", id);
+        userRepository.deleteById(id);
     }
 }

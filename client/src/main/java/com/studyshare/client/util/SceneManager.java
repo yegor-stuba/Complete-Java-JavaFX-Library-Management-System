@@ -19,12 +19,15 @@ import java.net.URL;
 
 public class SceneManager {
     private final Stage primaryStage;
-    @Setter
     private ControllerFactory controllerFactory;
     private static final Logger log = LoggerFactory.getLogger(SceneManager.class);
 
     public SceneManager(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    public void setControllerFactory(ControllerFactory factory) {
+        this.controllerFactory = factory;
     }
 
     public void switchToLogin() {
@@ -51,7 +54,7 @@ public class SceneManager {
         }
     }
 
-    public void switchToUserProfile() {
+public void switchToUserProfile() {
     try {
         URL resource = getClass().getResource("/fxml/user-profile.fxml");
         if (resource == null) {
@@ -83,45 +86,6 @@ public class SceneManager {
         }
     }
 
-    private Scene loadScene(String fxmlPath) {
-        try {
-            URL resource = getClass().getResource(fxmlPath);
-            if (resource == null) {
-                throw new IOException("FXML file not found: " + fxmlPath);
-            }
-
-            FXMLLoader loader = new FXMLLoader(resource);
-            loader.setControllerFactory(controllerFactory::createController);
-
-            Parent root = loader.load();
-            if (root == null) {
-                throw new IOException("Failed to load FXML root element");
-            }
-
-            return new Scene(root);
-        } catch (IOException e) {
-            log.error("Failed to load FXML file: {} - {}", fxmlPath, e.getMessage(), e);
-            Platform.runLater(() -> AlertUtil.showError("Scene Loading Error",
-                String.format("Failed to load interface: %s\nDetails: %s",
-                fxmlPath, e.getMessage())));
-            throw new RuntimeException("Failed to load scene: " + fxmlPath, e);
-        }
-    }
-
-    private void loadScene(String fxmlPath, String title) {
-        try {
-            Scene scene = loadScene(fxmlPath);
-            Platform.runLater(() -> {
-                primaryStage.setScene(scene);
-                primaryStage.setTitle(title);
-                primaryStage.show();
-            });
-        } catch (Exception e) {
-            log.error("Scene loading failed: {} - {}", fxmlPath, e.getMessage(), e);
-            throw new RuntimeException("Scene loading failed", e);
-        }
-    }
-
     public void navigateBasedOnRole(UserRole role) {
         log.debug("Navigating based on role: {}", role);
         try {
@@ -131,8 +95,8 @@ public class SceneManager {
                 loadScene("/fxml/user-profile.fxml", "User Profile");
             }
         } catch (Exception e) {
-            log.error("Navigation failed: {}", e.getMessage(), e);
-            throw new RuntimeException("Navigation failed: " + e.getMessage());
+            log.error("Navigation failed: {}", e.getMessage());
+            AlertUtil.showError("Navigation Error", "Failed to navigate: " + e.getMessage());
         }
     }
 
@@ -150,50 +114,78 @@ public class SceneManager {
         log.error(message + ": {}", e.getMessage());
         Platform.runLater(() -> AlertUtil.showError("Navigation Error", message));
     }
-    // Add these methods
-public void switchToTransactions() {
-    loadScene("/fxml/transactions.fxml", "Transactions");
-}
 
-public void showTransactionDetails(TransactionDTO transaction) {
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transaction-details-dialog.fxml"));
-        loader.setControllerFactory(controllerFactory::createController);
-        Parent root = loader.load();
-        Stage dialogStage = new Stage();
-        dialogStage.setTitle("Transaction Details");
-        dialogStage.setScene(new Scene(root));
-        dialogStage.showAndWait();
-    } catch (IOException e) {
-        handleSceneLoadError(e, "Failed to load transaction details");
+    public void switchToTransactions() {
+        loadScene("/fxml/transactions.fxml", "Transactions");
     }
-}
 
-public void showBookLendingDialog(BookDTO book) {
-    loadDialog("/fxml/book-lending.fxml", "Lend Book", book);
-}
-
-public void showBookReturnDialog(BookDTO book) {
-    loadDialog("/fxml/book-return.fxml", "Return Book", book);
-}
-
-private void loadDialog(String fxmlPath, String title, Object data) {
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        loader.setControllerFactory(controllerFactory::createController);
-        Parent root = loader.load();
-        Stage dialogStage = new Stage();
-        dialogStage.setTitle(title);
-        dialogStage.setScene(new Scene(root));
-
-        BaseController controller = loader.getController();
-        if (controller != null) {
-            controller.initData(data);
+    public void showTransactionDetails(TransactionDTO transaction) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transaction-details-dialog.fxml"));
+            loader.setControllerFactory(controllerFactory::createController);
+            Parent root = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Transaction Details");
+            dialogStage.setScene(new Scene(root));
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            handleSceneLoadError(e, "Failed to load transaction details");
         }
-
-        dialogStage.showAndWait();
-    } catch (IOException e) {
-        handleSceneLoadError(e, "Failed to load dialog: " + title);
     }
-}
+
+    public void showBookLendingDialog(BookDTO book) {
+        loadDialog("/fxml/book-lending.fxml", "Lend Book", book);
+    }
+
+    public void showBookReturnDialog(BookDTO book) {
+        loadDialog("/fxml/book-return.fxml", "Return Book", book);
+    }
+
+    private void loadDialog(String fxmlPath, String title, Object data) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            loader.setControllerFactory(controllerFactory::createController);
+            Parent root = loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle(title);
+            dialogStage.setScene(new Scene(root));
+
+            BaseController controller = loader.getController();
+            if (controller != null) {
+                controller.initData(data);
+            }
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            handleSceneLoadError(e, "Failed to load dialog: " + title);
+        }
+    }
+
+    public void loadScene(String fxmlPath, String title) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            loader.setControllerFactory(controllerFactory::createController);
+            Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
+            Platform.runLater(() -> {
+                try {
+                    primaryStage.setScene(scene);
+                    primaryStage.setTitle(title);
+                    primaryStage.show();
+
+                    BaseController controller = loader.getController();
+                    if (controller != null) {
+                        controller.initializeData();
+                    }
+                } catch (Exception e) {
+                    log.error("Scene transition failed: {}", e.getMessage());
+                    AlertUtil.showError("Navigation Error", "Failed to load " + title);
+                }
+            });
+        } catch (Exception e) {
+            log.error("Failed to load scene: {}", e.getMessage());
+            throw new RuntimeException("Scene loading failed", e);
+        }
+    }
 }

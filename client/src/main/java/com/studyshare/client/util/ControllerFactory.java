@@ -34,8 +34,8 @@ public class ControllerFactory {
         } else if (controllerClass == AdminDashboardController.class) {
             return new AdminDashboardController(userService, bookService, transactionService, sceneManager);
         } else if (controllerClass == BookManagementController.class) {
-            return new BookManagementController(bookService);
-        } else if (controllerClass == UserProfileController.class) {
+    return new BookManagementController(bookService, transactionService);
+} else if (controllerClass == UserProfileController.class) {
             return new UserProfileController(userService, transactionService, sceneManager);
         }
         throw new IllegalArgumentException("Unknown controller class: " + controllerClass.getName());

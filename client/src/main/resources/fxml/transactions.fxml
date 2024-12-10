@@ -11,15 +11,16 @@
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Refresh" styleClass="secondary-button" onAction="#loadTransactions"/>
+        <Button text="Back" styleClass="secondary-button" onAction="#goBack"/>
     </HBox>
 
     <TableView fx:id="transactionsTable" VBox.vgrow="ALWAYS" styleClass="transaction-table">
         <columns>
-            <TableColumn fx:id="bookTitleColumn" text="Book Title"/>
-            <TableColumn fx:id="typeColumn" text="Transaction Type"/>
-            <TableColumn fx:id="dateColumn" text="Date"/>
-            <TableColumn fx:id="dueDateColumn" text="Due Date"/>
-            <TableColumn fx:id="statusColumn" text="Status"/>
+            <TableColumn fx:id="bookTitleColumn" text="Book Title" prefWidth="200"/>
+            <TableColumn fx:id="typeColumn" text="Transaction Type" prefWidth="150"/>
+            <TableColumn fx:id="dateColumn" text="Date" prefWidth="150"/>
+            <TableColumn fx:id="dueDateColumn" text="Due Date" prefWidth="150"/>
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
         </columns>
     </TableView>
 </VBox>

@@ -21,7 +21,9 @@ public class TransactionDTO {
     private TransactionType type;
     private LocalDateTime date;
     private LocalDateTime dueDate;
+    private LocalDateTime returnDate;
     private boolean active;
     private boolean completed;
     private BookDTO book;
+    private UserDTO user;
 }

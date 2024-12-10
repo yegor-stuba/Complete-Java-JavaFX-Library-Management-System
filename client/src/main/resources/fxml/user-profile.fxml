@@ -77,9 +77,10 @@
         </tabs>
     </TabPane>
 
-    <HBox spacing="10">
-        <Button text="Register New Book" onAction="#handleRegisterBook" styleClass="primary-button"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button text="Logout" onAction="#handleLogout" styleClass="primary-button"/>
-    </HBox>
+   <HBox spacing="10">
+    <Button text="Register New Book" onAction="#handleRegisterBook" styleClass="primary-button"/>
+    <Region HBox.hgrow="ALWAYS" />
+    <Button text="Refresh" onAction="#handleRefresh" styleClass="primary-button"/>
+    <Button text="Logout" onAction="#handleLogout" styleClass="primary-button"/>
+</HBox>
 </VBox>

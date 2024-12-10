@@ -35,8 +35,11 @@ CREATE TABLE IF NOT EXISTS books (
     owner_id INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     description TEXT,
+    available BOOLEAN DEFAULT TRUE,
+    borrower_id INTEGER REFERENCES users(user_id),
     FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
+
 
 
 
@@ -46,21 +49,20 @@ CREATE INDEX IF NOT EXISTS idx_books_isbn ON books(isbn);
 CREATE INDEX IF NOT EXISTS idx_books_owner ON books(owner_id);
 
 CREATE TABLE IF NOT EXISTS transactions (
-    transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    book_id INTEGER NOT NULL,
-    type TEXT NOT NULL,
-    date TIMESTAMP NOT NULL,
-    due_date TIMESTAMP,
-    return_date TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (book_id) REFERENCES books(book_id)
+                                            transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                            book_id INTEGER NOT NULL,
+                                            user_id INTEGER NOT NULL,
+                                            active BOOLEAN DEFAULT TRUE,
+                                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                            FOREIGN KEY (book_id) REFERENCES books(book_id),
+                                            FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+
 
 -- 8. Create transaction indexes
 CREATE INDEX IF NOT EXISTS idx_transactions_user ON transactions(user_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_book ON transactions(book_id);
-CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);
+CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(created_at);
 
 -- 9. Insert initial data
 INSERT OR IGNORE INTO hibernate_sequences (sequence_name, next_val) VALUES ('books', 1);

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "transaction_id")
     private Long transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,7 +33,7 @@ public class Transaction {
     private LocalDateTime dueDate;
 
     @Column(name = "active")
-    private boolean active;
+    private boolean active = true;
 
     @Column(name = "return_date")
     private LocalDateTime returnDate;

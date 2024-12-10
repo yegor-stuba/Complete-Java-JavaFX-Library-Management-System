@@ -30,7 +30,6 @@
                                     <TableColumn fx:id="allAuthorColumn" text="Author" prefWidth="150"/>
                                     <TableColumn fx:id="allDescriptionColumn" text="Description" prefWidth="200"/>
                                     <TableColumn fx:id="allAvailableColumn" text="Available" prefWidth="100"/>
-                                    <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
                                 </columns>
                             </TableView>
                         </VBox>
@@ -77,10 +76,10 @@
         </tabs>
     </TabPane>
 
-   <HBox spacing="10">
-    <Button text="Register New Book" onAction="#handleRegisterBook" styleClass="primary-button"/>
-    <Region HBox.hgrow="ALWAYS" />
-    <Button text="Refresh" onAction="#handleRefresh" styleClass="primary-button"/>
-    <Button text="Logout" onAction="#handleLogout" styleClass="primary-button"/>
-</HBox>
+    <HBox spacing="10">
+        <Button text="Register New Book" onAction="#handleRegisterBook" styleClass="primary-button"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="Refresh" onAction="#handleRefresh" styleClass="primary-button"/>
+        <Button text="Logout" onAction="#handleLogout" styleClass="primary-button"/>
+    </HBox>
 </VBox>

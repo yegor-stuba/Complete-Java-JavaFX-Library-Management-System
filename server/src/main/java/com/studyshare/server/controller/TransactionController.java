@@ -4,6 +4,7 @@ import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.server.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -62,13 +63,13 @@ public ResponseEntity<TransactionDTO> createTransaction(@RequestBody Transaction
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/count/active")
-    public ResponseEntity<Long> getActiveLoansCount() {
-        try {
-            return ResponseEntity.ok(transactionService.getActiveLoansCount());
-        } catch (Exception e) {
-            log.error("Failed to get active loans count", e);
-            return ResponseEntity.internalServerError().build();
-        }
+ @GetMapping("/count/active")
+public ResponseEntity<Long> getActiveLoansCount() {
+    try {
+        return ResponseEntity.ok(transactionService.getActiveLoansCount());
+    } catch (Exception e) {
+        log.error("Failed to get active loans count", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
 }

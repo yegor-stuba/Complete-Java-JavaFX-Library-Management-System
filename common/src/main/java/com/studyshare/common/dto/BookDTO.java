@@ -20,7 +20,7 @@ public class BookDTO {
     @Min(value = 0, message = "Available copies must be non-negative")
     private Integer availableCopies;
     private Long ownerId;
-    private boolean available;
+    private boolean available = true;
     private String description;
 
     @Builder

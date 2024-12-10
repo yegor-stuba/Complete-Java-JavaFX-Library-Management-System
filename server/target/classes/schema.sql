@@ -49,17 +49,15 @@ CREATE INDEX IF NOT EXISTS idx_books_isbn ON books(isbn);
 CREATE INDEX IF NOT EXISTS idx_books_owner ON books(owner_id);
 
 CREATE TABLE IF NOT EXISTS transactions (
-    transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    book_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
-    type VARCHAR(20) NOT NULL,
-    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    due_date TIMESTAMP,
-    active BOOLEAN DEFAULT TRUE,
-    return_date TIMESTAMP,
-    FOREIGN KEY (book_id) REFERENCES books(book_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+                                            transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                            book_id INTEGER NOT NULL,
+                                            user_id INTEGER NOT NULL,
+                                            active BOOLEAN DEFAULT TRUE,
+                                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                            FOREIGN KEY (book_id) REFERENCES books(book_id),
+                                            FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+
 
 -- 8. Create transaction indexes
 CREATE INDEX IF NOT EXISTS idx_transactions_user ON transactions(user_id);

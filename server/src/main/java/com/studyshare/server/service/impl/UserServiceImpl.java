@@ -49,12 +49,25 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(user);
     }
 
-    private void validateNewUser(UserDTO userDTO) {
-        if (existsByUsername(userDTO.getUsername()) || existsByEmail(userDTO.getEmail())) {
-            throw new ValidationException("Username or email already exists");
-        }
-        validatePassword(userDTO.getPassword());
+private void validateNewUser(UserDTO userDTO) {
+    log.debug("Validating new user registration for username: {}", userDTO.getUsername());
+
+    if (userDTO.getUsername() == null || userDTO.getUsername().trim().isEmpty()) {
+        throw new ValidationException("Username cannot be empty");
     }
+
+    if (existsByUsername(userDTO.getUsername())) {
+        log.debug("Username already exists: {}", userDTO.getUsername());
+        throw new ValidationException("Username already exists");
+    }
+
+    if (existsByEmail(userDTO.getEmail())) {
+        log.debug("Email already exists: {}", userDTO.getEmail());
+        throw new ValidationException("Email already exists");
+    }
+
+    validatePassword(userDTO.getPassword());
+}
 
     private void validatePassword(String password) {
         if (password.length() < MIN_PASSWORD_LENGTH) {

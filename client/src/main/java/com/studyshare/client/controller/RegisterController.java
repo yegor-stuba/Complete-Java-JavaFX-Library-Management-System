@@ -49,16 +49,22 @@ public class RegisterController {
                     });
         }
     }
-    private void showErrorAlert(Throwable throwable) {
-        String message = throwable.getMessage();
-        if (message.contains("username")) {
-            AlertUtil.showError("Registration Failed", "Username already taken");
-        } else if (message.contains("email")) {
-            AlertUtil.showError("Registration Failed", "Email already registered");
+
+private void showErrorAlert(Throwable throwable) {
+    String message = throwable.getMessage();
+    Platform.runLater(() -> {
+        if (message.contains("Username already exists")) {
+            AlertUtil.showError("Registration Failed", "Username is already taken");
+        } else if (message.contains("Email already exists")) {
+            AlertUtil.showError("Registration Failed", "Email is already registered");
+        } else if (message.contains("Password")) {
+            AlertUtil.showError("Registration Failed", message);
         } else {
-            AlertUtil.showError("Error", "An unexpected error occurred: " + message);
+            AlertUtil.showError("Registration Failed",
+                "Registration failed: " + (message != null ? message : "Unknown error"));
         }
-    }
+    });
+}
 
 
 

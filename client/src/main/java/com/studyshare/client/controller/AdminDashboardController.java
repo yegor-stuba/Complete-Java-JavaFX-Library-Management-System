@@ -18,7 +18,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -636,48 +635,53 @@ private CompletableFuture<Void> updateStatistics() {
     }
 
 
-private BookDTO showBookDialog(BookDTO book) {
-    Dialog<BookDTO> dialog = new Dialog<>();
-    dialog.setTitle(book == null ? "Add New Book" : "Edit Book");
-    dialog.setHeaderText(book == null ? "Enter book details" : "Edit book details");
+    private BookDTO showBookDialog(BookDTO book) {
+        Dialog<BookDTO> dialog = new Dialog<>();
+        dialog.setTitle(book == null ? "Add New Book" : "Edit Book");
+        dialog.setHeaderText(book == null ? "Enter book details" : "Edit book details");
 
-    GridPane grid = new GridPane();
-    grid.setHgap(10);
-    grid.setVgap(10);
-    grid.setPadding(new Insets(20, 150, 10, 10));
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
 
-    TextField titleField = new TextField(book != null ? book.getTitle() : "");
-    TextField authorField = new TextField(book != null ? book.getAuthor() : "");
-    TextField isbnField = new TextField(book != null ? book.getIsbn() : "");
-    Spinner<Integer> copiesSpinner = new Spinner<>(1, 100, book != null ? book.getAvailableCopies() : 1);
+        TextField titleField = new TextField(book != null ? book.getTitle() : "");
+        TextField authorField = new TextField(book != null ? book.getAuthor() : "");
+        TextField isbnField = new TextField(book != null ? book.getIsbn() : "");
+        Spinner<Integer> copiesSpinner = new Spinner<>(0, 100, book != null ? book.getAvailableCopies() : 1);
 
-    grid.add(new Label("Title:"), 0, 0);
-    grid.add(titleField, 1, 0);
-    grid.add(new Label("Author:"), 0, 1);
-    grid.add(authorField, 1, 1);
-    grid.add(new Label("ISBN:"), 0, 2);
-    grid.add(isbnField, 1, 2);
-    grid.add(new Label("Copies:"), 0, 3);
-    grid.add(copiesSpinner, 1, 3);
+        grid.add(new Label("Title:"), 0, 0);
+        grid.add(titleField, 1, 0);
+        grid.add(new Label("Author:"), 0, 1);
+        grid.add(authorField, 1, 1);
+        grid.add(new Label("ISBN:"), 0, 2);
+        grid.add(isbnField, 1, 2);
+        grid.add(new Label("Copies:"), 0, 3);
+        grid.add(copiesSpinner, 1, 3);
 
-    dialog.getDialogPane().setContent(grid);
-    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-    dialog.setResultConverter(dialogButton -> {
-        if (dialogButton == ButtonType.OK) {
-            BookDTO newBook = new BookDTO();
-            newBook.setTitle(titleField.getText());
-            newBook.setAuthor(authorField.getText());
-            newBook.setIsbn(isbnField.getText());
-            newBook.setAvailableCopies(copiesSpinner.getValue());
-            newBook.setAvailable(true);
-            return newBook;
-        }
-        return null;
-    });
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                if (titleField.getText().isEmpty() || authorField.getText().isEmpty()
+                        || isbnField.getText().isEmpty()) {
+                    AlertUtil.showWarning("Validation Error", "All fields are required");
+                    return null;
+                }
+                BookDTO result = new BookDTO();
+                if (book != null) result.setBookId(book.getBookId());
+                result.setTitle(titleField.getText());
+                result.setAuthor(authorField.getText());
+                result.setIsbn(isbnField.getText());
+                result.setAvailableCopies(copiesSpinner.getValue());
+                return result;
+            }
+            return null;
+        });
 
-    return dialog.showAndWait().orElse(null);
-}
+        return dialog.showAndWait().orElse(null);
+    }
 
 
     @FXML
@@ -759,21 +763,7 @@ private BookDTO showBookDialog(BookDTO book) {
         }
     });
 }
-private void handleAddBook() {
-    BookDTO newBook = showBookDialog(null);
-    if (newBook != null) {
-        bookService.addBook(newBook)
-            .thenAccept(book -> Platform.runLater(() -> {
-                loadBooks();
-                AlertUtil.showInfo("Success", "Book added successfully");
-            }))
-            .exceptionally(throwable -> {
-                Platform.runLater(() -> AlertUtil.showError("Error",
-                    "Failed to add book: " + throwable.getMessage()));
-                return null;
-            });
-    }
-}
+
 
 private void refreshBooks() {
     bookService.getAllBooks()
@@ -786,9 +776,34 @@ private void refreshBooks() {
             return null;
         });
 }
-
-
-
+@FXML
+private void handleAddBook() {
+    BookDTO newBook = showBookDialog(null);
+    if (newBook != null) {
+        bookService.addBook(newBook)
+            .thenAccept(book -> Platform.runLater(() -> {
+                books.add(book);
+                AlertUtil.showInfo("Success", "Book added successfully");
+                loadBooks();
+            }))
+            .exceptionally(throwable -> {
+                String errorMessage;
+                Throwable cause = throwable.getCause();
+                if (cause instanceof ValidationException) {
+                    errorMessage = "Invalid book data: " + cause.getMessage();
+                } else if (cause instanceof ConflictException) {
+                    errorMessage = "Book with this ISBN already exists";
+                } else if (cause instanceof AuthorizationException) {
+                    errorMessage = "You don't have permission to add books";
+                } else {
+                    errorMessage = "Failed to add book: " + throwable.getMessage();
+                }
+                log.error("Book creation error: {}", errorMessage);
+                Platform.runLater(() -> AlertUtil.showError("Book Error", errorMessage));
+                return null;
+            });
+    }
+}
 @FXML
 private void handleBookSearch() {
     String searchQuery = bookSearchField.getText();

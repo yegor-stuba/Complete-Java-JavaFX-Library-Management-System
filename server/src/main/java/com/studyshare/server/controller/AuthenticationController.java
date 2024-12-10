@@ -127,28 +127,30 @@ public ResponseEntity<UserDTO> getCurrentUser() {
 }
 
 
-
 @PostMapping("/register")
 public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid UserDTO userDTO) {
     try {
-        // Set default role
+        log.debug("Registration attempt for username: {}", userDTO.getUsername());
         userDTO.setRole(UserRole.USER);
-
-        // Create user
         UserDTO createdUser = userService.createUser(userDTO);
-
+        log.info("User successfully registered: {}", userDTO.getUsername());
         return ResponseEntity.ok(AuthenticationResponse.builder()
             .token("token-" + createdUser.getUserId())
             .username(createdUser.getUsername())
             .role(createdUser.getRole())
             .userId(createdUser.getUserId())
+            .message("Registration successful")
             .build());
     } catch (ValidationException e) {
-        log.error("Registration failed: {}", e.getMessage());
-        return ResponseEntity.badRequest().build();
+        log.error("Registration validation failed: {}", e.getMessage());
+        return ResponseEntity.badRequest().body(AuthenticationResponse.builder()
+            .error(e.getMessage())
+            .build());
     } catch (Exception e) {
-        log.error("Registration failed: {}", e.getMessage());
-        return ResponseEntity.internalServerError().build();
+        log.error("Registration failed with unexpected error: {}", e.getMessage());
+        return ResponseEntity.internalServerError().body(AuthenticationResponse.builder()
+            .error("Registration failed: " + e.getMessage())
+            .build());
     }
 }
 

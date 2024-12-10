@@ -116,15 +116,11 @@ public class TransactionServiceImpl implements TransactionService {
         );
     }
 
-@Override
-public Long getActiveLoansCount() {
-    try {
+    @Override
+    public Long getActiveLoansCount() {
         return transactionRepository.countByActiveTrue();
-    } catch (Exception e) {
-        log.error("Error getting active loans count", e);
-        return 0L;
     }
-}
+
     @Override
 public TransactionDTO createTransaction(Long bookId, TransactionType type) {
     Book book = bookRepository.findById(bookId)

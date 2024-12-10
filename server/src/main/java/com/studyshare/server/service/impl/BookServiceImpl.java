@@ -109,7 +109,13 @@ public void deleteBook(Long id) {
     bookRepository.deleteById(id);
 }
 
-
+    @Override
+    public BookDTO createBook(BookDTO bookDTO) {
+        Book book = bookMapper.toEntity(bookDTO);
+        book.setOwner(userService.getCurrentUserEntity());
+        book.setAvailable(true);
+        return bookMapper.toDto(bookRepository.save(book));
+    }
 
 @Override
 public BookDTO updateBook(Long id, BookDTO bookDTO) {
@@ -122,12 +128,5 @@ public BookDTO updateBook(Long id, BookDTO bookDTO) {
     existingBook.setAvailable(bookDTO.isAvailable());
 
     return bookMapper.toDto(bookRepository.save(existingBook));
-}
-
-@Override
-public BookDTO createBook(BookDTO bookDTO) {
-    Book book = bookMapper.toEntity(bookDTO);
-    book.setAvailable(true);
-    return bookMapper.toDto(bookRepository.save(book));
 }
 }

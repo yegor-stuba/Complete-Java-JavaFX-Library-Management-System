@@ -28,9 +28,9 @@ public class Book {
     @Column(length = 1000)
     private String description;
 
-@ManyToOne
-@JoinColumn(name = "owner_id", nullable = true)
-private User owner;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
 
 
     @ManyToOne

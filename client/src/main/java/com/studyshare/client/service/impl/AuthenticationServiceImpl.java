@@ -23,6 +23,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.restClient = restClient;
     }
 
+    @Override
+public CompletableFuture<AuthenticationResponse> register(UserDTO userDTO) {
+    return restClient.post("/api/auth/register", userDTO, AuthenticationResponse.class)
+        .thenApply(response -> {
+            if (response != null && response.getError() != null) {
+                throw new AuthenticationException(response.getError());
+            }
+            this.token = response.getToken();
+            return response;
+        })
+        .exceptionally(throwable -> {
+            log.error("Registration failed: {}", throwable.getMessage());
+            throw new AuthenticationException("Registration failed: " + throwable.getMessage());
+        });
+}
+
 
 @Override
 public CompletableFuture<UserDTO> login(String username, String password) {
@@ -59,14 +75,7 @@ private boolean isTokenValid(String token) {
     }
 }
 
-@Override
-    public CompletableFuture<AuthenticationResponse> register(UserDTO userDTO) {
-        return restClient.post("/api/auth/register", userDTO, AuthenticationResponse.class)
-            .thenApply(response -> {
-                this.token = response.getToken();
-                return response;
-            });
-    }
+
 
     @Override
     public CompletableFuture<Boolean> validateToken(String token) {

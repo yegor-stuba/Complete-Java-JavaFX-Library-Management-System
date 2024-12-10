@@ -33,14 +33,7 @@ public class BookServiceImpl implements BookService {
     private final UserMapper userMapper;
     private final UserService userService;
 
-    @Override
-    @Transactional
-    public BookDTO createBook(BookDTO bookDTO) {
-        Book book = bookMapper.toEntity(bookDTO);
-        book.setOwner(userService.getCurrentUserEntity());
-        book.setAvailable(true);
-        return bookMapper.toDto(bookRepository.save(book));
-    }
+
     @Override
     public void validateBookAvailability(Long bookId) {
         Book book = bookRepository.findById(bookId)
@@ -52,9 +45,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDTO> getAllBooks() {
-        return bookMapper.toDtoList(bookRepository.findAll());
+        return bookRepository.findAll().stream()
+                .map(bookMapper::toDto)
+                .collect(Collectors.toList());
     }
-
 
     @Override
     public List<BookDTO> getBorrowedBooks(Long userId) {
@@ -114,14 +108,25 @@ public List<BookDTO> searchBooks(String query) {
 public void deleteBook(Long id) {
     bookRepository.deleteById(id);
 }
+
+    @Override
+    public BookDTO createBook(BookDTO bookDTO) {
+        Book book = bookMapper.toEntity(bookDTO);
+        book.setOwner(userService.getCurrentUserEntity());
+        book.setAvailable(true);
+        return bookMapper.toDto(bookRepository.save(book));
+    }
+
 @Override
 public BookDTO updateBook(Long id, BookDTO bookDTO) {
-    Book book = bookRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-    book.setTitle(bookDTO.getTitle());
-    book.setAuthor(bookDTO.getAuthor());
-    book.setIsbn(bookDTO.getIsbn());
-    book.setAvailable(bookDTO.isAvailable());
-    return bookMapper.toDto(bookRepository.save(book));
+    Book existingBook = bookRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+    existingBook.setTitle(bookDTO.getTitle());
+    existingBook.setAuthor(bookDTO.getAuthor());
+    existingBook.setIsbn(bookDTO.getIsbn());
+    existingBook.setAvailable(bookDTO.isAvailable());
+
+    return bookMapper.toDto(bookRepository.save(existingBook));
 }
 }

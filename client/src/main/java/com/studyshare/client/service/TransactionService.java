@@ -1,6 +1,8 @@
 package com.studyshare.client.service;
 
 import com.studyshare.common.dto.TransactionDTO;
+import com.studyshare.common.enums.TransactionType;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -12,5 +14,13 @@ public interface TransactionService {
     CompletableFuture<Long> getActiveLoansCount();
     CompletableFuture<List<TransactionDTO>> getCurrentUserBorrowedBooks();
     CompletableFuture<List<TransactionDTO>> getCurrentUserLentBooks();// Remove Long parameter
-CompletableFuture<TransactionDTO> completeTransaction(Long transactionId);  // Add this method
+
+    List<TransactionDTO> getAllTransactions();// Add this method
+    CompletableFuture<List<TransactionDTO>> getTransactions(Long bookId);
+    CompletableFuture<TransactionDTO> getLatestTransaction(Long bookId);
+
+    CompletableFuture<TransactionDTO> createTransaction(Long bookId, TransactionType type);
+
+    CompletableFuture<TransactionDTO> completeTransaction(Long id);
+
 }

@@ -10,9 +10,9 @@ import com.studyshare.common.security.dto.AuthenticationResponse;
 import jakarta.validation.ValidationException;
 import org.springframework.core.ParameterizedTypeReference;
 import java.util.List;
+
 import java.util.concurrent.*;
-
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,12 +114,13 @@ public CompletableFuture<List<UserDTO>> searchUsers(String query) {
 
 
 
-    @Override
-    public CompletableFuture<Void> logout() {
-        return restClient.post("/api/auth/logout", null, Void.class)
-            .thenRun(() -> this.authResponse = null);
-    }
-
+   @Override
+public CompletableFuture<Void> logout() {
+    return CompletableFuture.runAsync(() -> {
+        restClient.post("/api/auth/logout", null, Void.class);
+        org.springframework.security.core.context.SecurityContextHolder.clearContext();
+    });
+}
 
     @Override
     public CompletableFuture<Long> getUserCount() {

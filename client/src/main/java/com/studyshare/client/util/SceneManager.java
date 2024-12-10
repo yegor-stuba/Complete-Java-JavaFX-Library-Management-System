@@ -166,26 +166,15 @@ public void switchToUserProfile() {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             loader.setControllerFactory(controllerFactory::createController);
             Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
-
             Platform.runLater(() -> {
-                try {
-                    primaryStage.setScene(scene);
-                    primaryStage.setTitle(title);
-                    primaryStage.show();
-
-                    BaseController controller = loader.getController();
-                    if (controller != null) {
-                        controller.initializeData();
-                    }
-                } catch (Exception e) {
-                    log.error("Scene transition failed: {}", e.getMessage());
-                    AlertUtil.showError("Navigation Error", "Failed to load " + title);
-                }
+                primaryStage.setScene(scene);
+                primaryStage.setTitle(title);
+                primaryStage.show();
             });
         } catch (Exception e) {
             log.error("Failed to load scene: {}", e.getMessage());
             throw new RuntimeException("Scene loading failed", e);
         }
-    }
+
+}
 }

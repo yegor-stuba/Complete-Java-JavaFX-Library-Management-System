@@ -3,7 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.studyshare.client.controller.UserProfileController" stylesheets="@../css/style.css">
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.studyshare.client.controller.UserProfileController"
+      stylesheets="@../css/style.css">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
@@ -14,49 +16,70 @@
         <Label fx:id="roleLabel" styleClass="info-label"/>
     </VBox>
 
-    <HBox spacing="10" VBox.vgrow="ALWAYS">
-        <!-- Left side - All Books -->
-        <VBox spacing="5" HBox.hgrow="ALWAYS">
-            <TextField fx:id="searchField" promptText="Search books..." />
-            <Label text="All Books" styleClass="section-header"/>
-            <TableView fx:id="allBooksTable" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="allTitleColumn" text="Title" prefWidth="200"/>
-                    <TableColumn fx:id="allAuthorColumn" text="Author" prefWidth="150"/>
-                    <TableColumn fx:id="allAvailableColumn" text="Available" prefWidth="100"/>
-                </columns>
-            </TableView>
-        </VBox>
+    <TabPane VBox.vgrow="ALWAYS">
+        <tabs>
+            <Tab text="Books" closable="false">
+                <content>
+                    <HBox spacing="10">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <TextField fx:id="searchField" promptText="Search books..."/>
+                            <Label text="All Books" styleClass="section-header"/>
+                            <TableView fx:id="allBooksTable" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="allTitleColumn" text="Title" prefWidth="200"/>
+                                    <TableColumn fx:id="allAuthorColumn" text="Author" prefWidth="150"/>
+                                    <TableColumn fx:id="allDescriptionColumn" text="Description" prefWidth="200"/>
+                                    <TableColumn fx:id="allAvailableColumn" text="Available" prefWidth="100"/>
+                                    <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
 
-        <!-- Right side - Borrowed and Lended Books -->
-        <VBox spacing="5" HBox.hgrow="ALWAYS">
-            <Label text="Borrowed Books" styleClass="section-header"/>
-            <TableView fx:id="borrowedBooksTable" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="titleColumn" text="Title" prefWidth="200"/>
-                    <TableColumn fx:id="authorColumn" text="Author" prefWidth="150"/>
-                    <TableColumn fx:id="dueDateColumn" text="Due Date" prefWidth="150"/>
-                </columns>
-            </TableView>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Borrowed Books" styleClass="section-header"/>
+                            <TableView fx:id="borrowedBooksTable">
+                                <columns>
+                                    <TableColumn fx:id="borrowedTitleColumn" text="Title"/>
+                                    <TableColumn fx:id="borrowedAuthorColumn" text="Author"/>
+                                    <TableColumn fx:id="borrowedDescriptionColumn" text="Description"/>
+                                    <TableColumn fx:id="dueDateColumn" text="Due Date"/>
+                                </columns>
+                            </TableView>
 
-            <Label text="Lended Books" styleClass="section-header"/>
-            <TableView fx:id="lendedBooksTable" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="lendedTitleColumn" text="Title" prefWidth="200"/>
-                    <TableColumn fx:id="lendedAuthorColumn" text="Author" prefWidth="150"/>
-                    <TableColumn fx:id="borrowerColumn" text="Borrower" prefWidth="150"/>
-                </columns>
-            </TableView>
-        </VBox>
-    </HBox>
+                            <Label text="Lended Books" styleClass="section-header"/>
+                            <TableView fx:id="lendedBooksTable">
+                                <columns>
+                                    <TableColumn fx:id="lendedTitleColumn" text="Title"/>
+                                    <TableColumn fx:id="lendedAuthorColumn" text="Author"/>
+                                    <TableColumn fx:id="lendedDescriptionColumn" text="Description"/>
+                                    <TableColumn fx:id="borrowerColumn" text="Borrower"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </HBox>
+                </content>
+            </Tab>
+
+            <Tab text="Transactions" closable="false">
+                <content>
+                    <VBox spacing="10">
+                        <TableView fx:id="transactionsTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="timestampColumn" text="Time" prefWidth="150"/>
+                                <TableColumn fx:id="actionColumn" text="Action" prefWidth="150"/>
+                                <TableColumn fx:id="userColumn" text="User" prefWidth="150"/>
+                                <TableColumn fx:id="detailsColumn" text="Details" prefWidth="200"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </content>
+            </Tab>
+        </tabs>
+    </TabPane>
 
     <HBox spacing="10">
         <Button text="Register New Book" onAction="#handleRegisterBook" styleClass="primary-button"/>
-        <Region HBox.hgrow="ALWAYS" />
+        <Region HBox.hgrow="ALWAYS"/>
         <Button text="Logout" onAction="#handleLogout" styleClass="primary-button"/>
-        <Button text="Refresh" onAction="#handleRefresh" styleClass="primary-button"/>
-        <Region HBox.hgrow="ALWAYS" />
-        <Button text="Logout" onAction="#handleLogout" styleClass="primary-button"/>
-
     </HBox>
 </VBox>

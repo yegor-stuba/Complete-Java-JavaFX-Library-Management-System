@@ -3,6 +3,7 @@ package com.studyshare.server.controller;
 import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.dto.UserDTO;
 import com.studyshare.server.exception.ResourceNotFoundException;
+import com.studyshare.server.exception.ValidationException;
 import com.studyshare.server.model.Book;
 import com.studyshare.server.model.User;
 import com.studyshare.server.service.BookService;
@@ -47,34 +48,23 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAllBooks() {
+        log.info("Fetching all books");
+        List<BookDTO> books = bookService.getAllBooks();
+        log.info("Found {} books", books.size());
         try {
-            log.debug("Fetching all books");
-            List<BookDTO> books = bookService.getAllBooks();
-            return ResponseEntity.ok(books);
-        } catch (NullPointerException e) {
-            log.error("Null pointer while fetching books", e);
-            return ResponseEntity.ok(Collections.emptyList()); // Return empty list instead of error
+            return ResponseEntity.ok(bookService.getAllBooks());
         } catch (Exception e) {
-            log.error("Failed to fetch books", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Failed to fetch books");
+            log.error("Error fetching books: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookDTO> createBook(@Valid @RequestBody BookDTO bookDTO) {
         try {
-            log.debug("Creating new book: {}", bookDTO.getTitle());
-            BookDTO createdBook = bookService.createBook(bookDTO);
-            log.info("Book created successfully: {}", createdBook.getTitle());
-            return ResponseEntity.ok(createdBook);
-        } catch (DataIntegrityViolationException e) {
-            log.error("Book creation failed - duplicate ISBN", e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Book with this ISBN already exists");
-        } catch (Exception e) {
-            log.error("Book creation failed", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create book: " + e.getMessage());
+            return ResponseEntity.ok(bookService.createBook(bookDTO));
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -94,15 +84,23 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
-        return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
+    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) {
+        try {
+            return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
-        bookService.deleteBook(id);
-        return ResponseEntity.ok().build();
+        try {
+            bookService.deleteBook(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/search")

@@ -40,6 +40,14 @@ public class TransactionController extends BaseController {
     @FXML private TableColumn<TransactionDTO, String> dateColumn;
     @FXML private TableColumn<TransactionDTO, String> dueDateColumn;
     @FXML private TableColumn<TransactionDTO, String> statusColumn;
+    @FXML
+    private TableColumn<TransactionDTO, String> timestampColumn;
+    @FXML
+    private TableColumn<TransactionDTO, String> actionColumn;
+    @FXML
+    private TableColumn<TransactionDTO, String> userColumn;
+    @FXML
+    private TableColumn<TransactionDTO, String> detailsColumn;
 
     @FXML
     private void initialize() {
@@ -48,15 +56,6 @@ public class TransactionController extends BaseController {
         setupTableClickHandler();
     }
 
-    private void setupTableColumns() {
-        TransactionUtil.setupTransactionTableColumns(
-            bookTitleColumn,
-            typeColumn,
-            dateColumn,
-            dueDateColumn,
-            statusColumn
-        );
-    }
 
     private Long getCurrentUserId() {
         CompletableFuture<UserDTO> userFuture = userService.getCurrentUser();
@@ -89,19 +88,21 @@ public class TransactionController extends BaseController {
         });
     }
 
-   private void updateTransactionStatus(List<TransactionDTO> transactions) {
-    transactions.forEach(transaction -> {
-        String status = transaction.isActive() ? "Active" : "Completed";
-        String type = transaction.getType().toString();
 
-        Platform.runLater(() -> {
-            statusColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().isActive() ? "Active" : "Completed"));
-            typeColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getType().toString()));
-            bookTitleColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getBook().getTitle()));
-        });
-    });
+    private void setupTableColumns() {
+        timestampColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getTimestamp().toString()));
+        actionColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getActionType()));
+        userColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getUsername()));
+        detailsColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getDetails()));
+    }
+
+@GetMapping("/user/{userId}")
+public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable("userId") Long userId) {
+    List<TransactionDTO> transactions = (List<TransactionDTO>) transactionService.getUserTransactions();
+    return ResponseEntity.ok(transactions);
 }
 }

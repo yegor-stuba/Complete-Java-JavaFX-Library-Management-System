@@ -35,20 +35,13 @@ public class TransactionDetailsController extends BaseController {
     }
 
     public void setTransaction(TransactionDTO newTransaction) {
-        // Instead of assigning to the final field, update its properties
-        this.transaction.setBookTitle(newTransaction.getBookTitle());
-        this.transaction.setType(newTransaction.getType());
-        this.transaction.setDate(newTransaction.getDate());
-        this.transaction.setDueDate(newTransaction.getDueDate());
-        this.transaction.setCompleted(newTransaction.isCompleted());
-        this.transaction.setTransactionId(newTransaction.getTransactionId());
+        transaction.setBook(newTransaction.getBook());
+        transaction.setType(newTransaction.getType());
+        transaction.setTimestamp(newTransaction.getTimestamp());
+        transaction.setDueDate(newTransaction.getDueDate());
+        transaction.setStatus(newTransaction.getStatus());
+        transaction.setId(newTransaction.getId());
         populateTransactionDetails();
-    }
-
-    private Runnable onCompleteCallback;
-
-    public void setOnComplete(Runnable callback) {
-        this.onCompleteCallback = callback;
     }
 
     @FXML
@@ -58,9 +51,9 @@ public class TransactionDetailsController extends BaseController {
     }
 
     private void populateTransactionDetails() {
-        bookTitleLabel.setText(transaction.getBookTitle());
+        bookTitleLabel.setText(transaction.getBook().getTitle());
         transactionTypeLabel.setText(transaction.getType().toString());
-        dateLabel.setText(transaction.getDate().format(DATE_FORMATTER));
+        dateLabel.setText(transaction.getTimestamp().format(DATE_FORMATTER));
 
         if (transaction.getDueDate() != null) {
             dueDateLabel.setText(transaction.getDueDate().format(DATE_FORMATTER));
@@ -71,44 +64,41 @@ public class TransactionDetailsController extends BaseController {
 
     private void setupCompleteButton() {
         completeButton.setVisible(transaction.getType() == TransactionType.BORROW);
-        completeButton.setDisable(transaction.isCompleted());
+        completeButton.setDisable("COMPLETED".equals(transaction.getStatus()));
     }
 
     @FXML
     private void handleComplete() {
-        handleAsync(transactionService.completeTransaction(transaction.getTransactionId()))
+        handleAsync(transactionService.completeTransaction(transaction.getId()))
             .thenAccept(updatedTransaction -> {
-                transaction.setCompleted(true);
+                transaction.setStatus("COMPLETED");
                 updateStatus();
                 completeButton.setDisable(true);
             });
     }
 
     private void updateStatus() {
-        String status = transaction.isCompleted() ? "Completed" : "Active";
-        statusLabel.setText(status);
-        statusLabel.getStyleClass().add(transaction.isCompleted() ? "completed" : "active");
+        statusLabel.setText(transaction.getStatus());
+        statusLabel.getStyleClass().add("COMPLETED".equals(transaction.getStatus()) ?
+            "completed" : "active");
     }
+
     @FXML
-private void handleClose() {
-    dialogStage.close();
-}
+    private void handleClose() {
+        dialogStage.close();
+    }
 
-@FXML
-private void handleCompleteTransaction() {
-    transactionService.completeTransaction(transaction.getTransactionId())
-        .thenAccept(updatedTransaction -> Platform.runLater(() -> {
-            AlertUtil.showInfo("Success", "Transaction completed successfully");
-            dialogStage.close();
-        }))
-        .exceptionally(throwable -> {
-            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to complete transaction"));
-            return null;
-        })
-        .exceptionally(throwable -> {
-            ErrorHandler.handle(throwable);
-            return null;
-        });
+    @FXML
+    private void handleCompleteTransaction() {
+        transactionService.completeTransaction(transaction.getId())
+            .thenAccept(updatedTransaction -> Platform.runLater(() -> {
+                AlertUtil.showInfo("Success", "Transaction completed successfully");
+                dialogStage.close();
+            }))
+            .exceptionally(throwable -> {
+                Platform.runLater(() -> AlertUtil.showError("Error",
+                    "Failed to complete transaction"));
+                return null;
+            });
+    }
 }
-}
-

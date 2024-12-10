@@ -18,4 +18,5 @@ CompletableFuture<BookDTO> returnBook(Long bookId);
 CompletableFuture<Long> getBookCount();
 CompletableFuture<BookDTO> addBook(BookDTO bookDTO);
     CompletableFuture<BookDTO> registerBook(BookDTO book);
+
 }

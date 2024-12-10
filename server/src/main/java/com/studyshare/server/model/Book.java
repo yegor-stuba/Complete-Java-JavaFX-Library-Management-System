@@ -25,6 +25,9 @@ public class Book {
     @Column(name = "available_copies")
     private Integer availableCopies;
 
+    @Column(length = 1000)
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;

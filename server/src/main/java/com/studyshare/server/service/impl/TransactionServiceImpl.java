@@ -13,6 +13,7 @@ import com.studyshare.server.repository.TransactionRepository;
 import com.studyshare.server.repository.BookRepository;
 import com.studyshare.server.repository.UserRepository;
 import com.studyshare.server.service.BookService;
+import com.studyshare.server.service.SecurityAuditService;
 import com.studyshare.server.service.TransactionService;
 import com.studyshare.server.service.UserService;
 import jakarta.transaction.Transactional;
@@ -37,6 +38,9 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionMapper transactionMapper;
       private final BookRepository bookRepository;
     private final UserRepository userRepository;
+    private final SecurityAuditService securityAuditService;
+
+
 
 
     @Transactional
@@ -58,12 +62,24 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionMapper.toDto(transactionRepository.save(transaction));
     }
 
-@Override
-public List<TransactionDTO> getBookTransactions(Long bookId) {
-    return transactionMapper.toDtoList(
-        transactionRepository.findByBook_BookId(bookId)
-    );
-}
+
+    @Override
+    public List<TransactionDTO> getBookTransactions(Long bookId) {
+        return transactionRepository.findById(bookId)
+                .stream()
+                .map(transactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+
+
+    public List<TransactionDTO> getAllTransactions() {
+        return transactionRepository.findAll()
+                .stream()
+                .map(transactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     public List<TransactionDTO> findByBook_BookId(Long bookId) {
         return transactionMapper.toDtoList(transactionRepository.findByBook_BookId(bookId));
     }

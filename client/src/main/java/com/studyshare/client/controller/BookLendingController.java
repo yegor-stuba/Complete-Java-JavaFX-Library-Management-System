@@ -20,7 +20,7 @@ public class BookLendingController extends BaseController {
         this.bookService = bookService;
     }
 
-    @Override
+
     public void initData(Object data) {
         if (data instanceof BookDTO) {
             this.book = (BookDTO) data;

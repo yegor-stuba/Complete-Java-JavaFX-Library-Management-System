@@ -14,8 +14,7 @@ public class SessionConfig {
         return new HttpSessionListener() {
             @Override
             public void sessionCreated(HttpSessionEvent se) {
-                log.info("New session created: {}", se.getSession().getId());
-                se.getSession().setMaxInactiveInterval(30 * 60); // 30 minutes
+                se.getSession().setMaxInactiveInterval(1800); // 30 minutes
             }
 
             @Override

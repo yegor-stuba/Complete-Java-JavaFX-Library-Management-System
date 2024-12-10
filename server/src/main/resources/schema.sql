@@ -27,17 +27,16 @@ CREATE TABLE IF NOT EXISTS roles (
 );
 
 CREATE TABLE IF NOT EXISTS books (
-                                     book_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                     title TEXT NOT NULL,
-                                     author TEXT NOT NULL,
-                                     isbn TEXT UNIQUE,
-                                     available_copies INTEGER NOT NULL DEFAULT 1,
-                                     owner_id INTEGER,
-                                     borrower_id INTEGER,
-                                     FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE SET NULL,
-                                     FOREIGN KEY (borrower_id) REFERENCES users(user_id) ON DELETE SET NULL
+    book_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    author TEXT NOT NULL,
+    isbn TEXT UNIQUE,
+    available_copies INTEGER NOT NULL DEFAULT 1,
+    owner_id INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    description TEXT,
+    FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
-
 
 
 

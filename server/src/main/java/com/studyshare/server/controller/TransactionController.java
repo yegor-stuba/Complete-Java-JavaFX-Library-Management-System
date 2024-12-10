@@ -46,11 +46,10 @@ public ResponseEntity<TransactionDTO> createTransaction(@RequestBody Transaction
         return ResponseEntity.ok().build();
     }
 
-@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-@GetMapping("/user/{userId}")
-public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long userId) {
-    return ResponseEntity.ok(transactionService.getUserTransactions(userId));
-}
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long userId) {
+        return ResponseEntity.ok(transactionService.getUserTransactions(userId));
+    }
 
     @GetMapping("/book/{bookId}")
     public ResponseEntity<List<TransactionDTO>> getBookTransactions(@PathVariable Long bookId) {

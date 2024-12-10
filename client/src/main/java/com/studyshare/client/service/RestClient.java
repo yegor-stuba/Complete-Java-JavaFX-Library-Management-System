@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Supplier;
+
 public class RestClient {
     private static final Logger log = LoggerFactory.getLogger(RestClient.class);
     private final String baseUrl = ClientConfig.BASE_URL;

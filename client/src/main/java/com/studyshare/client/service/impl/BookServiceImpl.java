@@ -2,9 +2,6 @@ package com.studyshare.client.service.impl;
 
 import com.studyshare.client.service.BookService;
 import com.studyshare.client.service.RestClient;
-import com.studyshare.client.service.exception.BookOperationException;
-import com.studyshare.client.service.exception.ConflictException;
-import com.studyshare.client.service.exception.ResourceNotFoundException;
 import com.studyshare.common.dto.BookDTO;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -12,16 +9,6 @@ import java.util.concurrent.CompletionException;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
-
-import com.studyshare.common.dto.UserDTO;
-
-
-
-import jakarta.validation.ValidationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.naming.AuthenticationException;
 
 
 @Slf4j
@@ -92,5 +79,10 @@ public CompletableFuture<Long> getBookCount() {
 @Override
 public CompletableFuture<BookDTO> addBook(BookDTO bookDTO) {
     return restClient.post("/api/books", bookDTO, BookDTO.class);
+}
+
+@Override
+public CompletableFuture<BookDTO> registerBook(BookDTO book) {
+    return restClient.post("/api/books/register", book, BookDTO.class);
 }
 }

@@ -10,20 +10,20 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class TransactionDTO {
-    private Long transactionId;
-    private Long userId;
+    private Long id;
     private Long bookId;
-    private String bookTitle;
-    private TransactionType type;
-    private LocalDateTime date;
-    private LocalDateTime dueDate;
-    private LocalDateTime returnDate;
-    private boolean active;
-    private boolean completed;
+    private String actionType;
+    private String description;
+    private LocalDateTime timestamp;
+    private String username;
+    private String details;
     private BookDTO book;
     private UserDTO user;
+    private TransactionType type;
+    private LocalDateTime dueDate;
+    private String status;
 }

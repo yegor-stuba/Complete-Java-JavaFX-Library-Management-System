@@ -40,25 +40,26 @@
         </Tab>
 
         <Tab text="Book Management" closable="false">
-            <VBox spacing="10" styleClass="admin-section">
-                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="admin-search-bar">
-                    <TextField fx:id="bookSearchField" promptText="Search books..."
-                             styleClass="admin-search-field" HBox.hgrow="ALWAYS"/>
-                    <Button text="Search" onAction="#handleBookSearch" styleClass="admin-button"/>
-                    <Button text="Add Book" onAction="#handleAddBook" styleClass="admin-button"/>
-                </HBox>
-                <TableView fx:id="booksTable" VBox.vgrow="ALWAYS" styleClass="admin-table">
-                    <columns>
-                        <TableColumn fx:id="bookIdColumn" text="ID" styleClass="admin-table-column"/>
-                        <TableColumn fx:id="titleColumn" text="Title" styleClass="admin-table-column"/>
-                        <TableColumn fx:id="authorColumn" text="Author" styleClass="admin-table-column"/>
-                        <TableColumn fx:id="isbnColumn" text="ISBN" styleClass="admin-table-column"/>
-                        <TableColumn fx:id="copiesColumn" text="Available Copies" styleClass="admin-table-column"/>
-                        <TableColumn fx:id="bookActionsColumn" text="Actions" styleClass="admin-table-column"/>
-                    </columns>
-                </TableView>
-            </VBox>
-        </Tab>
+    <VBox spacing="10" styleClass="admin-section">
+        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="admin-search-bar">
+            <TextField fx:id="bookSearchField" promptText="Search books..."
+                      styleClass="admin-search-field" HBox.hgrow="ALWAYS"/>
+            <Button text="Search" onAction="#handleBookSearch" styleClass="admin-button"/>
+            <Button text="Add Book" onAction="#handleAddBook" styleClass="admin-button"/>
+        </HBox>
+        <TableView fx:id="booksTable" VBox.vgrow="ALWAYS" styleClass="admin-table">
+            <columns>
+                <TableColumn fx:id="bookIdColumn" text="ID" styleClass="admin-table-column"/>
+                <TableColumn fx:id="titleColumn" text="Title" styleClass="admin-table-column"/>
+                <TableColumn fx:id="authorColumn" text="Author" styleClass="admin-table-column"/>
+                <TableColumn fx:id="descriptionColumn" text="Description" styleClass="admin-table-column"/>
+                <TableColumn fx:id="isbnColumn" text="ISBN" styleClass="admin-table-column"/>
+                <TableColumn fx:id="copiesColumn" text="Available Copies" styleClass="admin-table-column"/>
+                <TableColumn fx:id="bookActionsColumn" text="Actions" styleClass="admin-table-column"/>
+            </columns>
+        </TableView>
+    </VBox>
+</Tab>
 
         <Tab text="Statistics" closable="false">
             <VBox spacing="20" styleClass="admin-statistics">
@@ -70,5 +71,24 @@
                 <Label fx:id="activeLoansLabel" styleClass="admin-stat-label"/>
             </VBox>
         </Tab>
+
+   <Tab text="Statistics" closable="false">
+    <VBox spacing="20" styleClass="admin-statistics">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        <Label fx:id="statsUsersLabel" styleClass="admin-stat-label"/>
+        <Label fx:id="statsBooksLabel" styleClass="admin-stat-label"/>
+        <Label fx:id="statsLoansLabel" styleClass="admin-stat-label"/>
+        <TableView fx:id="transactionsTable">
+            <columns>
+                <TableColumn fx:id="timestampColumn" text="Time"/>
+                <TableColumn fx:id="actionColumn" text="Action"/>
+                <TableColumn fx:id="userColumn" text="User"/>
+                <TableColumn fx:id="detailsColumn" text="Details"/>
+            </columns>
+        </TableView>
+    </VBox>
+</Tab>
     </TabPane>
 </VBox>

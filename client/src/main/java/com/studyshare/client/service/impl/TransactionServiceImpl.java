@@ -2,13 +2,12 @@ package com.studyshare.client.service.impl;
 
 import com.studyshare.client.service.RestClient;
 import com.studyshare.client.service.TransactionService;
-import com.studyshare.client.service.exception.RestClientException;
 import com.studyshare.common.dto.TransactionDTO;
+import com.studyshare.common.enums.TransactionType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 
 @Slf4j
 public class TransactionServiceImpl implements TransactionService {
@@ -17,11 +16,33 @@ public class TransactionServiceImpl implements TransactionService {
         return restClient.getList("/api/transactions/lent",
             new ParameterizedTypeReference<List<TransactionDTO>>() {});
     }
+
+    @Override
+    public List<TransactionDTO> getAllTransactions() {
+        return List.of();
+    }
+
+    @Override
+    public CompletableFuture<List<TransactionDTO>> getTransactions(Long bookId) {
+        return null;
+    }
+
+    @Override
+    public CompletableFuture<TransactionDTO> getLatestTransaction(Long bookId) {
+        return null;
+    }
+
+    @Override
+    public CompletableFuture<TransactionDTO> createTransaction(Long bookId, TransactionType type) {
+        return null;
+    }
+
     private final RestClient restClient;
 
     public TransactionServiceImpl(RestClient restClient) {
         this.restClient = restClient;
     }
+
 @Override
 public CompletableFuture<List<TransactionDTO>> getCurrentUserBorrowedBooks() {
     return restClient.getList("/api/transactions/borrowed",
@@ -58,4 +79,7 @@ public CompletableFuture<TransactionDTO> completeTransaction(Long transactionId)
     return restClient.post("/api/transactions/" + transactionId + "/complete",
         null, TransactionDTO.class);
 }
+
+
+
 }

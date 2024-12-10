@@ -25,10 +25,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.geometry.Insets;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import static com.studyshare.client.util.TransactionUtil.getTransactionStatus;
 
 
 @SuppressWarnings("unused")
@@ -72,7 +76,10 @@ public class UserProfileController extends BaseController {
     private TableColumn<BookDTO, String> lendedAuthorColumn;
     @FXML
     private TableColumn<BookDTO, String> borrowerColumn;
-
+@FXML private TableColumn<BookDTO, String> borrowedTitleColumn;
+@FXML private TableColumn<BookDTO, String> borrowedAuthorColumn;
+@FXML private TableColumn<BookDTO, String> borrowedDescriptionColumn;
+@FXML private TableColumn<BookDTO, String> lendedDescriptionColumn;
 
 
     public UserProfileController(UserService userService, TransactionService transactionService, SceneManager sceneManager) {
@@ -82,17 +89,26 @@ public class UserProfileController extends BaseController {
         this.bookService = bookService;
     }
 
-@FXML
-private void initialize() {
-    setupTableColumns();
-    loadUserProfile();
-    loadBorrowedBooks();
-    setupAllBooksTable();
-    setupLendedBooksTable();
-    loadLendedBooks();
-    loadAllBooks();
-    borrowedBooksTable.setItems(borrowedBooks);
-}
+    @FXML
+    private void initialize() {
+        setupTableColumns();
+        loadUserProfile();
+        setupAllBooksTable();
+        setupTransactionTables();
+        loadAllData();
+        borrowedBooksTable.setItems(borrowedBooks);
+    }
+
+    private void setupTransactionTables() {
+        setupBorrowedBooksTable();
+        setupLendedBooksTable();
+    }
+
+    private void loadAllData() {
+        loadAllBooks();
+        loadBorrowedBooks();
+        loadLendedBooks();
+    }
 
 private void setupAllBooksTable() {
     allTitleColumn.setCellValueFactory(data ->
@@ -107,6 +123,17 @@ private void setupAllBooksTable() {
     statusColumn.setCellValueFactory(data ->
             new SimpleStringProperty(data.getValue().isAvailable() ? "Available" : "Borrowed"));
 
+    TableColumn<BookDTO, String> transactionStatusColumn = new TableColumn<>("Transaction Status");
+    transactionStatusColumn.setCellValueFactory(data -> {
+        BookDTO book = data.getValue();
+        return new SimpleStringProperty(book.getStatusDisplay());
+    });
+
+    TableColumn<BookDTO, String> lastTransactionColumn = new TableColumn<>("Last Transaction");
+    lastTransactionColumn.setCellValueFactory(data -> {
+        BookDTO book = data.getValue();
+        return new SimpleStringProperty(getLastTransactionDate(book));
+    });
     statusColumn.setCellFactory(column -> new TableCell<>() {
         @Override
         protected void updateItem(String item, boolean empty) {
@@ -116,10 +143,10 @@ private void setupAllBooksTable() {
                 setStyle("");
             } else {
                 setText(item);
-                String style = item.equals("Available") ?
-                    "-fx-text-fill: green; -fx-font-weight: bold;" :
-                    "-fx-text-fill: red; -fx-font-weight: bold;";
-                setStyle(style);
+                String newStyle = item.equals("Available") ?
+                    "-fx-text-fill: green; -fx-font-weight: bold" :
+                    "-fx-text-fill: red; -fx-font-weight: bold";
+                setStyle(newStyle);
             }
         }
     });
@@ -172,35 +199,87 @@ private void setupAllBooksTable() {
     allBooksTable.getColumns().addAll(statusColumn, actionCol);
 }
 
-    private void setupLendedBooksTable() {
-        lendedTitleColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getTitle()));
-        lendedAuthorColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getAuthor()));
-        borrowerColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(getBorrowerName(data.getValue())));
-
-        // Add return button column
-        TableColumn<BookDTO, Void> actionCol = new TableColumn<>("Actions");
-        actionCol.setCellFactory(param -> new TableCell<>() {
-            private final Button returnButton = new Button("Return");
-
-            {
-                returnButton.setOnAction(event -> {
-                    BookDTO book = getTableView().getItems().get(getIndex());
-                    handleReturnBook(book);
-                });
+private String getLastTransactionDate(BookDTO book) {
+    return transactionService.getLatestTransaction(book.getBookId())
+        .thenApply(transaction -> {
+            if (transaction == null) {
+                return "No transactions";
             }
+            return transaction.getTimestamp()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        })
+        .join();
+}
 
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : returnButton);
-            }
-        });
+private void setupLendedBooksTable() {
+    lendedTitleColumn.setCellValueFactory(cellData ->
+        new SimpleStringProperty(cellData.getValue().getTitle()));
+    lendedAuthorColumn.setCellValueFactory(cellData ->
+        new SimpleStringProperty(cellData.getValue().getAuthor()));
+    lendedDescriptionColumn.setCellValueFactory(cellData ->
+        new SimpleStringProperty(cellData.getValue().getDescription()));
+    borrowerColumn.setCellValueFactory(cellData ->
+        new SimpleStringProperty(getBorrowerName(cellData.getValue())));
 
-        lendedBooksTable.getColumns().add(actionCol);
-    }
+    // Add action column
+    TableColumn<BookDTO, Void> actionCol = new TableColumn<>("Actions");
+    actionCol.setCellFactory(param -> new TableCell<>() {
+        private final Button returnButton = new Button("Return");
+        {
+            returnButton.setOnAction(event -> {
+                BookDTO book = getTableView().getItems().get(getIndex());
+                handleReturnBook(book);
+            });
+        }
+        @Override
+        protected void updateItem(Void item, boolean empty) {
+            super.updateItem(item, empty);
+            setGraphic(empty ? null : returnButton);
+        }
+    });
+    lendedBooksTable.getColumns().add(actionCol);
+}
+
+private void setupBorrowedBooksTable() {
+    borrowedTitleColumn.setCellValueFactory(cellData ->
+        new SimpleStringProperty(cellData.getValue().getTitle()));
+    borrowedAuthorColumn.setCellValueFactory(cellData ->
+        new SimpleStringProperty(cellData.getValue().getAuthor()));
+    borrowedDescriptionColumn.setCellValueFactory(cellData ->
+        new SimpleStringProperty(cellData.getValue().getDescription()));
+    dueDateColumn.setCellValueFactory(cellData ->
+        new SimpleStringProperty(formatDueDate(cellData.getValue())));
+
+    // Add action column
+    TableColumn<BookDTO, Void> actionCol = new TableColumn<>("Actions");
+    actionCol.setCellFactory(param -> new TableCell<>() {
+        private final Button returnButton = new Button("Return");
+        {
+            returnButton.setOnAction(event -> {
+                BookDTO book = getTableView().getItems().get(getIndex());
+                handleReturnBook(book);
+            });
+        }
+        @Override
+        protected void updateItem(Void item, boolean empty) {
+            super.updateItem(item, empty);
+            setGraphic(empty ? null : returnButton);
+        }
+    });
+    borrowedBooksTable.getColumns().add(actionCol);
+}
+
+
+private String formatDueDate(BookDTO book) {
+    return transactionService.getLatestTransaction(book.getBookId())
+        .thenApply(transaction -> {
+            if (transaction == null) return "N/A";
+            LocalDateTime dueDate = transaction.getTimestamp().plusDays(14);
+            return dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        })
+        .join();
+}
+
 
     private void handleReturnBook(BookDTO book) {
         handleAsync(transactionService.returnBook(book.getBookId()))

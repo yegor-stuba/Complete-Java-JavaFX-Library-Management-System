@@ -17,6 +17,7 @@ import javafx.scene.control.TableView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -26,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class TransactionController extends BaseController {
     private final TransactionService transactionService;
-    private final UserService userService;
+private final UserService userService;
     private final ObservableList<TransactionDTO> transactions = FXCollections.observableArrayList();
 
     public TransactionController(TransactionService transactionService, UserService userService) {
@@ -99,12 +100,9 @@ public class TransactionController extends BaseController {
         detailsColumn.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getDetails()));
     }
-
-@GetMapping("/user/{userId}")
-public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable("userId") Long userId) {
-    List<TransactionDTO> transactions = (List<TransactionDTO>) transactionService.getUserTransactions();
-    return ResponseEntity.ok(transactions);
+@GetMapping("/current")
+public ResponseEntity<List<TransactionDTO>> getCurrentUserTransactions() {
+    return ResponseEntity.ok((List<TransactionDTO>) transactionService.getUserTransactions());
 }
-
 
 }

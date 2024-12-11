@@ -30,6 +30,10 @@ public class ControllerFactory {
 
 public Object createController(Class<?> controllerClass) {
     log.debug("Creating controller for class: {}", controllerClass.getName());
+    log.debug("Available services - UserService: {}, BookService: {}, TransactionService: {}",
+            userService != null, bookService != null, transactionService != null);
+
+    log.debug("Creating controller for class: {}", controllerClass.getName());
     if (controllerClass == UserProfileController.class) {
         log.debug("Creating UserProfileController");
         return new UserProfileController(userService, bookService, transactionService, sceneManager);

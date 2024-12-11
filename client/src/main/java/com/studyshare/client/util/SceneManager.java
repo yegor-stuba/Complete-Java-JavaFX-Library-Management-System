@@ -151,26 +151,35 @@ private void handleSceneLoadError(Exception e, String message) {
 
 private void loadScene(String fxmlPath, String title) {
     try {
+        log.debug("Attempting to load FXML: {}", fxmlPath);
+
+        // Normalize the path
+        String normalizedPath = fxmlPath.startsWith("/") ? fxmlPath.substring(1) : fxmlPath;
+        log.debug("Normalized path: {}", normalizedPath);
+
         // Try multiple resource loading strategies
-        URL resource = getClass().getResource(fxmlPath);
+        URL resource = getClass().getClassLoader().getResource(normalizedPath);
+
         if (resource == null) {
-            resource = getClass().getResource("/fxml" + fxmlPath);
-        }
-        if (resource == null) {
-            resource = getClass().getClassLoader().getResource("fxml" + fxmlPath);
+            resource = getClass().getClassLoader().getResource("fxml/" + normalizedPath);
         }
 
-        log.debug("Attempting to load FXML from: {}", resource);
         if (resource == null) {
-            throw new IOException("Cannot find resource: " + fxmlPath);
+            resource = Thread.currentThread().getContextClassLoader().getResource(normalizedPath);
+        }
+
+        log.debug("Final resource URL: {}", resource);
+        if (resource == null) {
+            throw new IOException("Resource not found: " + normalizedPath);
         }
 
         FXMLLoader loader = new FXMLLoader(resource);
         loader.setControllerFactory(controllerFactory::createController);
-        Scene scene = new Scene(loader.load());
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
 
-        // Add CSS
-        URL cssUrl = getClass().getResource("/css/style.css");
+        // Load CSS with similar fallback strategy
+        URL cssUrl = getClass().getClassLoader().getResource("css/style.css");
         if (cssUrl != null) {
             scene.getStylesheets().add(cssUrl.toExternalForm());
         }
@@ -181,7 +190,7 @@ private void loadScene(String fxmlPath, String title) {
             primaryStage.show();
         });
     } catch (Exception e) {
-        log.error("Failed to load scene: {} - {}", fxmlPath, e.getMessage());
+        log.error("Failed to load scene: {} - {}", fxmlPath, e.getMessage(), e);
         throw new RuntimeException("Scene loading failed: " + e.getMessage(), e);
     }
 }

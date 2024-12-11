@@ -1,6 +1,5 @@
 package com.studyshare.common.dto;
 
-import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.enums.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +25,7 @@ public class TransactionDTO {
     private TransactionType type;
     private LocalDateTime dueDate;
     private String status;
+
+    public TransactionDTO(Object o, Long bookId, TransactionType type) {
+    }
 }

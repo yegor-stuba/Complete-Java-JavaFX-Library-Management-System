@@ -118,6 +118,23 @@ public class BookController {
         return ResponseEntity.ok(bookService.getAvailableBooks());
     }
 
+    @PostMapping("/{id}/borrow")
+public ResponseEntity<BookDTO> borrowBook(@PathVariable Long id) {
+    try {
+        return ResponseEntity.ok(bookService.borrowBook(id, getCurrentUserId()));
+    } catch (ValidationException e) {
+        return ResponseEntity.badRequest().build();
+    }
+}
+
+@PostMapping("/{id}/return")
+public ResponseEntity<BookDTO> returnBook(@PathVariable Long id) {
+    try {
+        return ResponseEntity.ok(bookService.returnBook(id));
+    } catch (ValidationException e) {
+        return ResponseEntity.badRequest().build();
+    }
+}
 
     @GetMapping("/borrowed/{userId}")
     public ResponseEntity<List<BookDTO>> getBorrowedBooks(@PathVariable Long userId) {
@@ -153,7 +170,7 @@ public class BookController {
             .body(ex.getMessage());
     }
 
-    @PostMapping("/register")
+@PostMapping("/register")
 public ResponseEntity<BookDTO> registerBook(@Valid @RequestBody BookDTO bookDTO) {
     try {
         bookDTO.setOwnerId(getCurrentUserId());

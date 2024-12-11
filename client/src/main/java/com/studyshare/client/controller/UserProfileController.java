@@ -48,6 +48,7 @@ public class UserProfileController extends BaseController {
     private final SceneManager sceneManager;
     private final ObservableList<BookDTO> borrowedBooks = FXCollections.observableArrayList();
     private Timeline refreshTimeline;
+    private TransactionViewController transactionViewController;
 
     @FXML
     private Label usernameLabel;
@@ -93,7 +94,7 @@ public class UserProfileController extends BaseController {
     @FXML private TableColumn<TransactionDTO, String> actionColumn;
     @FXML private TableColumn<TransactionDTO, String> userColumn;
     @FXML private TableColumn<TransactionDTO, String> detailsColumn;
-
+    @FXML private Pagination transactionPagination;
 
 
 
@@ -105,7 +106,9 @@ public class UserProfileController extends BaseController {
         this.bookService = bookService;
         this.transactionService = transactionService;
         this.sceneManager = sceneManager;
+        this.transactionViewController = new TransactionViewController();
     }
+
 
     @FXML
     private void initialize() {
@@ -125,6 +128,8 @@ public class UserProfileController extends BaseController {
         setupAllBooksTable();
         loadAllData();
         setupAutomaticStatusUpdates();
+        transactionViewController.initialize(transactionsTable, transactionPagination, transactionService);
+
 
         borrowedBooksTable.setItems(borrowedBooks);
 
@@ -225,7 +230,6 @@ public class UserProfileController extends BaseController {
             }
         });
     }
-
 
 
     private void setupTransactionTables() {
@@ -813,6 +817,7 @@ private TableView<BookDTO> lendedBooksTable;
     @FXML
     private void handleRefresh() {
         refreshAllTables();
+        transactionViewController.refresh();
     }
 
 private void refreshAllTables() {

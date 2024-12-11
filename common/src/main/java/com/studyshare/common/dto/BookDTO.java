@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-
 public class BookDTO {
     private Long bookId;
     @NotBlank(message = "Title is required")
@@ -20,19 +19,23 @@ public class BookDTO {
     @Min(value = 0, message = "Available copies must be non-negative")
     private Integer availableCopies;
     private Long ownerId;
+    private UserDTO owner;
+    private UserDTO borrower;
     private boolean available;
     private String description;
 
     @Builder
     public BookDTO(Long bookId, String title, String author, String isbn,
-                   Integer availableCopies, Long ownerId, boolean available,
-                   String description) {
+                   Integer availableCopies, Long ownerId, UserDTO owner,
+                   UserDTO borrower, boolean available, String description) {
         this.bookId = bookId;
         this.title = title;
         this.author = author;
         this.isbn = isbn;
         this.availableCopies = availableCopies;
         this.ownerId = ownerId;
+        this.owner = owner;
+        this.borrower = borrower;
         this.available = available;
         this.description = description;
     }

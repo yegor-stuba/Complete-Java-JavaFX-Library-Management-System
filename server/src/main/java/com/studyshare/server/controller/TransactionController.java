@@ -5,8 +5,8 @@ import com.studyshare.server.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import com.studyshare.common.enums.TransactionType;
 
 import java.util.List;
 
@@ -40,32 +40,6 @@ public ResponseEntity<TransactionDTO> createTransaction(@RequestBody Transaction
         ));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long userId) {
-        return ResponseEntity.ok(transactionService.getUserTransactions(userId));
-    }
-
-    @GetMapping("/book/{bookId}")
-    public ResponseEntity<List<TransactionDTO>> getBookTransactions(@PathVariable Long bookId) {
-        return ResponseEntity.ok(transactionService.getBookTransactions(bookId));
-    }
-
-    @PostMapping("/{id}/complete")
-    public ResponseEntity<Void> completeTransaction(@PathVariable Long id) {
-        transactionService.completeTransaction(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/count/active")
-    public ResponseEntity<Long> getActiveLoansCount() {
-        try {
-            return ResponseEntity.ok(transactionService.getActiveLoansCount());
-        } catch (Exception e) {
-            log.error("Failed to get active loans count", e);
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
 
 // In TransactionController.java
 @PostMapping("/books/{bookId}/borrow")
@@ -77,4 +51,47 @@ public ResponseEntity<TransactionDTO> borrowBook(@PathVariable Long bookId) {
 public ResponseEntity<TransactionDTO> returnBook(@PathVariable Long bookId) {
     return ResponseEntity.ok(transactionService.returnBook(bookId));
 }
+
+@GetMapping
+public ResponseEntity<List<TransactionDTO>> getAllTransactions() {
+    return ResponseEntity.ok(transactionService.getAllTransactions());
+}
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long userId) {
+        return ResponseEntity.ok(transactionService.getUserTransactions(userId));
+    }
+
+    @GetMapping("/book/{bookId}")
+    public ResponseEntity<List<TransactionDTO>> getBookTransactions(@PathVariable Long bookId) {
+        return ResponseEntity.ok(transactionService.getBookTransactions(bookId));
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<TransactionDTO>> getActiveTransactions() {
+        return ResponseEntity.ok(transactionService.getActiveTransactions());
+    }
+
+@GetMapping("/count/active-transactions")
+public ResponseEntity<Long> getActiveTransactionsCount() {
+    return ResponseEntity.ok(transactionService.getActiveTransactionsCount());
+}
+
+@GetMapping("/count/active-loans")
+public ResponseEntity<Long> getActiveLoansCount() {
+    return ResponseEntity.ok(transactionService.getActiveLoansCount());
+}
+
+    @PostMapping("/{bookId}/user/{userId}")
+    public ResponseEntity<TransactionDTO> createTransaction(
+            @PathVariable Long bookId,
+            @PathVariable Long userId,
+            @RequestParam TransactionType type) {
+        return ResponseEntity.ok(transactionService.createTransaction(bookId, userId, type));
+    }
+
+    @PutMapping("/{transactionId}/complete")
+    public ResponseEntity<TransactionDTO> completeTransaction(@PathVariable Long transactionId) {
+        return ResponseEntity.ok(transactionService.completeTransaction(transactionId));
+    }
 }

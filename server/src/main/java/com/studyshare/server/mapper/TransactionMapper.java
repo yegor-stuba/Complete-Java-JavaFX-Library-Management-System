@@ -15,25 +15,31 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TransactionMapper {
     private final BookMapper bookMapper;
+    private final UserMapper userMapper;
 
     public TransactionDTO toDto(Transaction transaction) {
         return TransactionDTO.builder()
-                .id(transaction.getTransactionId())
-                .bookId(transaction.getBook().getBookId())
+                .transactionId(transaction.getTransactionId())
+                .user(userMapper.toDto(transaction.getUser()))
                 .book(bookMapper.toDto(transaction.getBook()))
                 .type(transaction.getType())
-                .timestamp(transaction.getDate())
+                .date(transaction.getDate())
+                .active(transaction.isActive())
                 .dueDate(transaction.getDueDate())
-                .status(transaction.isActive() ? "ACTIVE" : "COMPLETED")
+                .returnDate(transaction.getReturnDate())
                 .build();
     }
 
     public Transaction toEntity(TransactionDTO dto) {
         Transaction transaction = new Transaction();
+        transaction.setTransactionId(dto.getTransactionId());
+        transaction.setUser(userMapper.toEntity(dto.getUser()));
+        transaction.setBook(bookMapper.toEntity(dto.getBook()));
         transaction.setType(dto.getType());
-        transaction.setDate(LocalDateTime.now());
+        transaction.setDate(dto.getDate());
+        transaction.setActive(dto.isActive());
         transaction.setDueDate(dto.getDueDate());
-        transaction.setActive(true);
+        transaction.setReturnDate(dto.getReturnDate());
         return transaction;
     }
 

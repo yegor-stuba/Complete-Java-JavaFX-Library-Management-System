@@ -11,27 +11,27 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class TransactionViewController {
     private static final Logger log = LoggerFactory.getLogger(TransactionViewController.class);
-    private final TransactionService transactionService;
     private final ObservableList<TransactionDTO> transactions = FXCollections.observableArrayList();
+    private Pagination pagination;
+    private TransactionService transactionService;
+    private static final int ITEMS_PER_PAGE = 40;
 
 
-
-    public TransactionViewController(TransactionService transactionService) {
+    public TransactionViewController() {
         this.transactionService = transactionService;
     }
 
@@ -48,11 +48,46 @@ public class TransactionViewController {
     private TableColumn<TransactionDTO, String> detailsColumn;
 
     @FXML
-    public void initialize() {
+    public void initialize(TableView<TransactionDTO> table, Pagination pagination, TransactionService service) {
+        this.transactionsTable = table;
+        this.pagination = pagination;
+        this.transactionService = service;
+        this.transactionService = transactionService;
+        setupPagination();
         setupTableColumns();
         loadTransactions();
         setupAutoRefresh();
         transactionsTable.setItems(transactions);
+    }
+
+    private void setupPagination() {
+        pagination.setPageFactory(this::createPage);
+        updateTotalPages();
+    }
+
+    private Node createPage(int pageIndex) {
+        transactionService.getTransactions(pageIndex, ITEMS_PER_PAGE)
+                .thenAccept(transactions -> Platform.runLater(() -> {
+                    transactionsTable.setItems(FXCollections.observableArrayList(transactions));
+                }))
+                .exceptionally(throwable -> {
+                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load transactions"));
+                    return null;
+                });
+        return transactionsTable;
+    }
+
+    private void updateTotalPages() {
+        transactionService.getTransactionCount()
+                .thenAccept(count -> {
+                    int pages = (int) Math.ceil(count / (double) ITEMS_PER_PAGE);
+                    Platform.runLater(() -> pagination.setPageCount(pages));
+                });
+    }
+
+    public void refresh() {
+        updateTotalPages();
+        pagination.setCurrentPageIndex(pagination.getCurrentPageIndex());
     }
 
     private void setupTableColumns() {

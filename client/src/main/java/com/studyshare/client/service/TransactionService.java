@@ -13,14 +13,12 @@ public interface TransactionService {
     CompletableFuture<List<TransactionDTO>> getActiveTransactions();
     CompletableFuture<Long> getActiveLoansCount();
     CompletableFuture<List<TransactionDTO>> getCurrentUserBorrowedBooks();
-    CompletableFuture<List<TransactionDTO>> getCurrentUserLentBooks();// Remove Long parameter
-
-    List<TransactionDTO> getAllTransactions();// Add this method
+    CompletableFuture<List<TransactionDTO>> getCurrentUserLentBooks();
     CompletableFuture<List<TransactionDTO>> getTransactions(Long bookId);
     CompletableFuture<TransactionDTO> getLatestTransaction(Long bookId);
-
     CompletableFuture<TransactionDTO> createTransaction(Long bookId, TransactionType type);
-
-    CompletableFuture<TransactionDTO> completeTransaction(Long id);
-
+    CompletableFuture<List<TransactionDTO>> getTransactions(int page, int size);
+    CompletableFuture<TransactionDTO> completeTransaction(Long transactionId);
+    CompletableFuture<List<TransactionDTO>> getAllTransactions();
+CompletableFuture<Long> getTransactionCount();
 }

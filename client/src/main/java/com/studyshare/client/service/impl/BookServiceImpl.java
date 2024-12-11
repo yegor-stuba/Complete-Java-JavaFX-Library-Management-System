@@ -58,7 +58,7 @@ public CompletableFuture<List<BookDTO>> searchBooks(String query) {
     return restClient.getList("/api/books/search?query=" + query,
         new ParameterizedTypeReference<List<BookDTO>>() {});
 }
-    @Override
+  @Override
 public CompletableFuture<BookDTO> borrowBook(Long bookId) {
     return restClient.post("/api/books/" + bookId + "/borrow", null, BookDTO.class);
 }
@@ -78,7 +78,7 @@ public CompletableFuture<Long> getBookCount() {
 
 @Override
 public CompletableFuture<BookDTO> addBook(BookDTO bookDTO) {
-    return restClient.post("/api/books", bookDTO, BookDTO.class);
+    return restClient.post("/api/books/register", bookDTO, BookDTO.class);
 }
 
 @Override

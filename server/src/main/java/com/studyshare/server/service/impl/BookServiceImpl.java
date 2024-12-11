@@ -9,7 +9,6 @@ import com.studyshare.server.mapper.UserMapper;
 import com.studyshare.server.model.Book;
 import com.studyshare.server.model.User;
 import com.studyshare.server.repository.BookRepository;
-import com.studyshare.server.repository.UserRepository;
 import com.studyshare.server.service.BookService;
 import com.studyshare.server.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,6 +45,36 @@ public class BookServiceImpl implements BookService {
                 .map(bookMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+
+@Override
+@Transactional
+public BookDTO borrowBook(Long bookId, Long userId) {
+    Book book = bookRepository.findById(bookId)
+        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+    if (!book.isAvailable()) {
+        throw new ValidationException("Book is not available");
+    }
+
+    User borrower = userService.getCurrentUserEntity();
+    book.setBorrower(borrower);
+    book.setAvailable(false);
+
+    return bookMapper.toDto(bookRepository.save(book));
+}
+
+@Override
+@Transactional
+public BookDTO returnBook(Long bookId) {
+    Book book = bookRepository.findById(bookId)
+        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+    book.setBorrower(null);
+    book.setAvailable(true);
+
+    return bookMapper.toDto(bookRepository.save(book));
+}
 
     @Override
     public List<BookDTO> getBorrowedBooks(Long userId) {
@@ -101,13 +127,21 @@ public void deleteBook(Long id) {
     bookRepository.deleteById(id);
 }
 
+
+
     @Override
     public BookDTO createBook(BookDTO bookDTO) {
+        User currentUser = userService.getCurrentUserEntity();
+        if (currentUser == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
         Book book = bookMapper.toEntity(bookDTO);
-        book.setOwner(userService.getCurrentUserEntity());
+        book.setOwner(currentUser);
         book.setAvailable(true);
         return bookMapper.toDto(bookRepository.save(book));
     }
+
 
 @Override
 public BookDTO updateBook(Long id, BookDTO bookDTO) {

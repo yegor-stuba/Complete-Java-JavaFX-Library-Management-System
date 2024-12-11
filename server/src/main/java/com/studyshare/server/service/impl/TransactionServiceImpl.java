@@ -19,8 +19,6 @@ import com.studyshare.server.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,8 +38,22 @@ public class TransactionServiceImpl implements TransactionService {
     private final UserRepository userRepository;
     private final SecurityAuditService securityAuditService;
 
+    @Override
+    @Transactional
+    public TransactionDTO createTransaction(Long bookId, Long userId, TransactionType type) {
+        User user = userService.getCurrentUserEntity();
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
+        Transaction transaction = new Transaction();
+        transaction.setUser(user);
+        transaction.setBook(book);
+        transaction.setType(type);
+        transaction.setDate(LocalDateTime.now());
+        transaction.setActive(true);
 
+        return transactionMapper.toDto(transactionRepository.save(transaction));
+    }
 
     @Transactional
     public TransactionDTO borrowBook(Long bookId) {
@@ -65,31 +77,6 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionMapper.toDto(transactionRepository.save(transaction));
     }
 
-    @Override
-    public List<TransactionDTO> getBookTransactions(Long bookId) {
-        return transactionRepository.findById(bookId)
-                .stream()
-                .map(transactionMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-
-
-    public List<TransactionDTO> getAllTransactions() {
-        return transactionRepository.findAll()
-                .stream()
-                .map(transactionMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<TransactionDTO> findByBook_BookId(Long bookId) {
-        return transactionMapper.toDtoList(transactionRepository.findByBook_BookId(bookId));
-    }
-
-    public Optional<Transaction> findByBook_BookIdAndActiveTrue(Long bookId) {
-        return transactionRepository.findByBook_BookIdAndActiveTrue(bookId);
-    }
-
     @Transactional
     public TransactionDTO returnBook(Long bookId) {
         Transaction activeTransaction = transactionRepository
@@ -101,26 +88,6 @@ public class TransactionServiceImpl implements TransactionService {
 
         bookService.updateBookStatus(bookId, true);
         return transactionMapper.toDto(transactionRepository.save(activeTransaction));
-    }
-
-
-    public List<TransactionDTO> getUserTransactions() {
-        User currentUser = userService.getCurrentUserEntity();
-        return transactionMapper.toDtoList(
-            transactionRepository.findByUserOrderByDateDesc(currentUser)
-        );
-    }
-
-    @Override
-    public List<TransactionDTO> getActiveTransactions() {
-        return transactionMapper.toDtoList(
-            transactionRepository.findByActiveTrue()
-        );
-    }
-
-    @Override
-    public Long getActiveLoansCount() {
-        return transactionRepository.countByActiveTrue();
     }
 
     @Override
@@ -137,14 +104,6 @@ public TransactionDTO createTransaction(Long bookId, TransactionType type) {
     return transactionMapper.toDto(transactionRepository.save(transaction));
 }
 
-@Override
-public TransactionDTO completeTransaction(Long transactionId) {
-    Transaction transaction = transactionRepository.findById(transactionId)
-        .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
-    transaction.setActive(false);
-    transaction.setReturnDate(LocalDateTime.now());
-    return transactionMapper.toDto(transactionRepository.save(transaction));
-}
 @Override
 public TransactionDTO getTransactionById(Long id) {
     return transactionMapper.toDto(
@@ -163,4 +122,45 @@ public List<TransactionDTO> getUserTransactions(Long userId) {
 }
 
 
+    @Override
+    public List<TransactionDTO> getBookTransactions(Long bookId) {
+        return transactionRepository.findByBook_BookId(bookId).stream()
+                .map(transactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TransactionDTO> getAllTransactions() {
+        return transactionRepository.findAll().stream()
+                .map(transactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Long getActiveTransactionsCount() {
+        return transactionRepository.countByActiveTrue();
+    }
+
+
+    @Override
+    @Transactional
+    public TransactionDTO completeTransaction(Long transactionId) {
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
+        transaction.setActive(false);
+        transaction.setReturnDate(LocalDateTime.now());
+        return transactionMapper.toDto(transactionRepository.save(transaction));
+    }
+
+    @Override
+    public List<TransactionDTO> getActiveTransactions() {
+        return transactionRepository.findByActiveTrue().stream()
+                .map(transactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Long getActiveLoansCount() {
+        return transactionRepository.countByTypeAndActiveTrue(TransactionType.BORROW);
+    }
 }

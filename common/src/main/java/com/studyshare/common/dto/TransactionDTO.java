@@ -25,7 +25,14 @@ public class TransactionDTO {
     private TransactionType type;
     private LocalDateTime dueDate;
     private String status;
+    private Long transactionId;
+    private LocalDateTime date;
+    private boolean active;
+    private LocalDateTime returnDate;
 
-    public TransactionDTO(Object o, Long bookId, TransactionType type) {
-    }
+public TransactionDTO(Object o, Long bookId, TransactionType type) {
+    this.bookId = bookId;
+    this.type = type;
+    this.timestamp = LocalDateTime.now();
+}
 }

@@ -78,26 +78,32 @@
     </content>
 </Tab>
 
-            <Tab text="Transactions" closable="false">
-                <content>
-                    <VBox spacing="10">
-                        <TableView fx:id="transactionsTable"
-                                   styleClass="transaction-table"
-                                   VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="timestampColumn" text="Timestamp"/>
-                                <TableColumn fx:id="actionColumn" text="Action"/>
-                                <TableColumn fx:id="userColumn" text="User"/>
-                                <TableColumn fx:id="detailsColumn" text="Details"/>
-                            </columns>
-                            <stylesheets>
-                                <URL value="@../css/style.css"/>
-                            </stylesheets>
-                        </TableView>
+           <Tab text="Transactions" closable="false">
+    <VBox spacing="10">
+        <!-- Transaction Statistics -->
+        <HBox spacing="20" styleClass="stats-container">
+            <Label fx:id="borrowedCountLabel" styleClass="stat-label"/>
+            <Label fx:id="lentCountLabel" styleClass="stat-label"/>
+            <Button text="Refresh" onAction="#handleRefresh" styleClass="refresh-button"/>
+        </HBox>
 
-                    </VBox>
-                </content>
-            </Tab>
+        <!-- Transaction Table -->
+        <TableView fx:id="transactionsTable" VBox.vgrow="ALWAYS" styleClass="transaction-table">
+            <columns>
+                <TableColumn fx:id="timestampColumn" text="Timestamp"/>
+                <TableColumn fx:id="actionColumn" text="Action"/>
+                <TableColumn fx:id="bookColumn" text="Book"/>
+                <TableColumn fx:id="statusColumn" text="Status"/>
+                <TableColumn fx:id="detailsColumn" text="Details"/>
+            </columns>
+        </TableView>
+
+        <!-- Pagination -->
+        <HBox spacing="10" alignment="CENTER">
+            <Pagination fx:id="transactionPagination"/>
+        </HBox>
+    </VBox>
+</Tab>
         </tabs>
     </TabPane>
 
@@ -107,3 +113,4 @@
     <Button text="Logout" onAction="#handleLogout" styleClass="primary-button"/>
 </HBox>
 </VBox>
+

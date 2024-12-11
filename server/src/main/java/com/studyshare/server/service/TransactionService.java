@@ -16,4 +16,8 @@ public interface TransactionService {
 
     TransactionDTO borrowBook(Long bookId);
     TransactionDTO returnBook(Long bookId);
+
+    TransactionDTO createTransaction(Long bookId, Long userId, TransactionType type);
+    List<TransactionDTO> getAllTransactions();
+    Long getActiveTransactionsCount();
 }

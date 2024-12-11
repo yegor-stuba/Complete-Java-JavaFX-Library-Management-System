@@ -119,7 +119,11 @@ public class TransactionController extends BaseController {
         });
     }
 
-
+@GetMapping("/book/{bookId}/latest")
+public ResponseEntity<TransactionDTO> getLatestTransaction(@PathVariable Long bookId) {
+    CompletableFuture<TransactionDTO> latestTransaction = transactionService.getLatestTransaction(bookId);
+    return ResponseEntity.ok(latestTransaction.join());
+}
 
     public void stop() {
         updateTimeline.stop();

@@ -67,14 +67,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDTO updateBookStatus(Long id, boolean available) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-        book.setAvailable(available);
-        return bookMapper.toDto(bookRepository.save(book));
-    }
-
-    @Override
     public Long getBookCount() {
         return bookRepository.count();
     }
@@ -128,5 +120,13 @@ public BookDTO updateBook(Long id, BookDTO bookDTO) {
     existingBook.setAvailable(bookDTO.isAvailable());
 
     return bookMapper.toDto(bookRepository.save(existingBook));
+}
+
+@Override
+public BookDTO updateBookStatus(Long id, boolean available) {
+    Book book = bookRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+    book.setAvailable(available);
+    return bookMapper.toDto(bookRepository.save(book));
 }
 }

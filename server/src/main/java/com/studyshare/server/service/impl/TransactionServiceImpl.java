@@ -45,13 +45,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Transactional
     public TransactionDTO borrowBook(Long bookId) {
-        BookDTO book = bookService.getBookById(bookId);
-        if (!book.isAvailable()) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+        BookDTO bookDTO = bookService.getBookById(bookId);
+        if (!bookDTO.isAvailable()) {
             throw new ValidationException("Book is not available for borrowing");
         }
 
         Transaction transaction = new Transaction();
-
+        transaction.setBook(book);
         transaction.setUser(userService.getCurrentUserEntity());
         transaction.setType(TransactionType.BORROW);
         transaction.setDate(LocalDateTime.now());
@@ -61,7 +64,6 @@ public class TransactionServiceImpl implements TransactionService {
         bookService.updateBookStatus(bookId, false);
         return transactionMapper.toDto(transactionRepository.save(transaction));
     }
-
 
     @Override
     public List<TransactionDTO> getBookTransactions(Long bookId) {

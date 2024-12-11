@@ -12,4 +12,12 @@ public class BookOperationException extends RuntimeException {
         this.operation = operation;
         this.bookId = bookId;
     }
+    public String getOperation() {
+        return operation;
+    }
+
+    public Long getBookId() {
+        return bookId;
+    }
+
 }

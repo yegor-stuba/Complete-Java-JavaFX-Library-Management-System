@@ -1,5 +1,6 @@
 package com.studyshare.client;
 
+import com.studyshare.client.config.ClientConfig;
 import com.studyshare.client.service.*;
 import com.studyshare.client.service.impl.AuthenticationServiceImpl;
 import com.studyshare.client.service.impl.TransactionServiceImpl;
@@ -14,6 +15,8 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URL;
 
 public class ClientApplication extends Application {
     private static final Logger log = LoggerFactory.getLogger(ClientApplication.class);
@@ -40,7 +43,8 @@ private void setupErrorHandling() {
     });
 }
 
-    private void initializeServices(Stage primaryStage) {
+private void initializeServices(Stage primaryStage) {
+    try {
         // Initialize core services
         RestClient restClient = new RestClient();
         connectionMonitor = new ConnectionMonitor();
@@ -54,22 +58,27 @@ private void setupErrorHandling() {
         // Setup scene management
         SceneManager sceneManager = new SceneManager(primaryStage);
         ControllerFactory controllerFactory = new ControllerFactory(
-            sceneManager,
-            userService,
-            bookService,
-            transactionService,
-            authService
+            sceneManager, userService, bookService, transactionService, authService
         );
         sceneManager.setControllerFactory(controllerFactory);
 
-        // Setup connection monitoring
-        setupConnectionMonitoring(primaryStage);
+        // Verify resources before loading initial scene
+        URL loginResource = getClass().getResource("/fxml/login.fxml");
+        if (loginResource == null) {
+            throw new RuntimeException("Required FXML resources not found");
+        }
 
-        // Start with login scene
         primaryStage.setTitle("Library Management System");
+        primaryStage.setWidth(ClientConfig.WINDOW_WIDTH);
+        primaryStage.setHeight(ClientConfig.WINDOW_HEIGHT);
         sceneManager.switchToLogin();
         primaryStage.show();
+    } catch (Exception e) {
+        log.error("Application initialization failed: {}", e.getMessage());
+        Platform.exit();
     }
+}
+
 
     private void setupConnectionMonitoring(Stage primaryStage) {
         connectionMonitor.connectedProperty().addListener((obs, oldVal, newVal) ->

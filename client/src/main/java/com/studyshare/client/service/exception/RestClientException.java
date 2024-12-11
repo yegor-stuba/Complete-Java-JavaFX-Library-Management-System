@@ -1,14 +1,17 @@
 package com.studyshare.client.service.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.http.HttpResponse;
 
 import static org.springframework.util.SerializationUtils.deserialize;
 
 
-@Slf4j
+
 public class RestClientException extends RuntimeException {
+    private static final Logger log = LoggerFactory.getLogger(RestClientException.class);
     private final int statusCode;
     private final String errorBody;
 

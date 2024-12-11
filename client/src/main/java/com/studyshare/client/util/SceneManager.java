@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -56,27 +57,18 @@ public class SceneManager {
 
 public void switchToUserProfile() {
     try {
-        URL resource = getClass().getResource("/fxml/user-profile.fxml");
-        if (resource == null) {
-            throw new IOException("FXML file not found: /fxml/user-profile.fxml");
-        }
-
-        FXMLLoader loader = new FXMLLoader(resource);
-        loader.setControllerFactory(controllerFactory::createController);
-
-        Scene scene = new Scene(loader.load());
-        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
-
-        Platform.runLater(() -> {
-            primaryStage.setScene(scene);
-            primaryStage.setTitle("User Profile");
-            primaryStage.show();
-        });
-    } catch (IOException e) {
-        log.error("Failed to load user profile: {}", e.getMessage());
-        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load user profile"));
+        loadScene("/fxml/user-profile.fxml", "User Profile");
+    } catch (Exception e) {
+        handleSceneLoadError(e, "Failed to load user profile");
     }
 }
+private void handleSceneLoadError(Exception e, String message) {
+    log.error("Scene error details: ", e);
+    Platform.runLater(() -> AlertUtil.showError("Navigation Error",
+        message + "\nType: " + e.getClass().getSimpleName() +
+        "\nCause: " + (e.getCause() != null ? e.getCause().getMessage() : "Unknown")));
+}
+
 
     public void switchToAdminDashboard() {
         try {
@@ -110,10 +102,6 @@ public void switchToUserProfile() {
         }
     }
 
-    private void handleSceneLoadError(Exception e, String message) {
-        log.error(message + ": {}", e.getMessage());
-        Platform.runLater(() -> AlertUtil.showError("Navigation Error", message));
-    }
 
     public void switchToTransactions() {
         loadScene("/fxml/transactions.fxml", "Transactions");
@@ -161,20 +149,40 @@ public void switchToUserProfile() {
         }
     }
 
-    public void loadScene(String fxmlPath, String title) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            loader.setControllerFactory(controllerFactory::createController);
-            Scene scene = new Scene(loader.load());
-            Platform.runLater(() -> {
-                primaryStage.setScene(scene);
-                primaryStage.setTitle(title);
-                primaryStage.show();
-            });
-        } catch (Exception e) {
-            log.error("Failed to load scene: {}", e.getMessage());
-            throw new RuntimeException("Scene loading failed", e);
+private void loadScene(String fxmlPath, String title) {
+    try {
+        // Try multiple resource loading strategies
+        URL resource = getClass().getResource(fxmlPath);
+        if (resource == null) {
+            resource = getClass().getResource("/fxml" + fxmlPath);
+        }
+        if (resource == null) {
+            resource = getClass().getClassLoader().getResource("fxml" + fxmlPath);
         }
 
+        log.debug("Attempting to load FXML from: {}", resource);
+        if (resource == null) {
+            throw new IOException("Cannot find resource: " + fxmlPath);
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource);
+        loader.setControllerFactory(controllerFactory::createController);
+        Scene scene = new Scene(loader.load());
+
+        // Add CSS
+        URL cssUrl = getClass().getResource("/css/style.css");
+        if (cssUrl != null) {
+            scene.getStylesheets().add(cssUrl.toExternalForm());
+        }
+
+        Platform.runLater(() -> {
+            primaryStage.setScene(scene);
+            primaryStage.setTitle(title);
+            primaryStage.show();
+        });
+    } catch (Exception e) {
+        log.error("Failed to load scene: {} - {}", fxmlPath, e.getMessage());
+        throw new RuntimeException("Scene loading failed: " + e.getMessage(), e);
+    }
 }
 }

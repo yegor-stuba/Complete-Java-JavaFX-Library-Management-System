@@ -321,3 +321,37 @@
     -fx-border-radius: 4px;
     -fx-border-color: #ffc107;
 }
+
+/* Add to client/src/main/resources/css/style.css */
+.transaction-table {
+    -fx-background-color: white;
+}
+
+.transaction-table .column-header {
+    -fx-background-color: #f0f0f0;
+    -fx-font-weight: bold;
+}
+
+.transaction-row-overdue {
+    -fx-background-color: #ffcccc;
+}
+
+.transaction-row-borrowed {
+    -fx-background-color: #e6ffe6;
+}
+
+.transaction-row-returned {
+    -fx-background-color: #e6e6ff;
+}
+
+.transaction-status {
+    -fx-font-weight: bold;
+}
+
+.transaction-status-overdue {
+    -fx-text-fill: #cc0000;
+}
+
+.transaction-status-active {
+    -fx-text-fill: #006600;
+}

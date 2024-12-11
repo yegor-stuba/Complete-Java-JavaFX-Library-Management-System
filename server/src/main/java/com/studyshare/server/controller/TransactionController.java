@@ -40,12 +40,6 @@ public ResponseEntity<TransactionDTO> createTransaction(@RequestBody Transaction
         ));
     }
 
-    @PostMapping("/return/{id}")
-    public ResponseEntity<Void> returnBook(@PathVariable Long id) {
-        transactionService.completeTransaction(id);
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long userId) {
         return ResponseEntity.ok(transactionService.getUserTransactions(userId));
@@ -71,4 +65,16 @@ public ResponseEntity<TransactionDTO> createTransaction(@RequestBody Transaction
             return ResponseEntity.internalServerError().build();
         }
     }
+
+
+// In TransactionController.java
+@PostMapping("/books/{bookId}/borrow")
+public ResponseEntity<TransactionDTO> borrowBook(@PathVariable Long bookId) {
+    return ResponseEntity.ok(transactionService.borrowBook(bookId));
+}
+
+@PostMapping("/books/{bookId}/return")
+public ResponseEntity<TransactionDTO> returnBook(@PathVariable Long bookId) {
+    return ResponseEntity.ok(transactionService.returnBook(bookId));
+}
 }

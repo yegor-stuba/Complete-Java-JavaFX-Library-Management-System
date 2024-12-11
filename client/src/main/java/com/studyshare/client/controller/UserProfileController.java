@@ -9,6 +9,9 @@ import com.studyshare.client.util.SceneManager;
 import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.common.dto.UserDTO;
+import com.studyshare.common.enums.TransactionType;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -21,6 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +32,10 @@ import javafx.geometry.Insets;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
-import static com.studyshare.client.util.TransactionUtil.getTransactionStatus;
 
 
 @SuppressWarnings("unused")
@@ -81,27 +84,82 @@ public class UserProfileController extends BaseController {
 @FXML private TableColumn<BookDTO, String> borrowedDescriptionColumn;
 @FXML private TableColumn<BookDTO, String> lendedDescriptionColumn;
 
+    @FXML private TableView<TransactionDTO> transactionsTable;
+    @FXML private TableColumn<TransactionDTO, String> timestampColumn;
+    @FXML private TableColumn<TransactionDTO, String> actionColumn;
+    @FXML private TableColumn<TransactionDTO, String> userColumn;
+    @FXML private TableColumn<TransactionDTO, String> detailsColumn;
 
-    public UserProfileController(UserService userService, TransactionService transactionService, SceneManager sceneManager) {
+
+    public UserProfileController(UserService userService,
+                                 BookService bookService,
+                                 TransactionService transactionService,
+                                 SceneManager sceneManager) {
         this.userService = userService;
+        this.bookService = bookService;
         this.transactionService = transactionService;
         this.sceneManager = sceneManager;
-        this.bookService = bookService;
     }
 
     @FXML
     private void initialize() {
         setupTableColumns();
+        setupStatusBasedStyling();
+        setupAutomaticStatusUpdates();
         loadUserProfile();
         setupAllBooksTable();
         setupTransactionTables();
         loadAllData();
-        borrowedBooksTable.setItems(borrowedBooks);
     }
+
+    private void setupTransactionStatusStyling() {
+        transactionsTable.setRowFactory(tv -> new TableRow<TransactionDTO>() {
+            @Override
+            protected void updateItem(TransactionDTO transaction, boolean empty) {
+                super.updateItem(transaction, empty);
+                if (transaction == null || empty) {
+                    setStyle("");
+                } else {
+                    if ("Overdue".equals(transaction.getStatus())) {
+                        setStyle("-fx-background-color: #ffcccc;"); // Light red for overdue
+                    } else if (transaction.getType() == TransactionType.BORROW) {
+                        setStyle("-fx-background-color: #e6ffe6;"); // Light green for borrowed
+                    } else if (transaction.getType() == TransactionType.RETURN) {
+                        setStyle("-fx-background-color: #e6e6ff;"); // Light blue for returned
+                    }
+                }
+            }
+        });
+    }
+
+
 
     private void setupTransactionTables() {
         setupBorrowedBooksTable();
         setupLendedBooksTable();
+
+        // Configure transaction columns
+        timestampColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(formatDateTime(data.getValue().getTimestamp())));
+
+        actionColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getType().toString()));
+
+        userColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getUser().getUsername()));
+
+        detailsColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(getTransactionDetails(data.getValue())));
+    }
+
+    private String formatDateTime(LocalDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
+
+    private String getTransactionDetails(TransactionDTO transaction) {
+        return String.format("%s - %s",
+                transaction.getBook().getTitle(),
+                transaction.getStatus());
     }
 
     private void loadAllData() {
@@ -425,13 +483,36 @@ private void loadUserProfile() {
             return null;
         });
 }
+
     private void setupTableColumns() {
-        titleColumn.setCellValueFactory(data ->
+
+        // All Books table
+        allTitleColumn.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getTitle()));
-        authorColumn.setCellValueFactory(data ->
+        allAuthorColumn.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getAuthor()));
+        allAvailableColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(String.valueOf(data.getValue().getAvailableCopies())));
+
+        // Borrowed Books table
+        borrowedTitleColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getTitle()));
+        borrowedAuthorColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getAuthor()));
+        borrowedDescriptionColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getDescription()));
         dueDateColumn.setCellValueFactory(data ->
-                new SimpleStringProperty("Due Date")); // Placeholder until we implement due dates
+                new SimpleStringProperty(formatDueDate(data.getValue())));
+
+        // Lended Books table
+        lendedTitleColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getTitle()));
+        lendedAuthorColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getAuthor()));
+        lendedDescriptionColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getDescription()));
+        borrowerColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(getBorrowerName(data.getValue())));
     }
 
 private void loadUserTransactions() {
@@ -590,16 +671,176 @@ private void handleRegisterBook() {
         refreshAllTables();
     }
 
- private void refreshAllTables() {
-    CompletableFuture.allOf(
-        handleAsync(bookService.getAllBooks()),
-        handleAsync(transactionService.getUserTransactions()),
+    private void refreshAllTables() {
+        CompletableFuture.allOf(
+                handleAsync(bookService.getAllBooks()),
+                handleAsync(transactionService.getUserTransactions())
+        ).thenRun(() -> {
+            loadAllBooks();
+            loadBorrowedBooks();
+            loadLendedBooks();
+            loadTransactions();
+            Platform.runLater(() -> AlertUtil.showInfo("Success", "Data refreshed successfully"));
+        });
+    }
+
+
+@FXML
+private void handleSearch() {
+    String query = searchField.getText().trim();
+    handleAsync(bookService.searchBooks(query))
+        .thenAccept(books -> Platform.runLater(() -> {
+            allBooksTable.getItems().setAll(books);
+        }))
+        .exceptionally(throwable -> {
+            Platform.runLater(() -> AlertUtil.showError("Search Error",
+                "Failed to search books: " + throwable.getMessage()));
+            return null;
+        });
+}
+
+
+    private void setupTransactionTable() {
+        transactionsTable.getStyleClass().add("transaction-table");
+
+        timestampColumn.setCellValueFactory(data ->
+            new SimpleStringProperty(data.getValue().getTimestamp().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
+        timestampColumn.setCellFactory(column -> createStyledCellFactory());
+
+        actionColumn.setCellValueFactory(data ->
+            new SimpleStringProperty(data.getValue().getType().toString()));
+        actionColumn.setCellFactory(column -> new TableCell<TransactionDTO, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    getStyleClass().add("transaction-cell");
+                    if (item.equals("BORROW")) {
+                        setStyle("-fx-text-fill: #006600;"); // Green for borrow
+                    } else if (item.equals("RETURN")) {
+                        setStyle("-fx-text-fill: #000066;"); // Blue for return
+                    }
+                }
+            }
+        });
+
+        userColumn.setCellValueFactory(data ->
+            new SimpleStringProperty(data.getValue().getUser().getUsername()));
+        userColumn.setCellFactory(column -> createStyledCellFactory());
+
+        detailsColumn.setCellValueFactory(data ->
+            new SimpleStringProperty(data.getValue().getBook().getTitle()));
+        detailsColumn.setCellFactory(column -> createStyledCellFactory());
+
+        loadTransactions();
+    }
+
+    private TableCell<TransactionDTO, String> createStyledCellFactory() {
+        return new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    getStyleClass().add("transaction-cell");
+                }
+            }
+        };
+    }
+
+    private void loadTransactions() {
         handleAsync(transactionService.getUserTransactions())
-    ).thenRun(() -> {
-        loadAllBooks();
-        loadBorrowedBooks();
-        loadLendedBooks();
-        Platform.runLater(() -> AlertUtil.showInfo("Success", "Data refreshed successfully"));
+                .thenAccept(transactions -> {
+                    if (transactions != null) {
+                        Platform.runLater(() -> {
+                            transactionsTable.getItems().setAll(transactions);
+                            updateTransactionStatus(transactions);
+                        });
+                    }
+                })
+                .exceptionally(throwable -> {
+                    log.error("Error loading transactions: {}", throwable.getMessage());
+                    Platform.runLater(() -> AlertUtil.showError("Transaction Error",
+                            "Failed to load transactions: " + throwable.getMessage()));
+                    return null;
+                });
+    }
+
+    private void updateTransactionStatus(List<TransactionDTO> transactions) {
+        transactions.forEach(transaction -> {
+            if (transaction.getDueDate() != null &&
+                    transaction.getDueDate().isBefore(LocalDateTime.now())) {
+                transaction.setStatus("Overdue");
+            }
+        });
+    }
+
+    // In UserProfileController.java
+private void setupStatusBasedStyling() {
+    transactionsTable.setRowFactory(tv -> new TableRow<TransactionDTO>() {
+        @Override
+        protected void updateItem(TransactionDTO transaction, boolean empty) {
+            super.updateItem(transaction, empty);
+            getStyleClass().removeAll("transaction-row-overdue",
+                                    "transaction-row-borrowed",
+                                    "transaction-row-returned");
+
+            if (transaction != null && !empty) {
+                switch (transaction.getType()) {
+                    case BORROW -> {
+                        if (isOverdue(transaction)) {
+                            getStyleClass().add("transaction-row-overdue");
+                        } else {
+                            getStyleClass().add("transaction-row-borrowed");
+                        }
+                    }
+                    case RETURN -> getStyleClass().add("transaction-row-returned");
+                }
+            }
+        }
     });
 }
+
+private boolean isOverdue(TransactionDTO transaction) {
+    return transaction.getDueDate() != null &&
+           transaction.getDueDate().isBefore(LocalDateTime.now()) &&
+           transaction.getType() == TransactionType.BORROW;
+}
+
+// In UserProfileController.java
+private void setupAutomaticStatusUpdates() {
+    Timeline statusUpdater = new Timeline(
+        new KeyFrame(Duration.seconds(30), event -> updateTransactionStatuses())
+    );
+    statusUpdater.setCycleCount(Timeline.INDEFINITE);
+    statusUpdater.play();
+}
+
+private void updateTransactionStatuses() {
+    if (transactionsTable.getItems() != null) {
+        transactionsTable.getItems().forEach(transaction -> {
+            if (transaction.getType() == TransactionType.BORROW) {
+                if (isOverdue(transaction)) {
+                    transaction.setStatus("Overdue");
+                } else {
+                    long daysLeft = ChronoUnit.DAYS.between(
+                        LocalDateTime.now(),
+                        transaction.getDueDate()
+                    );
+                    transaction.setStatus("Due in " + daysLeft + " days");
+                }
+            }
+        });
+        transactionsTable.refresh();
+    }
+}
+
 }

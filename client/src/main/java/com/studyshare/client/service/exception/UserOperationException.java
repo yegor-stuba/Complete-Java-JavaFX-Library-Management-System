@@ -12,4 +12,12 @@ public class UserOperationException extends RuntimeException {
         this.operation = operation;
         this.userId = userId;
     }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
 }

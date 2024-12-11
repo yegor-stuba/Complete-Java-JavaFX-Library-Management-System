@@ -5,7 +5,9 @@ import com.studyshare.client.service.BookService;
 import com.studyshare.client.service.UserService;
 import com.studyshare.client.service.TransactionService;
 import com.studyshare.client.controller.*;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ControllerFactory {
     private final SceneManager sceneManager;
     private final UserService userService;
@@ -26,18 +28,21 @@ public class ControllerFactory {
         this.authService = authService;
     }
 
-    public Object createController(Class<?> controllerClass) {
-        if (controllerClass == LoginController.class) {
-            return new LoginController(userService, sceneManager, authService);
-        } else if (controllerClass == RegisterController.class) {
-            return new RegisterController(userService, sceneManager);
-        } else if (controllerClass == AdminDashboardController.class) {
-            return new AdminDashboardController(userService, bookService, transactionService, sceneManager);
-        } else if (controllerClass == BookManagementController.class) {
-    return new BookManagementController(bookService, transactionService);
-} else if (controllerClass == UserProfileController.class) {
-            return new UserProfileController(userService, transactionService, sceneManager);
-        }
-        throw new IllegalArgumentException("Unknown controller class: " + controllerClass.getName());
+public Object createController(Class<?> controllerClass) {
+    log.debug("Creating controller for class: {}", controllerClass.getName());
+    if (controllerClass == UserProfileController.class) {
+        log.debug("Creating UserProfileController");
+        return new UserProfileController(userService, bookService, transactionService, sceneManager);
     }
+    if (controllerClass == LoginController.class) {
+        return new LoginController(userService, sceneManager, authService);
+    } else if (controllerClass == RegisterController.class) {
+        return new RegisterController(userService, sceneManager);
+    } else if (controllerClass == AdminDashboardController.class) {
+        return new AdminDashboardController(userService, bookService, transactionService, sceneManager);
+    } else if (controllerClass == BookManagementController.class) {
+        return new BookManagementController(bookService, transactionService);
+    }
+    throw new IllegalArgumentException("Unknown controller class: " + controllerClass.getName());
+}
 }

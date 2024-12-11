@@ -72,7 +72,7 @@
             </VBox>
         </Tab>
 
-   <Tab text="Statistics" closable="false">
+   <Tab text="Transactions" closable="false">
     <VBox spacing="20" styleClass="admin-statistics">
         <padding>
             <Insets top="20" right="20" bottom="20" left="20"/>

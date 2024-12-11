@@ -152,4 +152,14 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ex.getMessage());
     }
+
+    @PostMapping("/register")
+public ResponseEntity<BookDTO> registerBook(@Valid @RequestBody BookDTO bookDTO) {
+    try {
+        bookDTO.setOwnerId(getCurrentUserId());
+        return ResponseEntity.ok(bookService.createBook(bookDTO));
+    } catch (ValidationException e) {
+        return ResponseEntity.badRequest().build();
+    }
+}
 }

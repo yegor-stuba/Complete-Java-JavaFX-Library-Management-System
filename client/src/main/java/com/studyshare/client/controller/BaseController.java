@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class BaseController {
-    private static final Logger log = LoggerFactory.getLogger(BaseController.class);
+protected static final Logger log = LoggerFactory.getLogger(BaseController.class);
 
     @FXML
     protected Label connectionStatus;

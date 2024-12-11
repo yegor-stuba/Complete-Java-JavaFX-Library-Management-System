@@ -9,9 +9,17 @@ import lombok.Data;
 @Table(name = "books")
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_id")
-    private Long bookId;
+@GeneratedValue(strategy = GenerationType.TABLE, generator = "book_generator")
+@TableGenerator(
+    name = "book_generator",
+    table = "hibernate_sequences",
+    pkColumnName = "sequence_name",
+    valueColumnName = "next_val",
+    pkColumnValue = "books",
+    allocationSize = 1
+)
+@Column(name = "book_id")
+private Long bookId;
 
     @Column(nullable = false)
     private String title;

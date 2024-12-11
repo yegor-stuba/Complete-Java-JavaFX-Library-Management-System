@@ -2,6 +2,7 @@ package com.studyshare.server.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.hibernate.community.dialect.SQLiteDialect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -24,6 +25,11 @@ public class DatabaseConfig {
 
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
+
+    @Bean
+    public SQLiteDialect sqliteDialect() {
+        return new SQLiteDialect();
+    }
 
     @Bean
     public DataSource dataSource() {

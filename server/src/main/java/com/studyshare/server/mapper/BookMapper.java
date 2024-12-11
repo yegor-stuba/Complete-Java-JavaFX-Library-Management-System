@@ -20,14 +20,15 @@ public class BookMapper {
             .build();
     }
 
-    public Book toEntity(BookDTO dto) {
-        Book book = new Book();
-        book.setTitle(dto.getTitle());
-        book.setAuthor(dto.getAuthor());
-        book.setIsbn(dto.getIsbn());
-        book.setAvailableCopies(dto.getAvailableCopies());
-        return book;
-    }
+   public Book toEntity(BookDTO dto) {
+    Book book = new Book();
+    book.setTitle(dto.getTitle());
+    book.setAuthor(dto.getAuthor());
+    book.setIsbn(dto.getIsbn());
+    book.setAvailableCopies(dto.getAvailableCopies());
+    book.setAvailable(true);
+    return book;
+}
 
     public List<BookDTO> toDtoList(List<Book> books) {
         return books.stream()

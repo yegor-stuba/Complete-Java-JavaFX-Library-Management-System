@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Component
 public class UserMapper {
 
- public UserDTO toDto(User user) {
+public UserDTO toDto(User user) {
     UserDTO dto = new UserDTO();
     dto.setUserId(user.getUserId());
     dto.setUsername(user.getUsername());

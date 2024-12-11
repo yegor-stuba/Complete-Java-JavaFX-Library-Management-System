@@ -9,10 +9,13 @@ import com.studyshare.server.mapper.UserMapper;
 import com.studyshare.server.model.Book;
 import com.studyshare.server.model.User;
 import com.studyshare.server.repository.BookRepository;
+import com.studyshare.server.repository.UserRepository;
 import com.studyshare.server.service.BookService;
 import com.studyshare.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final UserRepository userRepository;
     private final BookMapper bookMapper;
     private final UserMapper userMapper;
     private final UserService userService;
@@ -129,19 +133,14 @@ public void deleteBook(Long id) {
 
 
 
-    @Override
-    public BookDTO createBook(BookDTO bookDTO) {
-        User currentUser = userService.getCurrentUserEntity();
-        if (currentUser == null) {
-            throw new ResourceNotFoundException("User not found");
-        }
-
-        Book book = bookMapper.toEntity(bookDTO);
-        book.setOwner(currentUser);
-        book.setAvailable(true);
-        return bookMapper.toDto(bookRepository.save(book));
-    }
-
+@Override
+public BookDTO createBook(BookDTO bookDTO) {
+    log.debug("Creating new book: {}", bookDTO);
+    Book book = bookMapper.toEntity(bookDTO);
+    book.setAvailable(true);
+    Book savedBook = bookRepository.save(book);
+    return bookMapper.toDto(savedBook);
+}
 
 @Override
 public BookDTO updateBook(Long id, BookDTO bookDTO) {

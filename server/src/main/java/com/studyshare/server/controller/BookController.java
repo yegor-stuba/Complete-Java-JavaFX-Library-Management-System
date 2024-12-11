@@ -172,11 +172,13 @@ public ResponseEntity<BookDTO> returnBook(@PathVariable Long id) {
 
 @PostMapping("/register")
 public ResponseEntity<BookDTO> registerBook(@Valid @RequestBody BookDTO bookDTO) {
+    log.debug("Registering new book: {}", bookDTO);
     try {
-        bookDTO.setOwnerId(getCurrentUserId());
-        return ResponseEntity.ok(bookService.createBook(bookDTO));
-    } catch (ValidationException e) {
-        return ResponseEntity.badRequest().build();
+        BookDTO created = bookService.createBook(bookDTO);
+        return ResponseEntity.ok(created);
+    } catch (Exception e) {
+        log.error("Error creating book: {}", e.getMessage());
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 }
 }

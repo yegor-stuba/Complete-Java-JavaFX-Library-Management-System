@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS hibernate_sequences (
     next_val BIGINT
 );
 
-
+INSERT OR REPLACE INTO hibernate_sequences (sequence_name, next_val)
+VALUES ('books', 1);
 
 -- 2. Create users table before its indexes
 CREATE TABLE IF NOT EXISTS users (

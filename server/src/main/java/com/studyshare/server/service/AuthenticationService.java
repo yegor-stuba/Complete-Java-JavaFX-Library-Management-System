@@ -35,10 +35,10 @@ public class AuthenticationService {
 
 
 
-    public UserDTO authenticate(String username, String password) {
-        UserDTO user = userService.findByUsername(username);
-
-        securityAuditService.logLoginAttempt(username, false);
-        throw new AuthenticationException("Invalid credentials");
-    }
+public UserDTO authenticate(String username, String password) {
+    log.debug("Authenticating user: {}", username);
+    UserDTO user = userService.findByUsername(username);
+    log.debug("Found user during authentication: {}", user);
+    return user;
+}
 }

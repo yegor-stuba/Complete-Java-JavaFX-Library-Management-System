@@ -145,11 +145,16 @@ public CompletableFuture<UserDTO> getCurrentUser() {
             throw new RuntimeException("Invalid token");
         }
     }
+
 @Override
 public User getCurrentUserEntity() {
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    log.debug("Looking up user by username: {}", username);
     return userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        .orElseThrow(() -> {
+            log.error("User not found for username: {}", username);
+            return new UsernameNotFoundException("User not found: " + username);
+        });
 }
 
 

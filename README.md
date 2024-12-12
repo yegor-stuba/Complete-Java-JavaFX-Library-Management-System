@@ -1,7 +1,5 @@
 📚 StudyShare: Collaborative Library Management System
 
-
-
 StudyShare is a robust library management system designed to simplify book lending, user management, and transaction tracking for administrators and users. It ensures efficient operation, secure authentication, and a smooth user experience.
 
 ✨ Features
@@ -46,11 +44,11 @@ Backend: Java, Spring Boot
 
 Frontend: JavaFX (FXML for UI design)
 
-Database: SQLite
+Database: MySQL
 
 Build Tool: Maven
 
-IDE: IntelliJ IDEA
+Authentication: JWT (JSON Web Token)
 
 🚀 Getting Started
 
@@ -105,37 +103,37 @@ Password: admin
 📷 Screenshots
 
 Login Page
-<img width="796" alt="image" src="https://github.com/user-attachments/assets/be1a85b4-ba29-4728-a9e9-b62eb939c6b2" />
 
+A clean and intuitive login interface for both users and admins.
 
+<img width="795" alt="image" src="https://github.com/user-attachments/assets/db7e4dfe-9485-41aa-9522-a044f009c49e" />
 
 
 Registration Page
-<img width="797" alt="image" src="https://github.com/user-attachments/assets/281f93a7-7428-4c2d-8f75-7336c6ca52df" />
+
+Easily register new users with a simple and efficient form.
+
+<img width="795" alt="image" src="https://github.com/user-attachments/assets/12bd9e67-3647-4a90-8100-12b8aea2193e" />
 
 
+Admin Dashboard
+
+Get an overview of library statistics and manage books and users seamlessly.
+
+<img width="1440" alt="image" src="https://github.com/user-attachments/assets/fd66d67a-b290-49dc-9ca8-7d791164108a" />
 
 
-Admin Dashboard (admin part)
-<img width="1430" alt="image" src="https://github.com/user-attachments/assets/3f18bb90-8375-48f3-9ce7-af61361ac1af" />
+Book Management
 
+Manage book inventory, add new books, and update details with ease.
 
+Statistics
 
+View detailed statistics about library usage, total books, and registered users.
 
-Book Mangment
-<img width="1440" alt="image" src="https://github.com/user-attachments/assets/59475f43-b92f-4a05-8cdb-956cdea267ac" />
+Transactions
 
-
-
-Statistics (admin part)
-<img width="1440" alt="image" src="https://github.com/user-attachments/assets/82b7571c-5453-4588-90da-2dbed348a473" />
-
-
-
-Transactions 
-<img width="1440" alt="image" src="https://github.com/user-attachments/assets/5fac0af1-106a-49a5-865d-fc85156a1c04" />
-
-
+Monitor user transactions, including who borrowed or returned specific books.
 
 📖 Additional Features
 
@@ -155,6 +153,11 @@ View total books in the library and total users registered.
 
 We welcome contributions! Please fork the repository and submit a pull request with detailed explanations of your changes.
 
+📜 License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
 ✉️ Contact
 
-For any inquiries or feedback, please reach out to Veres Group at veres.group@example.com.Stay connected for updates and new features!
+For any inquiries or feedback, please reach out to Veres Group at veres.group@example.com.
+Stay connected for updates and new features!

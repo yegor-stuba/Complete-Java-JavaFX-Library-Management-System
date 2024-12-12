@@ -27,7 +27,7 @@ public class BookValidator implements Validator {
         }
 
         if (book.getIsbn() != null && !book.getIsbn().matches("^(?=(?:\\D*\\d){10}(?:(?:\\D*\\d){3})?$)[\\d-]+$")) {
-            errors.rejectValue("isbn", "field.invalid", "Invalid ISBN format");
+            errors.rejectValue("isbn", "field.invalid", "Invalid ISBN format : must be 10 digits");
         }
     }
 }

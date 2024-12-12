@@ -149,6 +149,25 @@ public class UserProfileController extends BaseController {
             return;
         }
 
+        // Initialize columns if they're null
+        if (timestampColumn == null) timestampColumn = new TableColumn<>("Timestamp");
+        if (actionColumn == null) actionColumn = new TableColumn<>("Action");
+        if (userColumn == null) userColumn = new TableColumn<>("User");
+        if (detailsColumn == null) detailsColumn = new TableColumn<>("Details");
+
+        if (!transactionsTable.getColumns().contains(timestampColumn)) {
+            transactionsTable.getColumns().add(timestampColumn);
+        }
+        if (!transactionsTable.getColumns().contains(actionColumn)) {
+            transactionsTable.getColumns().add(actionColumn);
+        }
+        if (!transactionsTable.getColumns().contains(userColumn)) {
+            transactionsTable.getColumns().add(userColumn);
+        }
+        if (!transactionsTable.getColumns().contains(detailsColumn)) {
+            transactionsTable.getColumns().add(detailsColumn);
+        }
+
         timestampColumn.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getTimestamp() != null ?
                         formatDateTime(data.getValue().getTimestamp()) : "N/A"));

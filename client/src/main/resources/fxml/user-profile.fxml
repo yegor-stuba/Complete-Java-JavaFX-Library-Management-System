@@ -33,6 +33,7 @@
                         <TableColumn fx:id="allDescriptionColumn" text="Description" prefWidth="200"/>
                         <TableColumn fx:id="allAvailableColumn" text="Available" prefWidth="100"/>
                         <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
+                        <TableColumn fx:id="bookUserColumn" text="User"/>
                     </columns>
                 </TableView>
                 <HBox spacing="5" alignment="CENTER_RIGHT">
@@ -95,6 +96,7 @@
                 <TableColumn fx:id="bookColumn" text="Book"/>
                 <TableColumn fx:id="statusColumn" text="Status"/>
                 <TableColumn fx:id="detailsColumn" text="Details"/>
+                <TableColumn fx:id="userColumn" text="User"/>
             </columns>
         </TableView>
 

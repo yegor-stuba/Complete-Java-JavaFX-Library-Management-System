@@ -41,20 +41,6 @@ CREATE TABLE IF NOT EXISTS books (
     FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE SET NULL
 );
 
-<<<<<<< Updated upstream
-=======
--- Insert initial users
-INSERT OR REPLACE INTO users (user_id, username, password, email, role)
-VALUES
-    (1, 'admin', 'admin', 'admin@studyshare.com', 'ADMIN'),
-    (2, 'user', 'password', 'user@studyshare.com', 'USER');
-
--- Insert sample book
-INSERT OR REPLACE INTO books (title, author, isbn, available_copies, owner_id)
-VALUES ('The Great Gatsby', 'F. Scott Fitzgerald', '9780743273565', 3, 1),
-       ('testio', 'test', '1234567890123', 1, 1),
-       ('How To Make All Happen', 'John Doe', '1234569890123', 1, 1);
->>>>>>> Stashed changes
 
 
 

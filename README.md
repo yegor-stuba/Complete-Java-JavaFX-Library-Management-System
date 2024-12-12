@@ -105,14 +105,35 @@ Password: admin
 📷 Screenshots
 
 Login Page
+<img width="796" alt="image" src="https://github.com/user-attachments/assets/be1a85b4-ba29-4728-a9e9-b62eb939c6b2" />
+
 
 
 
 Registration Page
+<img width="797" alt="image" src="https://github.com/user-attachments/assets/281f93a7-7428-4c2d-8f75-7336c6ca52df" />
 
 
 
-Admin Dashboard
+
+Admin Dashboard (admin part)
+<img width="1430" alt="image" src="https://github.com/user-attachments/assets/3f18bb90-8375-48f3-9ce7-af61361ac1af" />
+
+
+
+
+Book Mangment
+<img width="1440" alt="image" src="https://github.com/user-attachments/assets/59475f43-b92f-4a05-8cdb-956cdea267ac" />
+
+
+
+Statistics (admin part)
+<img width="1440" alt="image" src="https://github.com/user-attachments/assets/82b7571c-5453-4588-90da-2dbed348a473" />
+
+
+
+Transactions 
+<img width="1440" alt="image" src="https://github.com/user-attachments/assets/5fac0af1-106a-49a5-865d-fc85156a1c04" />
 
 
 

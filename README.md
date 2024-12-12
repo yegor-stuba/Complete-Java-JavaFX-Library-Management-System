@@ -1,163 +1,134 @@
-📚 StudyShare: Collaborative Library Management System
+# 📚 StudyShare: Collaborative Library Management System
+
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 
 StudyShare is a robust library management system designed to simplify book lending, user management, and transaction tracking for administrators and users. It ensures efficient operation, secure authentication, and a smooth user experience.
 
-✨ Features
+---
 
-For Users:
+## ✨ Features
 
-🛠 User Registration and Login
+### For Users:
+- 🛠 **User Registration and Login**
+- 📖 **Browse Available Books**
+- 🔄 **Borrow and Return Books**
+- 📊 **View Transaction History**
 
-📖 Browse Available Books
+### For Admins:
+- 👤 **User Management**
+  - Add, edit, or delete user accounts.
+- 📚 **Book Inventory Management**
+  - Add new books, update book details, and track their availability.
+- 🖥 **Admin Dashboard with Statistics**
+  - View the total number of books in the library.
+  - Track the total number of registered users.
+  - View detailed statistics of borrowed and returned books.
+- 📈 **Detailed Transaction Reports**
+  - Monitor which user borrowed or returned specific books.
+  - Access transaction details available only for admins.
 
-🔄 Borrow and Return Books
+---
 
-📊 View Personal Transaction History
+## 🛠 Tech Stack
 
-For Admins:
+- **Backend**: Java, Spring Boot
+- **Frontend**: JavaFX (FXML for UI design)
+- **Database**: SQLite
+- **Build Tool**: Maven
+- **IDE**: IntelliJ IDEA
 
-👤 User Management
+---
 
-Add, edit, or delete user accounts.
+## 🚀 Getting Started
 
-📚 Book Inventory Management
+### Prerequisites
+1. Install **Java 17+**.
+2. Install **Maven**.
+3. Set up **MySQL** and create the database using `schema.sql` in `server/src/main/resources`.
 
-Add new books, update book details, and track their availability.
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/studyshare.git
+   cd studyshare
+   ```
+2. Navigate to the server directory and build the backend:
+   ```bash
+   cd server
+   mvn clean install
+   ```
+3. Configure the database connection in `application.properties`:
+   ```properties
+   spring.datasource.url=jdbc:mysql://localhost:3306/studyshare
+   spring.datasource.username=your_username
+   spring.datasource.password=your_password
+   ```
+4. Run the application:
+   ```bash
+   mvn spring-boot:run
+   ```
+5. Launch the frontend application by running the JavaFX client.
 
-📈 Admin Dashboard with Statistics
+---
 
-View the total number of books in the library.
+## 📥 Login Information
 
-Track the total number of registered users.
+### User Login
+- **Username**: `user`
+- **Password**: `password`
 
-View detailed statistics of borrowed and returned books.
+### Admin Login
+- **Username**: `admin`
+- **Password**: `admin`
 
-🖥 Transaction Reports
+---
 
-Monitor which user borrowed or returned specific books.
+## 📷 Screenshots
 
-Access transaction details available only for admins.
-
-🛠 Tech Stack
-
-Backend: Java, Spring Boot
-
-Frontend: JavaFX (FXML for UI design)
-
-Database: MySQL
-
-Build Tool: Maven
-
-Authentication: JWT (JSON Web Token)
-
-🚀 Getting Started
-
-Prerequisites
-
-Install Java 17+.
-
-Install Maven.
-
-Set up MySQL and create the database using schema.sql in server/src/main/resources.
-
-Installation
-
-Clone the repository:
-
-git clone https://github.com/your-repo/studyshare.git
-cd studyshare
-
-Navigate to the server directory and build the backend:
-
-cd server
-mvn clean install
-
-Configure the database connection in application.properties:
-
-spring.datasource.url=jdbc:mysql://localhost:3306/studyshare
-spring.datasource.username=your_username
-spring.datasource.password=your_password
-
-Run the application:
-
-mvn spring-boot:run
-
-Launch the frontend application by running the JavaFX client.
-
-📥 Login Information
-
-To access the system, use the following credentials:
-
-User Login
-
-Username: user
-
-Password: password
-
-Admin Login
-
-Username: admin
-
-Password: admin
-
-📷 Screenshots
-
-Login Page
-
+### Login Page
 A clean and intuitive login interface for both users and admins.
+<img width="797" alt="image" src="https://github.com/user-attachments/assets/7d66100b-d703-4fd1-9072-2245ad211ed3" />
 
-<img width="795" alt="image" src="https://github.com/user-attachments/assets/db7e4dfe-9485-41aa-9522-a044f009c49e" />
-
-
-Registration Page
-
+### Registration Page
 Easily register new users with a simple and efficient form.
+<img width="798" alt="image" src="https://github.com/user-attachments/assets/c8c98642-d146-4b72-b0ab-77b544ce8125" />
 
-<img width="795" alt="image" src="https://github.com/user-attachments/assets/12bd9e67-3647-4a90-8100-12b8aea2193e" />
-
-
-Admin Dashboard
-
+### Admin Dashboard
 Get an overview of library statistics and manage books and users seamlessly.
+![Admin Dashboard](https://github.com/user-attachments/assets/fd66d67a-b290-49dc-9ca8-7d791164108a)
 
-<img width="1440" alt="image" src="https://github.com/user-attachments/assets/fd66d67a-b290-49dc-9ca8-7d791164108a" />
-
-
-Book Management
-
+### Book Management
 Manage book inventory, add new books, and update details with ease.
 
-Statistics
-
+### Statistics
 View detailed statistics about library usage, total books, and registered users.
 
-Transactions
-
+### Transactions
 Monitor user transactions, including who borrowed or returned specific books.
 
-📖 Additional Features
+---
 
-Borrow and return books seamlessly.
+## 📖 Additional Features
 
-Users can only view their own transaction history.
+- Borrow and return books seamlessly.
+- Users can only view their own transaction history.
+- Admins can:
+  - Track who borrowed or returned books.
+  - Monitor library usage statistics.
+  - View total books in the library and total users registered.
 
-Admins can:
+---
 
-Track who borrowed or returned books.
-
-Monitor library usage statistics.
-
-View total books in the library and total users registered.
-
-🤝 Contributing
+## 🤝 Contributing
 
 We welcome contributions! Please fork the repository and submit a pull request with detailed explanations of your changes.
 
-📜 License
+---
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+## ✉️ Contact
 
-✉️ Contact
+For any inquiries or feedback, please reach out to **Veres Group** at `veres.group@example.com`.
 
-For any inquiries or feedback, please reach out to Veres Group at veres.group@example.com.
 Stay connected for updates and new features!

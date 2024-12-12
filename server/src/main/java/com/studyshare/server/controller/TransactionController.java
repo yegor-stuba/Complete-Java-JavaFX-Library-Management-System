@@ -1,10 +1,12 @@
 package com.studyshare.server.controller;
 
 import com.studyshare.common.dto.TransactionDTO;
+import com.studyshare.common.dto.UserDTO;
 import com.studyshare.server.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import com.studyshare.common.enums.TransactionType;
 
@@ -17,7 +19,11 @@ import java.util.List;
 public class TransactionController {
     private final TransactionService transactionService;
 
-
+@GetMapping("/user/current")
+public ResponseEntity<List<TransactionDTO>> getCurrentUserTransactions(Authentication authentication) {
+    UserDTO user = (UserDTO) authentication.getPrincipal();
+    return ResponseEntity.ok(transactionService.getUserTransactions(user.getUserId()));
+}
 
     @GetMapping("/{id}")
     public ResponseEntity<TransactionDTO> getTransaction(@PathVariable Long id) {

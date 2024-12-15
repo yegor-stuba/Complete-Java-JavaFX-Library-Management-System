@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 public class SessionConfig {
-    private static final int SESSION_TIMEOUT = 1800; // 30 minutes
+    private static final int SESSION_TIMEOUT = 3600;
 
     @Bean
     public HttpSessionListener httpSessionListener() {

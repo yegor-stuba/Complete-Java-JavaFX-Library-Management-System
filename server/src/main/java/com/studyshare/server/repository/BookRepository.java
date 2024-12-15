@@ -29,4 +29,6 @@ Optional<Book> findByIdWithLock(@Param("id") Long id);
 
     @Query("SELECT b FROM Book b WHERE b.title LIKE %:query% OR b.author LIKE %:query% OR b.isbn LIKE %:query%")
     List<Book> searchBooks(@Param("query") String query);
+
+    boolean existsByBorrower(User user);
 }

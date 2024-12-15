@@ -119,6 +119,10 @@ public BookDTO borrowBook(Long bookId) {
             .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
     User user = userService.getCurrentUserEntity();
 
+        if (bookRepository.existsByBorrower(user)) {
+            throw new ValidationException("User already has a borrowed book");
+        }
+
     if (book.getAvailableCopies() <= 0) {
         throw new ValidationException("No copies available");
     }

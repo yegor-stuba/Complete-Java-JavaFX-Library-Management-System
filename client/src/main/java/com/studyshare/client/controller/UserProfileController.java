@@ -542,7 +542,6 @@ private void loadBooks() {
                     AlertUtil.showInfo("Success", "Logged out successfully");
                 })
                 .exceptionally(throwable -> {
-                    AlertUtil.showError("Error", "Failed to logout");
                     return null;
                 });
     }
@@ -660,14 +659,5 @@ private void refreshAllTables() {
                 });
     }
 
-    public void cleanup() {
-        if (refreshTimeline != null) {
-            refreshTimeline.stop();
-        }
-}
-    public void stop() {
-        if (refreshTimeline != null) {
-            refreshTimeline.stop();
-        }
-    }
+
 }

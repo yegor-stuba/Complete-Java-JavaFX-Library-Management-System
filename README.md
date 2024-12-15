@@ -51,7 +51,7 @@ StudyShare is a robust library management system designed to simplify book lendi
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/studyshare.git
+   git clone git@github.com:Thursday-10-00-11-50-semester-work/thursday-10-00-11-50-semester-work-veres.git
    cd studyshare
    ```
 2. Navigate to the server directory and build the backend:
@@ -59,17 +59,11 @@ StudyShare is a robust library management system designed to simplify book lendi
    cd server
    mvn clean install
    ```
-3. Configure the database connection in `application.properties`:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/studyshare
-   spring.datasource.username=your_username
-   spring.datasource.password=your_password
-   ```
-4. Run the application:
+3. Run the application:
    ```bash
    mvn spring-boot:run
    ```
-5. Launch the frontend application by running the JavaFX client.
+4. Launch the frontend application by running the JavaFX client.
 
 ---
 
@@ -101,9 +95,13 @@ Get an overview of library statistics and manage books and users seamlessly.
 
 ### Book Management
 Manage book inventory, add new books, and update details with ease.
+<img width="794" alt="Screenshot 2024-12-15 at 12 51 55" src="https://github.com/user-attachments/assets/0e22eb3a-0dff-4f3b-af6e-a183b5270b80" />
+
 
 ### Transactions
 Monitor user transactions, including who borrowed or returned specific books.
+<img width="794" alt="Screenshot 2024-12-15 at 12 52 04" src="https://github.com/user-attachments/assets/00d9addd-ba03-46d2-9471-a301776c4748" />
+
 
 
 ---
@@ -115,3 +113,4 @@ We welcome contributions! Please fork the repository and submit a pull request w
 ---
 
 ## ✉️ Contact
+veres@group.com

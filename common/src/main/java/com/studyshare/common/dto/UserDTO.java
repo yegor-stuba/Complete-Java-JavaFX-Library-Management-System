@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Data
 @NoArgsConstructor
@@ -17,4 +19,7 @@ public class UserDTO {
     private String email;
     private UserRole role;
     private String password;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastLogin;
+    private int activeBorrowCount;
 }

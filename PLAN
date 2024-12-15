@@ -1,0 +1,77 @@
+Implementation Plan for Full Points
+Phase 1: Setup and Architecture
+Establish Project Structure (1 Day)
+
+Set up a Maven-based Spring Boot backend.
+Set up a JavaFX frontend project.
+Create folder structures for backend (Controller, Entity, Repository, Service, Security, Util) and frontend (Controllers, FXML, CSS, Utils).
+Client-Server Communication (2 Days)
+
+Configure Spring Boot for RESTful API communication.
+Test client-server interaction with dummy data using REST endpoints.
+Database Setup (1 Day)
+
+Choose H2 database (embedded) for simplicity.
+Create schema and establish relationships for Users, Roles, Books, and Transactions tables.
+Phase 2: Database Design and Implementation
+Create Database Tables (3 Days)
+
+Implement Users table with user_id, username, password (hashed), role_id, and email.
+Implement Roles table with role_id and role_name.
+Implement Books table with book_id, title, author, isbn, and available_copies.
+Implement Transactions table with transaction_id, user_id, book_id, action, and date.
+Define Entity Classes (2 Days)
+
+Create JPA entities for each table.
+Annotate entities with relationships:
+@ManyToOne between Users and Roles.
+@ManyToOne between Transactions and Users/Books.
+Write Repositories (1 Day)
+
+Define JpaRepository interfaces for CRUD operations on Users, Roles, Books, and Transactions.
+Phase 3: Authentication and Authorization
+Registration Feature (2 Days)
+
+Create a UserController with endpoints for user registration.
+Validate input data (e.g., unique username/email).
+Hash passwords using BCrypt before saving them to the database.
+Login Feature (2 Days)
+
+Implement a login API to validate credentials and issue a session token or simple role-based authentication.
+Set up role-based access control for routes.
+Security Configuration (1 Day)
+
+Configure SecurityConfig to protect endpoints.
+Implement role-based authorization using Spring Security.
+Phase 4: Core Functionalities
+Role-Specific Functionalities (6 Days)
+
+User Role:
+
+Create a catalog browsing API.
+Implement borrowing and returning books using Transactions.
+Update book availability in the Books table.
+Library Administrator Role:
+
+Create APIs for adding, updating, and deleting books.
+Create APIs for managing user accounts (CRUD).
+Create an endpoint to view all transactions.
+Error Handling and Security (2 Days)
+
+Implement robust error handling for missing data, unauthorized access, etc.
+Ensure basic SQL injection protection (parameterized queries via JPA).
+Phase 5: Frontend Implementation
+User Interface Design (4 Days)
+
+Create FXML layouts for:
+Login and registration pages.
+User dashboard (view books, borrow/return books).
+Admin dashboard (manage books, users, and view transactions).
+Controller Logic (4 Days)
+
+Implement JavaFX controllers to handle user actions.
+Integrate frontend with backend APIs via HTTP requests.
+UI Styling (2 Days)
+
+Style the application using JavaFX CSS.
+Ensure the UI is intuitive and visually appealing.

@@ -69,13 +69,15 @@ public boolean isAdmin() {
 @Override
 public CompletableFuture<List<UserDTO>> getAllUsers() {
     return restClient.getList("/api/users",
-        new ParameterizedTypeReference<List<UserDTO>>() {});
+            new ParameterizedTypeReference<>() {
+            });
 }
 
 @Override
 public CompletableFuture<List<UserDTO>> searchUsers(String query) {
     return restClient.getList("/api/users/search?query=" + query,
-        new ParameterizedTypeReference<List<UserDTO>>() {});
+            new ParameterizedTypeReference<>() {
+            });
 }
 
 

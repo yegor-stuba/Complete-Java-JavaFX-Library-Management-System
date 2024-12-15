@@ -41,14 +41,12 @@ public class DatabaseVerifier {
         List<User> users = userRepository.findAll();
         log.info("Found {} users in database", users.size());
 
-        users.forEach(user -> {
-            log.debug("User found - ID: {}, Username: {}, Role: {}, Email: {}",
-                user.getUserId(),
-                user.getUsername(),
-                user.getRole(),
-                user.getEmail()
-            );
-        });
+        users.forEach(user -> log.debug("User found - ID: {}, Username: {}, Role: {}, Email: {}",
+            user.getUserId(),
+            user.getUsername(),
+            user.getRole(),
+            user.getEmail()
+        ));
 
         // Verify admin exists
         userRepository.findByUsername("admin")

@@ -17,9 +17,8 @@ public interface UserService extends UserDetailsService {
     boolean existsByEmail(String email);
     List<UserDTO> searchUsers(String query);
     CompletableFuture<UserDTO> getCurrentUser();
-    void validateToken(String token);
     boolean authenticate(String username, String password);
-    void logout();
     Long getUserCount();
+
     User getCurrentUserEntity();
 }

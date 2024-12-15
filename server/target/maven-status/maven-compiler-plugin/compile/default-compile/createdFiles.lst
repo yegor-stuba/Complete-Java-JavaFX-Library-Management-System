@@ -14,10 +14,10 @@ com/studyshare/server/model/Book.class
 com/studyshare/server/config/SessionConfig.class
 com/studyshare/server/config/SessionConfig$1.class
 com/studyshare/server/controller/AuthenticationController.class
-com/studyshare/server/exception/InvalidTokenException.class
 com/studyshare/server/service/SecurityAuditService.class
 com/studyshare/server/controller/UserController.class
 com/studyshare/server/ServerApplication.class
+com/studyshare/server/model/Transaction$TransactionBuilder.class
 com/studyshare/server/exception/GlobalExceptionHandler.class
 com/studyshare/server/controller/BookController.class
 com/studyshare/server/controller/HomeController.class

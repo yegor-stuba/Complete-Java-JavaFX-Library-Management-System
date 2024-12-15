@@ -21,7 +21,4 @@ public class ClientConfig {
     public static final int WINDOW_WIDTH = 800;
     public static final int WINDOW_HEIGHT = 600;
 
-    // Timeout settings
-    public static final int CONNECTION_TIMEOUT = 5000; // milliseconds
-    public static final int READ_TIMEOUT = 5000; // milliseconds
 }

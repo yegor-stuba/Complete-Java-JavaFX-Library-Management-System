@@ -1,12 +1,9 @@
 package com.studyshare.client.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
+
 import com.studyshare.client.service.exception.*;
-import com.studyshare.common.dto.UserDTO;
-import com.studyshare.common.security.dto.AuthenticationResponse;
-import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,10 +18,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import java.util.concurrent.CompletionStage;
 import java.util.function.Supplier;
 
 public class RestClient {
@@ -33,27 +28,23 @@ public class RestClient {
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
     private String authToken;
-    private final CookieManager cookieManager;
     private String sessionCookie;
     private static final int MAX_RETRIES = 3;
     private static final long RETRY_DELAY_MS = 1000;
 
 
     public RestClient() {
+        this.authToken = authToken;
         this.objectMapper = new ObjectMapper()
                 .registerModule(new JavaTimeModule())
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        this.cookieManager = new CookieManager();
+        CookieManager cookieManager = new CookieManager();
         this.httpClient = HttpClient.newBuilder()
                 .cookieHandler(cookieManager)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
     }
 
-    public void setAuthToken(String token) {
-        this.authToken = token;
-        log.debug("Auth token set: {}", token); // Add logging
-    }
 
     public <T> CompletableFuture<T> executeWithRetry(Supplier<CompletableFuture<T>> operation) {
         return CompletableFuture.supplyAsync(() -> {

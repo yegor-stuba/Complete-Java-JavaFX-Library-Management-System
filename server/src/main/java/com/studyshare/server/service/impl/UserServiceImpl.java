@@ -1,6 +1,5 @@
 package com.studyshare.server.service.impl;
 
-import com.studyshare.client.controller.AdminDashboardController;
 import com.studyshare.client.service.exception.AuthenticationException;
 import com.studyshare.server.exception.ResourceNotFoundException;
 import com.studyshare.server.exception.ValidationException;
@@ -10,10 +9,8 @@ import com.studyshare.server.repository.UserRepository;
 import com.studyshare.server.model.User;
 import com.studyshare.server.mapper.UserMapper;
 
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +31,7 @@ public class UserServiceImpl implements UserService {
 
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+    private String username;
 
 
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
@@ -127,36 +125,28 @@ public CompletableFuture<UserDTO> getCurrentUser() {
 }
 
         @Override
-        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            this.username = username;
             User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-            return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
-            );
-        }
-
-
-    @Override
-    public void validateToken(String token) {
-        if (token == null || token.isEmpty()) {
-            throw new RuntimeException("Invalid token");
-        }
-    }
-
-@Override
-public User getCurrentUserEntity() {
-    String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    log.debug("Looking up user by username: {}", username);
-    return userRepository.findByUsername(username)
-        .orElseThrow(() -> {
-            log.error("User not found for username: {}", username);
-            return new UsernameNotFoundException("User not found: " + username);
-        });
+    return new org.springframework.security.core.userdetails.User(
+        user.getUsername(),
+        user.getPassword(),
+        Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
+    );
 }
 
+    @Override
+    public User getCurrentUserEntity() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof UserDTO) {
+            UserDTO userDTO = (UserDTO) auth.getPrincipal();
+            return userRepository.findById(userDTO.getUserId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userDTO));
+        }
+        throw new AuthenticationException("User not authenticated");
+    }
 
    @Override
 public UserDTO findByUsername(String username) {
@@ -184,32 +174,5 @@ public boolean authenticate(String username, String password) {
 public Long getUserCount() {
     return userRepository.count();
 }
-    @Override
-    public void logout() {
-        SecurityContextHolder.clearContext();
-    }
 
-
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<UserDTO> getAllUsersForAdmin() {
-        log.debug("Admin requesting all users");
-        return userRepository.findAll().stream()
-                .map(userMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    public UserDTO updateUserAsAdmin(Long id, UserDTO userDTO) {
-        log.debug("Admin updating user: {}", id);
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        userMapper.updateEntity(user, userDTO);
-        return userMapper.toDto(userRepository.save(user));
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    public void deleteUserAsAdmin(Long id) {
-        log.debug("Admin deleting user: {}", id);
-        userRepository.deleteById(id);
-    }
 }

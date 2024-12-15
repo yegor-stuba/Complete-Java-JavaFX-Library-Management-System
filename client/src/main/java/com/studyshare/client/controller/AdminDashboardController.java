@@ -8,7 +8,6 @@ import com.studyshare.client.service.exception.ConflictException;
 import com.studyshare.client.service.exception.ResourceNotFoundException;
 import com.studyshare.client.service.exception.RestClientException;
 import com.studyshare.client.util.AlertUtil;
-import com.studyshare.client.util.DateTimeUtil;
 import com.studyshare.client.util.SceneManager;
 import com.studyshare.client.util.TransactionUtil;
 import com.studyshare.common.dto.BookDTO;
@@ -23,8 +22,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
@@ -32,8 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.naming.AuthenticationException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
@@ -46,30 +44,12 @@ public class AdminDashboardController {
     private final ObservableList<UserDTO> users = FXCollections.observableArrayList();
     private static final Logger log = LoggerFactory.getLogger(AdminDashboardController.class);
     private final ObservableList<BookDTO> books = FXCollections.observableArrayList();
-    private TransactionViewController transactionViewController;
 
    // Required FXML fields
 @FXML private TableView<BookDTO> booksTable;
 @FXML private TableView<UserDTO> usersTable;
 @FXML private TextField userSearchField;
 @FXML private TextField bookSearchField;
-@FXML private Label totalUsersLabel;
-@FXML private Label totalBooksLabel;
-@FXML private Label activeLoansLabel;
-
-// New FXML fields for additional tables
-@FXML private TableView<BookDTO> borrowedBooksTable;
-@FXML private TableView<BookDTO> lentBooksTable;
-
-@FXML private TableColumn<BookDTO, String> borrowedTitleColumn;
-@FXML private TableColumn<BookDTO, String> borrowedAuthorColumn;
-@FXML private TableColumn<BookDTO, String> borrowerColumn;
-@FXML private TableColumn<BookDTO, Void> borrowedActionsColumn;
-
-@FXML private TableColumn<BookDTO, String> lentTitleColumn;
-@FXML private TableColumn<BookDTO, String> lentAuthorColumn;
-@FXML private TableColumn<BookDTO, String> lenderColumn;
-@FXML private TableColumn<BookDTO, Void> lentActionsColumn;
 
 // Book table columns
 @FXML private TableColumn<BookDTO, String> bookIdColumn;
@@ -78,6 +58,11 @@ public class AdminDashboardController {
 @FXML private TableColumn<BookDTO, String> isbnColumn;
 @FXML private TableColumn<BookDTO, String> copiesColumn;
 @FXML private TableColumn<BookDTO, Void> bookActionsColumn;
+    @FXML private TableColumn<BookDTO, String> borrowedTitleColumn;
+    @FXML private TableColumn<BookDTO, String> borrowedAuthorColumn;
+    @FXML private TableColumn<BookDTO, String> borrowerColumn;
+    @FXML private TableView<BookDTO> borrowedBooksTable;
+
 
 // User table columns
 @FXML private TableColumn<UserDTO, String> userIdColumn;
@@ -85,8 +70,6 @@ public class AdminDashboardController {
 @FXML private TableColumn<UserDTO, String> emailColumn;
 @FXML private TableColumn<UserDTO, String> roleColumn;
 @FXML private TableColumn<UserDTO, Void> actionsColumn;
-    @FXML private Pagination transactionPagination;
-    private static final int ITEMS_PER_PAGE = 40;
     private final Timeline statisticsUpdateTimeline;
 
     public AdminDashboardController(
@@ -99,10 +82,8 @@ public class AdminDashboardController {
         this.transactionService = transactionService;
         this.sceneManager = sceneManager;
         this.statisticsUpdateTimeline = new Timeline(
-                new KeyFrame(Duration.seconds(30), e -> updateStatistics())
         );
         statisticsUpdateTimeline.setCycleCount(Timeline.INDEFINITE);
-        this.transactionViewController = new TransactionViewController();
     }
 
     // transaction columns
@@ -110,11 +91,7 @@ public class AdminDashboardController {
     @FXML private TableColumn<TransactionDTO, String> actionColumn;
     @FXML private TableColumn<TransactionDTO, String> userColumn;
     @FXML private TableColumn<TransactionDTO, String> bookColumn;
-    @FXML private TableColumn<TransactionDTO, String> statusColumn;
     @FXML private TableView<TransactionDTO> transactionsTable;
-    @FXML private Label statsUsersLabel;
-    @FXML private Label statsBooksLabel;
-    @FXML private Label statsLoansLabel;
 
 
     @FXML
@@ -129,8 +106,11 @@ public class AdminDashboardController {
         }, 0, 30000);
         try {
             Thread.sleep(100);
+            setupBookColumns();
+            loadBooks();
+
+            handleBookSearch();
             setupTables();
-            updateStatistics();
             setupUserTable();
             setupBookTable();
             loadInitialData();
@@ -140,132 +120,165 @@ public class AdminDashboardController {
             loadData();
             setupTransactionTable();
             startRealTimeUpdates();
-            transactionViewController.initialize(transactionsTable, transactionPagination, transactionService);
+            setupBorrowedBooksTable();
         } catch (Exception e) {
             log.error("Failed to initialize dashboard", e);
             AlertUtil.showError("Error", "Failed to initialize dashboard");
         }
     }
 
+    private void setupBookColumns() {
+        bookIdColumn.setCellValueFactory(new PropertyValueFactory<>("bookId"));
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+        isbnColumn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
+        copiesColumn.setCellValueFactory(new PropertyValueFactory<>("availableCopies"));
+        setupActionColumn();
 
-
-    private void setupAllTables() {
-    setupBorrowedBooksTable();
-    setupLentBooksTable();
-    loadAllBookData();
-}
-
-    private void setupTransactionTable() {
-        TransactionUtil.setupTransactionTableColumns(
-                timestampColumn,
-                actionColumn,
-                userColumn,
-                bookColumn,
-                statusColumn
-        );
-
-        transactionPagination.setPageFactory(this::createTransactionPage);
+        booksTable.setItems(books);
     }
 
-   private Node createTransactionPage(int pageIndex) {
-    int fromIndex = pageIndex * ITEMS_PER_PAGE;
-    transactionService.getAllTransactions()
-        .thenAccept(allTransactions -> {
-            int toIndex = Math.min(fromIndex + ITEMS_PER_PAGE, allTransactions.size());
-            if (fromIndex <= toIndex) {
-                Platform.runLater(() -> {
-                    List<TransactionDTO> pageTransactions = allTransactions.subList(fromIndex, toIndex);
-                    transactionsTable.setItems(FXCollections.observableArrayList(pageTransactions));
-                });
-            }
-        })
-        .exceptionally(throwable -> {
-            log.error("Failed to load transactions", throwable);
-            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load transactions"));
-            return null;
-        });
-    return transactionsTable;
-}
+    private void setupActionColumn() {
+        bookActionsColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button editBtn = new Button("Edit");
+            private final Button deleteBtn = new Button("Delete");
 
+            {
+                editBtn.setOnAction(event -> handleEditBook(getTableView().getItems().get(getIndex())));
+                deleteBtn.setOnAction(event -> handleDeleteBook(getTableView().getItems().get(getIndex())));
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    var hbox = new javafx.scene.layout.HBox(5);
+                    hbox.getChildren().addAll(editBtn, deleteBtn);
+                    setGraphic(hbox);
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void handleBookSearch() {
+        String searchQuery = bookSearchField.getText();
+        if (!searchQuery.isEmpty()) {
+            bookService.searchBooks(searchQuery)
+                    .thenAccept(results -> Platform.runLater(() -> {
+                        books.clear();
+                        books.addAll(results);
+                    }))
+                    .exceptionally(throwable -> {
+                        Platform.runLater(() -> AlertUtil.showError("Search Error",
+                                "Failed to search books: " + throwable.getMessage()));
+                        return null;
+                    });
+        } else {
+            loadBooks();
+        }
+    }
+
+
+    private void handleDeleteBook(BookDTO book) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirm Deletion");
+        confirmation.setHeaderText("Delete Book");
+        confirmation.setContentText("Are you sure you want to delete book: " + book.getTitle() + "?");
+
+        confirmation.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                bookService.deleteBook(book.getBookId())
+                        .thenRun(() -> Platform.runLater(() -> {
+                            books.remove(book);
+                            AlertUtil.showInfo("Success", "Book deleted successfully");
+                        }))
+                        .exceptionally(throwable -> {
+                            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to delete book"));
+                            return null;
+                        });
+            }
+        });
+    }
+
+    private CompletableFuture<?> loadBooks() {
+        return bookService.getAllBooks()
+                .thenAccept(bookList -> {
+                    if (bookList != null) {
+                        Platform.runLater(() -> {
+                            books.clear();
+                            books.addAll(bookList);
+                            log.debug("Successfully loaded {} books", bookList.size());
+                        });
+                    } else {
+                        throw new ResourceNotFoundException("No books available");
+                    }
+                })
+                .exceptionally(throwable -> {
+                    String errorMessage;
+                    Throwable cause = throwable.getCause();
+                    if (cause instanceof AuthorizationException) {
+                        errorMessage = "You don't have permission to view books";
+                    } else if (cause instanceof AuthenticationException) {
+                        errorMessage = "Session expired - please log in again";
+                    } else if (cause instanceof ResourceNotFoundException) {
+                        errorMessage = "No books found in the system";
+                    } else if (cause instanceof RestClientException) {
+                        errorMessage = "Server error: " + cause.getMessage();
+                    } else {
+                        errorMessage = "Failed to load books: " + throwable.getMessage();
+                    }
+                    log.error("Book loading error: {}", errorMessage);
+                    Platform.runLater(() -> AlertUtil.showError("Loading Error", errorMessage));
+                    return null;
+                });
+    }
+
+    private void setupTransactionTable() {
+        log.debug("Setting up transaction table");
+
+        timestampColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getTransactionDate().toString()));
+        actionColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getType().toString()));
+        userColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getUsername()));
+        bookColumn.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getBookTitle()));
+
+        // Load initial data
+        refreshTransactions();
+
+
+        Timeline refreshTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(15), event -> refreshTransactions())
+        );
+        refreshTimeline.setCycleCount(Timeline.INDEFINITE);
+        refreshTimeline.play();
+
+    }
+
+    private void refreshTransactions() {
+        transactionService.getAllTransactions()
+                .thenAccept(transactions -> Platform.runLater(() -> {
+                    transactionsTable.setItems(FXCollections.observableArrayList(transactions));
+                    log.debug("Loaded {} transactions", transactions.size());
+                }))
+                .exceptionally(throwable -> {
+                    log.error("Failed to load transactions", throwable);
+                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load transactions"));
+                    return null;
+                });
+    }
 
     private void startRealTimeUpdates() {
         statisticsUpdateTimeline.play();
     }
 
 
-    public void stop() {
-        statisticsUpdateTimeline.stop();
-    }
-
-
-private void setupBorrowedBooksTable() {
-    borrowedTitleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
-    borrowedAuthorColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAuthor()));
-    borrowerColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBorrower().getUsername()));
-
-    borrowedActionsColumn.setCellFactory(col -> new TableCell<>() {
-        private final Button returnButton = new Button("Return");
-        {
-            returnButton.setOnAction(e -> handleReturnBook(getTableView().getItems().get(getIndex())));
-        }
-
-        @Override
-        protected void updateItem(Void item, boolean empty) {
-            super.updateItem(item, empty);
-            setGraphic(empty ? null : returnButton);
-        }
-    });
-}
-
-private void setupLentBooksTable() {
-    lentTitleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
-    lentAuthorColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAuthor()));
-    lenderColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getOwner().getUsername()));
-
-    lentActionsColumn.setCellFactory(col -> new TableCell<>() {
-        private final Button returnButton = new Button("Return");
-        {
-            returnButton.setOnAction(e -> handleReturnBook(getTableView().getItems().get(getIndex())));
-        }
-
-        @Override
-        protected void updateItem(Void item, boolean empty) {
-            super.updateItem(item, empty);
-            setGraphic(empty ? null : returnButton);
-        }
-    });
-}
-
-private void loadAllBookData() {
-    loadBooks();
-    loadBorrowedBooks();
-    loadLentBooks();
-}
-
-private void loadBorrowedBooks() {
-    bookService.getBorrowedBooks()
-        .thenAccept(books -> Platform.runLater(() ->
-            borrowedBooksTable.setItems(FXCollections.observableArrayList(books))))
-        .exceptionally(throwable -> {
-            handleLoadingError(throwable, "Failed to load borrowed books");
-            return null;
-        });
-}
-
-private void loadLentBooks() {
-    bookService.getLentBooks()
-        .thenAccept(books -> Platform.runLater(() ->
-            lentBooksTable.setItems(FXCollections.observableArrayList(books))))
-        .exceptionally(throwable -> {
-            handleLoadingError(throwable, "Failed to load lent books");
-            return null;
-        });
-}
-
-
-
-   private void loadInitialData() {
-    if (!userService.isAdmin()) {
+   private void loadInitialData() {    if (!userService.isAdmin()) {
         Platform.runLater(() -> {
             AlertUtil.showError("Access Denied", "Admin privileges required");
             sceneManager.switchToLogin();
@@ -275,8 +288,7 @@ private void loadLentBooks() {
 
     CompletableFuture.allOf(
         loadUsers(),
-        loadBooks(),
-        updateStatistics()
+        loadBooks()
     ).exceptionally(throwable -> {
         handleLoadError(throwable);
         return null;
@@ -319,16 +331,15 @@ private void checkSessionStatus() {
 
 
 
-  private CompletableFuture<Void> loadData() {
-    return userService.getCurrentUser()
+  private CompletableFuture loadData() {
+      return userService.getCurrentUser()
         .thenCompose(user -> {
             if (!UserRole.ADMIN.equals(user.getRole())) {
                 throw new AuthorizationException("Admin privileges required");
             }
             return CompletableFuture.allOf(
                 loadUsers(),
-                loadBooks(),
-                updateStatistics()
+                loadBooks()
             );
         })
         .exceptionally(throwable -> {
@@ -343,60 +354,6 @@ private void checkSessionStatus() {
         });
 }
 
-private void checkAdminAccess() {
-    userService.getCurrentUser()
-        .thenAccept(user -> {
-            if (user == null || !UserRole.ADMIN.equals(user.getRole())) {
-                log.warn("Non-admin user attempted to access admin dashboard");
-                Platform.runLater(() -> {
-                    AlertUtil.showWarning(
-                        "Access Restricted",
-                        "This section requires administrator privileges.\nPlease log in with an admin account."
-                    );
-                    sceneManager.switchToLogin();
-                });
-            } else {
-                log.debug("Admin access verified for user: {}", user.getUsername());
-            }
-        })
-        .exceptionally(throwable -> {
-            log.error("Authentication check failed: {}", throwable.getMessage());
-            Platform.runLater(() -> {
-                if (throwable.getCause() instanceof AuthenticationException) {
-                    AlertUtil.showError(
-                        "Session Expired",
-                        "Your session has expired.\nPlease log in again to continue."
-                    );
-                } else if (throwable.getCause() instanceof AuthorizationException) {
-                    AlertUtil.showError(
-                        "Access Denied",
-                        "You don't have permission to access this section."
-                    );
-                } else {
-                    AlertUtil.showError(
-                        "System Error",
-                        "Failed to verify admin access.\nPlease try logging in again."
-                    );
-                }
-                sceneManager.switchToLogin();
-            });
-            return null;
-        });
-}
-
-    private CompletableFuture<Void> loadStatistics() {
-        return CompletableFuture.allOf(
-                userService.getUserCount()
-                        .thenAccept(count -> Platform.runLater(() ->
-                                totalUsersLabel.setText("Total Users: " + count))),
-                bookService.getBookCount()
-                        .thenAccept(count -> Platform.runLater(() ->
-                                totalBooksLabel.setText("Total Books: " + count))),
-                transactionService.getActiveLoansCount()
-                        .thenAccept(count -> Platform.runLater(() ->
-                                activeLoansLabel.setText("Active Loans: " + count)))
-        );
-    }
 
 
 
@@ -433,7 +390,6 @@ private void checkAdminAccess() {
         titleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
         authorColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAuthor()));
         isbnColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getIsbn()));
-        copiesColumn.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAvailableCopies())));
 
         loadBooks();
     }
@@ -502,7 +458,6 @@ private void checkAdminAccess() {
     private void refreshData() {
         loadUsers();
         loadBooks();
-        updateStatistics();
     }
 
 private CompletableFuture<Void> loadUsers() {
@@ -530,130 +485,30 @@ private CompletableFuture<Void> loadUsers() {
         });
 }
 
-   private CompletableFuture<Void> loadBooks() {
-    return bookService.getAllBooks()
-        .thenAccept(bookList -> {
-            if (bookList != null) {
-                Platform.runLater(() -> {
-                    books.clear();
-                    books.addAll(bookList);
-                    log.debug("Successfully loaded {} books", bookList.size());
-                });
-            } else {
-                throw new ResourceNotFoundException("No books available");
-            }
-        })
-        .exceptionally(throwable -> {
-            String errorMessage;
-            Throwable cause = throwable.getCause();
-            if (cause instanceof AuthorizationException) {
-                errorMessage = "You don't have permission to view books";
-            } else if (cause instanceof AuthenticationException) {
-                errorMessage = "Session expired - please log in again";
-            } else if (cause instanceof ResourceNotFoundException) {
-                errorMessage = "No books found in the system";
-            } else if (cause instanceof RestClientException) {
-                errorMessage = "Server error: " + cause.getMessage();
-            } else {
-                errorMessage = "Failed to load books: " + throwable.getMessage();
-            }
-            log.error("Book loading error: {}", errorMessage);
-            Platform.runLater(() -> AlertUtil.showError("Loading Error", errorMessage));
-            return null;
-        });
-}
+
 
 @FXML
 private void handleAddUser() {
-    UserDTO newUser = showUserDialog(null);    if (newUser != null) {
+    UserDTO newUser = showUserDialog(null);
+    if (newUser != null) {
         userService.createUser(newUser)
-            .thenAccept(user -> {
-                log.debug("User created successfully: {}", user.getUsername());
-                Platform.runLater(() -> {
-                    users.add(user);
-                    AlertUtil.showInfo("Success", "User " + user.getUsername() + " created successfully");
-                });
-            })
+            .thenAccept(user -> Platform.runLater(() -> {
+                users.add(user);
+                AlertUtil.showInfo("Success", "User created successfully");
+                loadUsers(); // Refresh the user list
+            }))
             .exceptionally(throwable -> {
                 String errorMessage;
-                Throwable cause = throwable.getCause();
-                if (cause instanceof ValidationException) {
-                    errorMessage = "Invalid user data: " + cause.getMessage();
-                } else if (cause instanceof ConflictException) {
+                if (throwable.getMessage().contains("UNIQUE constraint failed")) {
                     errorMessage = "Username or email already exists";
-                } else if (cause instanceof AuthorizationException) {
-                    errorMessage = "You don't have permission to create users";
-                } else if (cause instanceof RestClientException) {
-                    errorMessage = "Server error: " + cause.getMessage();
                 } else {
                     errorMessage = "Failed to create user: " + throwable.getMessage();
                 }
-                log.error("User creation error: {}", errorMessage);
                 Platform.runLater(() -> AlertUtil.showError("User Creation Error", errorMessage));
                 return null;
             });
     }
 }
-
-private void setupTransactionColumns() {
-    timestampColumn.setCellValueFactory(data ->
-        new SimpleStringProperty(DateTimeUtil.formatDateTime(data.getValue().getDate())));
-
-    actionColumn.setCellValueFactory(data ->
-        new SimpleStringProperty(data.getValue().getType().toString()));
-
-    userColumn.setCellValueFactory(data ->
-        new SimpleStringProperty(data.getValue().getUser().getUsername()));
-
-    bookColumn.setCellValueFactory(data ->
-        new SimpleStringProperty(data.getValue().getBook().getTitle()));
-
-    statusColumn.setCellValueFactory(data ->
-        new SimpleStringProperty(TransactionUtil.getTransactionStatus(data.getValue())));
-}
-
-    private CompletableFuture<Void> updateStatistics() {
-        CompletableFuture<Void> userCountFuture = userService.getUserCount()
-                .thenAccept(count -> Platform.runLater(() ->
-                        totalUsersLabel.setText("Total Users: " + count)));
-
-        CompletableFuture<Void> bookCountFuture = bookService.getBookCount()
-                .thenAccept(count -> Platform.runLater(() ->
-                        totalBooksLabel.setText("Total Books: " + count)));
-
-        CompletableFuture<Void> loanCountFuture = transactionService.getActiveLoansCount()
-                .thenAccept(count -> Platform.runLater(() ->
-                        activeLoansLabel.setText("Active Loans: " + count)));
-
-        return CompletableFuture.allOf(
-                userCountFuture,
-                bookCountFuture,
-                loanCountFuture
-        ).exceptionally(throwable -> {
-            log.error("Failed to update statistics", throwable);
-            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to update statistics"));
-            return null;
-        });
-    }
-
-
-    private CompletableFuture<Void> updateUserStatistics() {
-        return userService.getUserCount()
-                .thenAccept(count -> Platform.runLater(() ->
-                        statsUsersLabel.setText("Total Users: " + count)));
-    }
-
-    private CompletableFuture<Void> updateBookStatistics() {
-        return bookService.getBookCount()
-                .thenAccept(count -> Platform.runLater(() ->
-                        statsBooksLabel.setText("Total Books: " + count)));
-    }
-
-    private CompletableFuture<Void> updateLoanStatistics() {
-        return transactionService.getActiveLoansCount()
-                .thenAccept(count -> Platform.runLater(() ->
-                        statsLoansLabel.setText("Active Loans: " + count)));
-    }
 
 
     @FXML
@@ -709,42 +564,9 @@ private void setupTransactionColumns() {
 
 
 
-    private void handleEditBook(BookDTO book) {
-        BookDTO updatedBook = showBookDialog(book);
-        if (updatedBook != null) {
-            bookService.updateBook(book.getBookId(), updatedBook)
-                    .thenAccept(updated -> Platform.runLater(() -> {
-                        int index = books.indexOf(book);
-                        books.set(index, updated);
-                        AlertUtil.showInfo("Success", "Book updated successfully");
-                    }))
-                    .exceptionally(throwable -> {
-                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to update book"));
-                        return null;
-                    });
-        }
-    }
 
-    private void handleDeleteBook(BookDTO book) {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirm Deletion");
-        confirmation.setHeaderText("Delete Book");
-        confirmation.setContentText("Are you sure you want to delete book: " + book.getTitle() + "?");
 
-        confirmation.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                bookService.deleteBook(book.getBookId())
-                        .thenRun(() -> Platform.runLater(() -> {
-                            books.remove(book);
-                            AlertUtil.showInfo("Success", "Book deleted successfully");
-                        }))
-                        .exceptionally(throwable -> {
-                            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to delete book"));
-                            return null;
-                        });
-            }
-        });
-    }
+
 
 
     // Search functionality
@@ -827,6 +649,25 @@ private void setupTransactionColumns() {
     }
 
 
+
+    @FXML
+    private void handleUserSearch() {
+        String searchQuery = userSearchField.getText();
+        if (!searchQuery.isEmpty()) {
+            userService.searchUsers(searchQuery)
+                    .thenAccept(results -> Platform.runLater(() -> {
+                        users.clear();
+                        users.addAll(results);
+                    }))
+                    .exceptionally(throwable -> {
+                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to search users"));
+                        return null;
+                    });
+        } else {
+            loadUsers();
+        }
+    }
+
     private BookDTO showBookDialog(BookDTO book) {
         Dialog<BookDTO> dialog = new Dialog<>();
         dialog.setTitle(book == null ? "Add New Book" : "Edit Book");
@@ -875,218 +716,96 @@ private void setupTransactionColumns() {
         return dialog.showAndWait().orElse(null);
     }
 
+    private void refreshBooks() {
+        CompletableFuture.allOf(
+                loadBooks(),
+                CompletableFuture.runAsync(this::loadBorrowedBooks)
+        ).exceptionally(throwable -> {
+            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to refresh books"));
+            return null;
+        });
+    }
 
     @FXML
-    private void handleUserSearch() {
-        String searchQuery = userSearchField.getText();
-        if (!searchQuery.isEmpty()) {
-            userService.searchUsers(searchQuery)
-                    .thenAccept(results -> Platform.runLater(() -> {
-                        users.clear();
-                        users.addAll(results);
+    private void handleAddBook() {
+        BookDTO newBook = showBookDialog(null);
+        if (newBook != null) {
+            bookService.addBook(newBook)
+                    .thenAccept(book -> Platform.runLater(() -> {
+                        books.add(book);
+                        AlertUtil.showInfo("Success", "Book added successfully");
+                        loadBooks();
                     }))
                     .exceptionally(throwable -> {
-                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to search users"));
+                        String errorMessage;
+                        Throwable cause = throwable.getCause();
+                        if (cause instanceof ValidationException) {
+                            errorMessage = "Invalid book data: " + cause.getMessage();
+                        } else if (cause instanceof ConflictException) {
+                            errorMessage = "Book with this ISBN already exists";
+                        } else if (cause instanceof AuthorizationException) {
+                            errorMessage = "You don't have permission to add books";
+                        } else {
+                            errorMessage = "Failed to add book: " + throwable.getMessage();
+                        }
+                        log.error("Book creation error: {}", errorMessage);
+                        Platform.runLater(() -> AlertUtil.showError("Book Error", errorMessage));
                         return null;
                     });
-        } else {
-            loadUsers();
+        }
+    }
+
+    private void handleEditBook(BookDTO book) {
+        BookDTO updatedBook = showBookDialog(book);
+        if (updatedBook != null) {
+            bookService.updateBook(book.getBookId(), updatedBook)
+                    .thenAccept(updated -> Platform.runLater(() -> {
+                        int index = books.indexOf(book);
+                        books.set(index, updated);
+                        AlertUtil.showInfo("Success", "Book updated successfully");
+                    }))
+                    .exceptionally(throwable -> {
+                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to update book"));
+                        return null;
+                    });
         }
     }
 
 
-
-
-    protected CompletableFuture<Void> handleAsync(CompletableFuture<Void> future) {
-        return future.exceptionally(throwable -> {
-            handleLoadingError(throwable, "An error occurred during async operation");
-            return null;
-        });
-    }
-
-    private void handleLoadingError(Throwable throwable, String message) {
-        log.error("Loading error: {} - {}", message, throwable.getMessage(), throwable);
-        Platform.runLater(() -> AlertUtil.showError("Error", message));
-    }
-
-    private void handleLendBook(BookDTO book) {
-    if (book != null) {
-        bookService.borrowBook(book.getBookId())
-            .thenAccept(updatedBook -> Platform.runLater(() -> {
-                refreshBooks();
-                AlertUtil.showInfo("Success", "Book lent successfully");
-            }))
-            .exceptionally(throwable -> {
-                Platform.runLater(() -> AlertUtil.showError("Error", "Failed to lend book"));
-                return null;
-            });
-    }
-}
-
-    private void setupBookManagement() {
-    // Book table columns
-    bookIdColumn.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getBookId())));
-    titleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
-    authorColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAuthor()));
-    isbnColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getIsbn()));
-    copiesColumn.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAvailableCopies())));
-
-        bookActionsColumn.setCellFactory(col -> new TableCell<>() {
-            private final Button editButton = new Button("Edit");
-            private final Button deleteButton = new Button("Delete");
-            private final Button borrowReturnButton = new Button();
-
-            {
-                editButton.setOnAction(e -> handleEditBook(getTableView().getItems().get(getIndex())));
-                deleteButton.setOnAction(e -> handleDeleteBook(getTableView().getItems().get(getIndex())));
-                borrowReturnButton.setOnAction(e -> {
-                    BookDTO book = getTableView().getItems().get(getIndex());
-                    if (book.isAvailable()) {
-                        handleBorrowBook(book);
-                    } else {
-                        handleReturnBook(book);
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    BookDTO book = getTableView().getItems().get(getIndex());
-                    borrowReturnButton.setText(book.isAvailable() ? "Borrow" : "Return");
-                    HBox buttons = new HBox(5, editButton, deleteButton, borrowReturnButton);
-                    setGraphic(buttons);
-                }
-            }
-        });
-}
-
-    private void handleBorrowBook(BookDTO book) {
-        bookService.borrowBook(book.getBookId())
-                .thenAccept(updatedBook -> Platform.runLater(() -> {
-                    refreshBooks();
-                    AlertUtil.showInfo("Success", "Book borrowed successfully");
-                }))
-                .exceptionally(throwable -> {
-                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to borrow book"));
-                    return null;
-                });
-    }
-
-    private void handleReturnBook(BookDTO book) {
-        bookService.returnBook(book.getBookId())
-                .thenAccept(updatedBook -> Platform.runLater(() -> {
-                    refreshBooks();
-                    AlertUtil.showInfo("Success", "Book returned successfully");
-                }))
-                .exceptionally(throwable -> {
-                    Platform.runLater(() -> AlertUtil.showError("Error", "Failed to return book"));
-                    return null;
-                });
-    }
-
-private void refreshBooks() {
-    bookService.getAllBooks()
-        .thenAccept(bookList -> Platform.runLater(() -> {
-            books.clear();
-            books.addAll(bookList);
-        }))
-        .exceptionally(throwable -> {
-            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to refresh books"));
-            return null;
-        });
-}
-@FXML
-private void handleAddBook() {
-    BookDTO newBook = showBookDialog(null);
-    if (newBook != null) {
-        bookService.addBook(newBook)
-            .thenAccept(book -> Platform.runLater(() -> {
-                books.add(book);
-                AlertUtil.showInfo("Success", "Book added successfully");
-                loadBooks();
-            }))
-            .exceptionally(throwable -> {
-                String errorMessage;
-                Throwable cause = throwable.getCause();
-                if (cause instanceof ValidationException) {
-                    errorMessage = "Invalid book data: " + cause.getMessage();
-                } else if (cause instanceof ConflictException) {
-                    errorMessage = "Book with this ISBN already exists";
-                } else if (cause instanceof AuthorizationException) {
-                    errorMessage = "You don't have permission to add books";
-                } else {
-                    errorMessage = "Failed to add book: " + throwable.getMessage();
-                }
-                log.error("Book creation error: {}", errorMessage);
-                Platform.runLater(() -> AlertUtil.showError("Book Error", errorMessage));
-                return null;
-            });
-    }
-}
-@FXML
-private void handleBookSearch() {
-    String searchQuery = bookSearchField.getText();
-    if (!searchQuery.isEmpty()) {
-        bookService.searchBooks(searchQuery)
-            .thenAccept(results -> Platform.runLater(() -> {
-                books.clear();
-                books.addAll(results);
-            }))
-            .exceptionally(throwable -> {
-                Platform.runLater(() -> AlertUtil.showError("Search Error",
-                    "Failed to search books: " + throwable.getMessage()));
-                return null;
-            });
-    } else {
-        loadBooks();
-    }
-}
-
-@FXML
-private void handleRefresh() {
-    loadData();
-    updateStatistics();
-    refreshTransactionTable();
-}
-
-private void refreshTransactionTable() {
-    int currentPage = transactionPagination.getCurrentPageIndex();
-    loadTransactionPage(currentPage);
-}
-
-private void loadTransactionPage(int pageIndex) {
-    transactionService.getTransactions(pageIndex, ITEMS_PER_PAGE)
-        .thenAccept(transactions -> Platform.runLater(() -> {
-            transactionsTable.setItems(FXCollections.observableArrayList(transactions));
-            updateStatistics();
-        }))
-        .exceptionally(throwable -> {
-            log.error("Failed to load transactions", throwable);
-            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load transactions"));
-            return null;
-        });
-}
-
-@FXML
+ @FXML
 private void handleBorrowSelected() {
     BookDTO selectedBook = booksTable.getSelectionModel().getSelectedItem();
     if (selectedBook != null) {
+        if (!selectedBook.isAvailable()) {
+            AlertUtil.showWarning("Warning", "Book is not available for borrowing");
+            return;
+        }
         bookService.borrowBook(selectedBook.getBookId())
             .thenAccept(updatedBook -> Platform.runLater(() -> {
                 refreshBooks();
+                loadBorrowedBooks();
+                refreshTransactions();
                 AlertUtil.showInfo("Success", "Book borrowed successfully");
             }))
             .exceptionally(throwable -> {
-                Platform.runLater(() -> AlertUtil.showError("Error", "Failed to borrow book"));
+                log.error("Failed to borrow book", throwable);
+                Platform.runLater(() -> AlertUtil.showError("Error",
+                    "Failed to borrow book: " + throwable.getMessage()));
                 return null;
             });
     } else {
         AlertUtil.showWarning("Warning", "Please select a book to borrow");
     }
+}
+
+private void loadBorrowedBooks() {
+    bookService.getBorrowedBooks()
+        .thenAccept(borrowedBooks -> Platform.runLater(() ->
+            borrowedBooksTable.setItems(FXCollections.observableArrayList(borrowedBooks))))
+        .exceptionally(throwable -> {
+            Platform.runLater(() -> AlertUtil.showError("Error", "Failed to load borrowed books"));
+            return null;
+        });
 }
 
 @FXML
@@ -1096,6 +815,8 @@ private void handleReturnSelected() {
         bookService.returnBook(selectedBook.getBookId())
             .thenAccept(updatedBook -> Platform.runLater(() -> {
                 refreshBooks();
+                loadBorrowedBooks();
+                refreshTransactions();
                 AlertUtil.showInfo("Success", "Book returned successfully");
             }))
             .exceptionally(throwable -> {
@@ -1107,22 +828,69 @@ private void handleReturnSelected() {
     }
 }
 
-@FXML
-private void handleReturnLended() {
-    BookDTO selectedBook = lentBooksTable.getSelectionModel().getSelectedItem();
-    if (selectedBook != null) {
-        bookService.returnBook(selectedBook.getBookId())
-            .thenAccept(updatedBook -> Platform.runLater(() -> {
-                refreshBooks();
-                AlertUtil.showInfo("Success", "Book returned successfully");
-            }))
-            .exceptionally(throwable -> {
-                Platform.runLater(() -> AlertUtil.showError("Error", "Failed to return book"));
-                return null;
-            });
-    } else {
-        AlertUtil.showWarning("Warning", "Please select a book to return");
-    }
+
+
+  private void setupBorrowedBooksTable() {
+    borrowedTitleColumn.setCellValueFactory(data ->
+            new SimpleStringProperty(data.getValue().getTitle()));
+
+    borrowedAuthorColumn.setCellValueFactory(data ->
+            new SimpleStringProperty(data.getValue().getAuthor()));
+
+    borrowerColumn.setCellValueFactory(data ->
+            new SimpleStringProperty(data.getValue().getBorrower() != null ?
+                    data.getValue().getBorrower().getUsername() : ""));
+
+    loadBorrowedBooks();
 }
+
+
+    private void setupBookManagement() {
+        // Book table columns
+        bookIdColumn.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getBookId())));
+        titleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTitle()));
+        authorColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAuthor()));
+        isbnColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getIsbn()));
+        copiesColumn.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAvailableCopies())));
+
+        bookActionsColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button editButton = new Button("Edit");
+            private final Button deleteButton = new Button("Delete");
+
+            {
+                editButton.setOnAction(e -> handleEditBook(getTableView().getItems().get(getIndex())));
+                deleteButton.setOnAction(e -> handleDeleteBook(getTableView().getItems().get(getIndex())));
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    HBox buttons = new HBox(5, editButton, deleteButton);
+                    setGraphic(buttons);
+                }
+            }
+        });
+
+        copiesColumn.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    BookDTO book = getTableView().getItems().get(getIndex());
+                    setText(book.getAvailableCopies() + "/" + book.getTotalCopies());
+                    if (book.getAvailableCopies() == 0) {
+                        setStyle("-fx-background-color: #ffcdd2;"); // Light red for unavailable
+                    } else if (book.getAvailableCopies() < book.getTotalCopies()) {
+                        setStyle("-fx-background-color: #fff9c4;"); // Light yellow for partially available
+                    } else {
+                        setStyle("-fx-background-color: #c8e6c9;"); // Light green for fully available
+                    }
+                }
+            }
+        });
+    }
 
 }

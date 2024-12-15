@@ -19,6 +19,7 @@
     </MenuBar>
 
     <TabPane VBox.vgrow="ALWAYS" styleClass="admin-tab-pane">
+        <!-- User Management Tab -->
         <Tab text="User Management" closable="false">
             <VBox spacing="10" styleClass="admin-section">
                 <HBox spacing="10" alignment="CENTER_LEFT" styleClass="admin-search-bar">
@@ -29,125 +30,72 @@
                 </HBox>
                 <TableView fx:id="usersTable" VBox.vgrow="ALWAYS" styleClass="admin-table">
                     <columns>
-                        <TableColumn fx:id="userIdColumn" text="ID" styleClass="admin-table-column"/>
-                        <TableColumn fx:id="usernameColumn" text="Username" styleClass="admin-table-column"/>
-                        <TableColumn fx:id="emailColumn" text="Email" styleClass="admin-table-column"/>
-                        <TableColumn fx:id="roleColumn" text="Role" styleClass="admin-table-column"/>
-                        <TableColumn fx:id="actionsColumn" text="Actions" styleClass="admin-table-column"/>
+                        <TableColumn fx:id="userIdColumn" text="ID"/>
+                        <TableColumn fx:id="usernameColumn" text="Username"/>
+                        <TableColumn fx:id="emailColumn" text="Email"/>
+                        <TableColumn fx:id="roleColumn" text="Role"/>
+                        <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="200"/>
                     </columns>
                 </TableView>
             </VBox>
         </Tab>
 
-       <Tab text="Book Management" closable="false">
-    <content>
-        <HBox spacing="10">
-            <!-- Left side - All Books (60%) -->
-            <VBox spacing="5" HBox.hgrow="ALWAYS" prefWidth="800">
-                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="admin-search-bar">
-                    <TextField fx:id="bookSearchField" promptText="Search books..."
-                             styleClass="admin-search-field" HBox.hgrow="ALWAYS"/>
-                    <Button text="Search" onAction="#handleBookSearch" styleClass="admin-button"/>
-                    <Button text="Add Book" onAction="#handleAddBook" styleClass="admin-button"/>
-                </HBox>
-                <Label text="All Books" styleClass="section-header"/>
-                <TableView fx:id="booksTable" VBox.vgrow="ALWAYS" styleClass="admin-table">
+    <!-- Book Management Tab -->
+<Tab text="Book Management" closable="false">
+    <HBox spacing="10">
+        <!-- Left side - Main Books Table -->
+        <VBox spacing="10" HBox.hgrow="ALWAYS" prefWidth="800">
+            <HBox spacing="10" alignment="CENTER_LEFT" styleClass="admin-search-bar">
+                <TextField fx:id="bookSearchField" promptText="Search books..."
+                         styleClass="admin-search-field" HBox.hgrow="ALWAYS"/>
+                <Button text="Search" onAction="#handleBookSearch" styleClass="admin-button"/>
+                <Button text="Add Book" onAction="#handleAddBook" styleClass="admin-button"/>
+            </HBox>
+            <TableView fx:id="booksTable" VBox.vgrow="ALWAYS" styleClass="admin-table">
+                <columns>
+                    <TableColumn fx:id="bookIdColumn" text="ID" prefWidth="30"/>
+                    <TableColumn fx:id="titleColumn" text="Title"/>
+                    <TableColumn fx:id="authorColumn" text="Author"/>
+                    <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="50"/>
+                    <TableColumn fx:id="copiesColumn" text="Available/Total"/>
+                    <TableColumn fx:id="bookActionsColumn" text="Actions" prefWidth="200"/>
+                </columns>
+            </TableView>
+            <HBox spacing="5" alignment="CENTER_RIGHT">
+                <Button text="Borrow Selected" onAction="#handleBorrowSelected" styleClass="action-button"/>
+            </HBox>
+        </VBox>
+
+        <!-- Right side - Borrowed Books -->
+        <VBox spacing="10" HBox.hgrow="ALWAYS" prefWidth="400">
+            <Label text="Borrowed Books" styleClass="section-header"/>
+            <TableView fx:id="borrowedBooksTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="borrowedTitleColumn" text="Title"/>
+                    <TableColumn fx:id="borrowedAuthorColumn" text="Author"/>
+                    <TableColumn fx:id="borrowedcopiesColumn" text="Available/Total"/>
+                    <TableColumn fx:id="borrowerColumn" text="Borrower"/>
+                </columns>
+            </TableView>
+            <HBox spacing="5" alignment="CENTER_RIGHT">
+                <Button text="Return" onAction="#handleReturnSelected" styleClass="action-button"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</Tab>
+
+        <!-- Transactions Tab -->
+        <Tab text="Transactions" closable="false">
+            <VBox spacing="10">
+                <TableView fx:id="transactionsTable" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="bookIdColumn" text="ID"/>
-                        <TableColumn fx:id="titleColumn" text="Title"/>
-                        <TableColumn fx:id="authorColumn" text="Author"/>
-                        <TableColumn fx:id="isbnColumn" text="ISBN"/>
-                        <TableColumn fx:id="copiesColumn" text="Available Copies"/>
-                        <TableColumn fx:id="bookActionsColumn" text="Actions"/>
+                        <TableColumn fx:id="timestampColumn" text="Time" prefWidth="150"/>
+                        <TableColumn fx:id="actionColumn" text="Action" prefWidth="100"/>
+                        <TableColumn fx:id="userColumn" text="User" prefWidth="150"/>
+                        <TableColumn fx:id="bookColumn" text="Book" prefWidth="200"/>
                     </columns>
                 </TableView>
-                <HBox spacing="5" alignment="CENTER_RIGHT">
-                    <Button text="Borrow Selected" onAction="#handleBorrowSelected" styleClass="action-button"/>
-                </HBox>
-            </VBox>
-
-            <!-- Right side - Borrowed and Lent Books (40%) -->
-            <VBox spacing="5" HBox.hgrow="ALWAYS" prefWidth="500">
-                <!-- Borrowed Books -->
-                <VBox spacing="5" VBox.vgrow="ALWAYS">
-                    <Label text="Borrowed Books" styleClass="section-header"/>
-                    <TableView fx:id="borrowedBooksTable" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="borrowedTitleColumn" text="Title"/>
-                            <TableColumn fx:id="borrowedAuthorColumn" text="Author"/>
-                            <TableColumn fx:id="borrowerColumn" text="Borrower"/>
-                            <TableColumn fx:id="borrowedActionsColumn" text="Actions"/>
-                        </columns>
-                    </TableView>
-                    <HBox spacing="5" alignment="CENTER_RIGHT">
-                        <Button text="Return" onAction="#handleReturnSelected" styleClass="action-button"/>
-                    </HBox>
-                </VBox>
-
-                <!-- Lent Books -->
-                <VBox spacing="5" VBox.vgrow="ALWAYS">
-                    <Label text="Lent Books" styleClass="section-header"/>
-                    <TableView fx:id="lentBooksTable" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="lentTitleColumn" text="Title"/>
-                            <TableColumn fx:id="lentAuthorColumn" text="Author"/>
-                            <TableColumn fx:id="lenderColumn" text="Lender"/>
-                            <TableColumn fx:id="lentActionsColumn" text="Actions"/>
-                        </columns>
-                    </TableView>
-                    <HBox spacing="5" alignment="CENTER_RIGHT">
-                        <Button text="Return" onAction="#handleReturnLended" styleClass="action-button"/>
-                    </HBox>
-                </VBox>
-            </VBox>
-        </HBox>
-    </content>
-</Tab>
-
-        <Tab text="Statistics" closable="false">
-            <VBox spacing="20" styleClass="admin-statistics">
-                <padding>
-                    <Insets top="20" right="20" bottom="20" left="20"/>
-                </padding>
-                <Label fx:id="totalUsersLabel" styleClass="admin-stat-label"/>
-                <Label fx:id="totalBooksLabel" styleClass="admin-stat-label"/>
-                <Label fx:id="activeLoansLabel" styleClass="admin-stat-label"/>
             </VBox>
         </Tab>
-
-<Tab text="Transactions" closable="false">
-    <VBox spacing="20" styleClass="admin-statistics">
-        <!-- Real-time Statistics -->
-        <HBox spacing="20" styleClass="stats-container">
-            <Label fx:id="statsUsersLabel" styleClass="admin-stat-label"/>
-            <Label fx:id="statsBooksLabel" styleClass="admin-stat-label"/>
-            <Label fx:id="statsLoansLabel" styleClass="admin-stat-label"/>
-            <Button text="Refresh" onAction="#handleRefresh" styleClass="refresh-button"/>
-        </HBox>
-
-        <!-- Search and Filter -->
-        <HBox spacing="10" styleClass="search-container">
-            <TextField fx:id="transactionSearchField" promptText="Search transactions..." HBox.hgrow="ALWAYS"/>
-        </HBox>
-
-        <!-- Transaction Table -->
-        <TableView fx:id="transactionsTable" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="timestampColumn" text="Time"/>
-                <TableColumn fx:id="actionColumn" text="Action"/>
-                <TableColumn fx:id="userColumn" text="User"/>
-                <TableColumn fx:id="bookColumn" text="Book"/>
-                <TableColumn fx:id="statusColumn" text="Status"/>
-                <TableColumn fx:id="detailsColumn" text="Details"/>
-            </columns>
-        </TableView>
-
-        <!-- Pagination -->
-        <HBox spacing="10" alignment="CENTER">
-            <Pagination fx:id="transactionPagination"/>
-            <ComboBox fx:id="pageSizeComboBox" promptText="Items per page"/>
-        </HBox>
-    </VBox>
-</Tab>
     </TabPane>
 </VBox>

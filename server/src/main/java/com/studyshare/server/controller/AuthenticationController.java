@@ -7,8 +7,6 @@ import com.studyshare.common.enums.UserRole;
 import com.studyshare.server.exception.ValidationException;
 import com.studyshare.common.security.dto.AuthenticationRequest;
 import com.studyshare.common.security.dto.AuthenticationResponse;
-import com.studyshare.server.service.AuthenticationService;
-import com.studyshare.server.service.SecurityAuditService;
 import com.studyshare.server.service.TransactionService;
 import com.studyshare.server.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -65,49 +63,9 @@ public ResponseEntity<?> login(@RequestBody AuthenticationRequest request, HttpS
 @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 @GetMapping("/user/{userId}")
 public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long userId) {
-    return ResponseEntity.ok(transactionService.getUserTransactions(userId));
+    return ResponseEntity.ok(transactionService.getUserTransactions());
 }
 
-private Authentication createAuthentication(UserDTO user) {
-    List<GrantedAuthority> authorities = Collections.singletonList(
-        new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
-    );
-    return new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities);
-}
-
-private void configureSession(HttpSession session, UserDTO user) {
-    session.setAttribute("USER_ROLE", user.getRole());
-    session.setAttribute("USER_ID", user.getUserId());
-    session.setMaxInactiveInterval(3600);
-}
-
-private UserDTO sanitizeUserData(UserDTO user) {
-    user.setPassword(null);
-    return user;
-}
-
-private boolean validateLoginRequest(AuthenticationRequest request) {
-    return request.getUsername() != null && !request.getUsername().trim().isEmpty()
-        && request.getPassword() != null && !request.getPassword().isEmpty();
-}
-
-
-
-private void setupUserAuthentication(UserDTO user) {
-    List<GrantedAuthority> authorities = Collections.singletonList(
-        new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
-    );
-    Authentication auth = new UsernamePasswordAuthenticationToken(
-        user.getUsername(), null, authorities
-    );
-    SecurityContextHolder.getContext().setAuthentication(auth);
-}
-
-private void setupUserSession(HttpSession session, UserDTO user) {
-    session.setAttribute("USER_ROLE", user.getRole());
-    session.setAttribute("USER_ID", user.getUserId());
-    session.setMaxInactiveInterval(3600);
-}
 
 
 @PostMapping("/logout")

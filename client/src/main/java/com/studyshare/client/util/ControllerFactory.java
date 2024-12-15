@@ -44,8 +44,6 @@ public Object createController(Class<?> controllerClass) {
         return new RegisterController(userService, sceneManager);
     } else if (controllerClass == AdminDashboardController.class) {
         return new AdminDashboardController(userService, bookService, transactionService, sceneManager);
-    } else if (controllerClass == BookManagementController.class) {
-        return new BookManagementController(bookService, transactionService);
     }
     throw new IllegalArgumentException("Unknown controller class: " + controllerClass.getName());
 }

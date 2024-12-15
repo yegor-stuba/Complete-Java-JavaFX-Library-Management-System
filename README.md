@@ -18,16 +18,16 @@ StudyShare is a robust library management system designed to simplify book lendi
 
 ### For Admins:
 - 👤 **User Management**
-  - Add, edit, or delete user accounts.
+    - Add, edit, or delete user accounts.
 - 📚 **Book Inventory Management**
-  - Add new books, update book details, and track their availability.
+    - Add new books, update book details, and track their availability.
 - 🖥 **Admin Dashboard with Statistics**
-  - View the total number of books in the library.
-  - Track the total number of registered users.
-  - View detailed statistics of borrowed and returned books.
+    - View the total number of books in the library.
+    - Track the total number of registered users.
+    - View detailed statistics of borrowed and returned books.
 - 📈 **Detailed Transaction Reports**
-  - Monitor which user borrowed or returned specific books.
-  - Access transaction details available only for admins.
+    - Monitor which user borrowed or returned specific books.
+    - Access transaction details available only for admins.
 
 ---
 
@@ -102,22 +102,9 @@ Get an overview of library statistics and manage books and users seamlessly.
 ### Book Management
 Manage book inventory, add new books, and update details with ease.
 
-### Statistics
-View detailed statistics about library usage, total books, and registered users.
-
 ### Transactions
 Monitor user transactions, including who borrowed or returned specific books.
 
----
-
-## 📖 Additional Features
-
-- Borrow and return books seamlessly.
-- Users can only view their own transaction history.
-- Admins can:
-  - Track who borrowed or returned books.
-  - Monitor library usage statistics.
-  - View total books in the library and total users registered.
 
 ---
 
@@ -128,7 +115,3 @@ We welcome contributions! Please fork the repository and submit a pull request w
 ---
 
 ## ✉️ Contact
-
-For any inquiries or feedback, please reach out to **Veres Group** at `veres.group@example.com`.
-
-Stay connected for updates and new features!

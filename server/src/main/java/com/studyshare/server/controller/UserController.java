@@ -115,11 +115,11 @@ public ResponseEntity<List<UserDTO>> getAllUsers() {
 
     @GetMapping("/{id}/books")
     public ResponseEntity<List<Book>> getUserBooks(@PathVariable Long id) {
-        return ResponseEntity.ok(bookService.getBooksByUserId(id));
+        return ResponseEntity.ok(bookService.getUserBooks(id));
     }
 
     @GetMapping("/{id}/transactions")
     public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long id) {
-        return ResponseEntity.ok(transactionService.getUserTransactions(id));
+        return ResponseEntity.ok(transactionService.getUserTransactions());
     }
 }

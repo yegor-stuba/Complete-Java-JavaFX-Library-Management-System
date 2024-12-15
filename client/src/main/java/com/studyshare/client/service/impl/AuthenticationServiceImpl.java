@@ -77,14 +77,5 @@ private boolean isTokenValid(String token) {
 
 
 
-    @Override
-    public CompletableFuture<Boolean> validateToken(String token) {
-        return restClient.get("/api/auth/validate", Boolean.class);
-    }
-
-    @Override
-    public boolean isAuthenticated() {
-        return restClient.isAuthenticated();
-    }
 }
 

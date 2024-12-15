@@ -2,102 +2,68 @@ package com.studyshare.server.controller;
 
 import com.studyshare.common.dto.TransactionDTO;
 import com.studyshare.common.dto.UserDTO;
+import com.studyshare.common.enums.TransactionType;
 import com.studyshare.server.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import com.studyshare.common.enums.TransactionType;
 
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/transactions")
 @RequiredArgsConstructor
 public class TransactionController {
     private final TransactionService transactionService;
 
-@GetMapping("/user/current")
-public ResponseEntity<List<TransactionDTO>> getCurrentUserTransactions(Authentication authentication) {
-    UserDTO user = (UserDTO) authentication.getPrincipal();
-    return ResponseEntity.ok(transactionService.getUserTransactions(user.getUserId()));
-}
-
-    @GetMapping("/{id}")
-    public ResponseEntity<TransactionDTO> getTransaction(@PathVariable Long id) {
-        return ResponseEntity.ok(transactionService.getTransactionById(id));
+    @GetMapping
+    public ResponseEntity<List<TransactionDTO>> getAllTransactions() {
+        return ResponseEntity.ok(transactionService.getAllTransactions());
     }
 
-@PostMapping
-public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDTO) {
-    return ResponseEntity.ok(transactionService.createTransaction(
-        transactionDTO.getBookId(),
-        transactionDTO.getType()
-    ));
+@GetMapping("/count")
+public ResponseEntity<Long> getTransactionCount() {
+    return ResponseEntity.ok(transactionService.getTransactionCount());
 }
 
-    @PostMapping("/borrow")
-    public ResponseEntity<TransactionDTO> borrowBook(@RequestBody TransactionDTO transactionDTO) {
-        return ResponseEntity.ok(transactionService.createTransaction(
-            transactionDTO.getBookId(),
-            transactionDTO.getType()
-        ));
-    }
 
-
-// In TransactionController.java
-@PostMapping("/books/{bookId}/borrow")
-public ResponseEntity<TransactionDTO> borrowBook(@PathVariable Long bookId) {
-    return ResponseEntity.ok(transactionService.borrowBook(bookId));
-}
-
-@PostMapping("/books/{bookId}/return")
-public ResponseEntity<TransactionDTO> returnBook(@PathVariable Long bookId) {
-    return ResponseEntity.ok(transactionService.returnBook(bookId));
-}
-
-@GetMapping
-public ResponseEntity<List<TransactionDTO>> getAllTransactions() {
-    return ResponseEntity.ok(transactionService.getAllTransactions());
+@GetMapping("/current")
+public ResponseEntity<List<TransactionDTO>> getCurrentUserTransactions() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    UserDTO userDTO = (UserDTO) auth.getPrincipal();
+    return ResponseEntity.ok(transactionService.getUserTransactions());
 }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<TransactionDTO>> getUserTransactions(@PathVariable Long userId) {
-        return ResponseEntity.ok(transactionService.getUserTransactions(userId));
+        return ResponseEntity.ok(transactionService.getUserTransactions());
     }
 
-    @GetMapping("/book/{bookId}")
-    public ResponseEntity<List<TransactionDTO>> getBookTransactions(@PathVariable Long bookId) {
-        return ResponseEntity.ok(transactionService.getBookTransactions(bookId));
+    @PostMapping("/borrow")
+    public ResponseEntity<TransactionDTO> borrowBook(@RequestParam Long bookId) {
+        return ResponseEntity.ok(transactionService.createTransaction(bookId, TransactionType.BORROW));
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<List<TransactionDTO>> getActiveTransactions() {
-        return ResponseEntity.ok(transactionService.getActiveTransactions());
+    @PostMapping("/return")
+    public ResponseEntity<TransactionDTO> returnBook(@RequestParam Long bookId) {
+        return ResponseEntity.ok(transactionService.createTransaction(bookId, TransactionType.RETURN));
     }
 
-@GetMapping("/count/active-transactions")
-public ResponseEntity<Long> getActiveTransactionsCount() {
-    return ResponseEntity.ok(transactionService.getActiveTransactionsCount());
-}
-
-@GetMapping("/count/active-loans")
-public ResponseEntity<Long> getActiveLoansCount() {
-    return ResponseEntity.ok(transactionService.getActiveLoansCount());
-}
-
-    @PostMapping("/{bookId}/user/{userId}")
+    @PostMapping
     public ResponseEntity<TransactionDTO> createTransaction(
-            @PathVariable Long bookId,
-            @PathVariable Long userId,
+            @RequestParam Long bookId,
             @RequestParam TransactionType type) {
-        return ResponseEntity.ok(transactionService.createTransaction(bookId, userId, type));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDTO userDTO = (UserDTO) authentication.getPrincipal();
+        return ResponseEntity.ok(transactionService.createTransaction(bookId, type));
     }
 
-    @PutMapping("/{transactionId}/complete")
-    public ResponseEntity<TransactionDTO> completeTransaction(@PathVariable Long transactionId) {
-        return ResponseEntity.ok(transactionService.completeTransaction(transactionId));
+
+
+    @GetMapping("/{transactionId}")
+    public ResponseEntity<TransactionDTO> getTransaction(@PathVariable Long transactionId) {
+        return ResponseEntity.ok(transactionService.getTransaction(transactionId));
     }
 }

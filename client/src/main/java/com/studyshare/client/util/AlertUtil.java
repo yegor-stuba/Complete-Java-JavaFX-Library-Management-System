@@ -21,10 +21,6 @@ public class AlertUtil {
     });
 }
 
-public static void showLoginError(String message) {
-    showError("Login Failed", message);
-    log.error("Login error: {}", message);
-}
     public static void showInfo(String title, String content) {
         showAlert(AlertType.INFORMATION, title, content);
     }

@@ -1,12 +1,10 @@
 package com.studyshare.client.controller;
 
-import com.studyshare.client.service.impl.BookServiceImpl;
 import com.studyshare.client.util.AlertUtil;
-import com.studyshare.client.util.ErrorHandler;
+
 import com.studyshare.common.dto.BookDTO;
 import com.studyshare.common.dto.TransactionDTO;
-import com.studyshare.common.dto.UserDTO;
-import com.studyshare.common.enums.UserRole;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -58,11 +56,10 @@ protected static final Logger log = LoggerFactory.getLogger(BaseController.class
     }
 
     protected void logTransaction(TransactionDTO transaction) {
-        log.info("Transaction: {} - Book: {} - Type: {} - Time: {}",
-            transaction.getId(),
-            transaction.getBook().getTitle(),
-            transaction.getType(),
-            transaction.getTimestamp());
+        log.info("Transaction: {} - Book: {} - Type: {}",
+            transaction.getTransactionId(),
+            transaction.getBookId(),
+            transaction.getType());
     }
 
     protected void logBookAction(BookDTO book) {

@@ -1,11 +1,10 @@
 package com.studyshare.server.service.impl;
 
 import com.studyshare.common.dto.BookDTO;
-import com.studyshare.common.dto.UserDTO;
+import com.studyshare.common.enums.TransactionType;
 import com.studyshare.server.exception.ResourceNotFoundException;
 import com.studyshare.server.exception.ValidationException;
 import com.studyshare.server.mapper.BookMapper;
-import com.studyshare.server.mapper.UserMapper;
 import com.studyshare.server.model.Book;
 import com.studyshare.server.model.User;
 import com.studyshare.server.repository.BookRepository;
@@ -16,31 +15,86 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
-    private final UserRepository userRepository;
     private final BookMapper bookMapper;
-    private final UserMapper userMapper;
     private final UserService userService;
+    private final TransactionServiceImpl transactionService;
 
 
     @Override
-    public void validateBookAvailability(Long bookId) {
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-        if (!book.isAvailable()) {
-            throw new ValidationException("Book is not available");
-        }
+    public BookDTO getBookById(Long id) {
+        Book book = findById(id);
+        return bookMapper.toDto(book);
+    }
+
+    @Override
+    public List<BookDTO> getBorrowedBooks() {
+        User user = userService.getCurrentUserEntity();
+        return bookRepository.findByBorrower(user)
+                .stream()
+                .map(bookMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public BookDTO addBook(BookDTO bookDTO) {
+        Book book = bookMapper.toEntity(bookDTO);
+        return bookMapper.toDto(bookRepository.save(book));
+    }
+
+    @Override
+    public Book findById(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
+    }
+
+
+@Override
+public List<Book> getUserBooks(Long userId) {
+    return bookRepository.findByBorrowerUserId(userId);
+}
+
+@Override
+@Transactional
+public BookDTO createBook(BookDTO bookDTO) {
+    Book book = bookMapper.toEntity(bookDTO);
+    book.setBookId(null); // Ensure ID is null for auto-generation
+    book.setTotalCopies(bookDTO.getAvailableCopies());
+    return bookMapper.toDto(bookRepository.save(book));
+}
+
+    @Override
+    @Transactional
+    public BookDTO updateBook(Long bookId, BookDTO bookDTO) {
+        Book book = findById(bookId);
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setAvailableCopies(bookDTO.getAvailableCopies());
+        return bookMapper.toDto(bookRepository.save(book));
+    }
+
+    @Override
+    @Transactional
+    public void deleteBook(Long bookId) {
+        bookRepository.deleteById(bookId);
+    }
+
+    @Override
+    public BookDTO getBook(Long bookId) {
+        return bookMapper.toDto(findById(bookId));
     }
 
     @Override
@@ -50,116 +104,51 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toList());
     }
 
-
-@Override
-@Transactional
-public BookDTO borrowBook(Long bookId, Long userId) {
-    Book book = bookRepository.findById(bookId)
-        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-
-    if (!book.isAvailable()) {
-        throw new ValidationException("Book is not available");
+    @Override
+    public List<BookDTO> searchBooks(String query) {
+        return bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query)
+                .stream()
+                .map(bookMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    User borrower = userService.getCurrentUserEntity();
-    book.setBorrower(borrower);
-    book.setAvailable(false);
 
-    return bookMapper.toDto(bookRepository.save(book));
-}
+    @Transactional
+public BookDTO borrowBook(Long bookId) {
+    Book book = bookRepository.findByIdWithLock(bookId)
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+    User user = userService.getCurrentUserEntity();
 
-@Override
-@Transactional
-public BookDTO returnBook(Long bookId) {
-    Book book = bookRepository.findById(bookId)
-        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-
-    book.setBorrower(null);
-    book.setAvailable(true);
-
-    return bookMapper.toDto(bookRepository.save(book));
-}
-
-    @Override
-    public List<BookDTO> getBorrowedBooks(Long userId) {
-        UserDTO userDTO = userService.getUserById(userId);
-        User user = userMapper.toEntity(userDTO);
-        List<Book> books = bookRepository.findByBorrowerAndAvailableFalse(user);
-        return bookMapper.toDtoList(books);
+    if (book.getAvailableCopies() <= 0) {
+        throw new ValidationException("No copies available");
     }
 
-    @Override
-    public List<BookDTO> getLentBooks() {
-        User currentUser = userService.getCurrentUserEntity();
-        return bookMapper.toDtoList(
-            bookRepository.findByOwnerAndAvailableFalse(currentUser)
-        );
-    }
-
-    @Override
-    public Long getBookCount() {
-        return bookRepository.count();
-    }
-
-    @Override
-    public List<BookDTO> getAvailableBooks() {
-        return bookMapper.toDtoList(
-                bookRepository.findByAvailableTrue()
-        );
-    }
-
-    @Override
-    public List<Book> getBooksByUserId(Long userId) {
-        return bookRepository.findByOwner_UserId(userId);
-    }
-
-    @Override
-public BookDTO getBookById(Long id) {
-    return bookMapper.toDto(
-        bookRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Book not found"))
-    );
-}
-@Override
-public List<BookDTO> searchBooks(String query) {
-    return bookMapper.toDtoList(
-        bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query)
-    );
-}
-@Override
-public void deleteBook(Long id) {
-    bookRepository.deleteById(id);
-}
-
-
-
-@Override
-public BookDTO createBook(BookDTO bookDTO) {
-    log.debug("Creating new book: {}", bookDTO);
-    Book book = bookMapper.toEntity(bookDTO);
-    book.setAvailable(true);
+    book.setAvailableCopies(book.getAvailableCopies() - 1);
+    book.setBorrower(user);
     Book savedBook = bookRepository.save(book);
+
+    transactionService.createTransaction(bookId, TransactionType.BORROW);
     return bookMapper.toDto(savedBook);
 }
 
-@Override
-public BookDTO updateBook(Long id, BookDTO bookDTO) {
-    Book existingBook = bookRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+    @Override
+    @Transactional
+    public BookDTO returnBook(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+        User user = userService.getCurrentUserEntity();
 
-    existingBook.setTitle(bookDTO.getTitle());
-    existingBook.setAuthor(bookDTO.getAuthor());
-    existingBook.setIsbn(bookDTO.getIsbn());
-    existingBook.setAvailable(bookDTO.isAvailable());
+        if (!user.equals(book.getBorrower())) {
+            throw new ValidationException("Book was not borrowed by this user");
+        }
 
-    return bookMapper.toDto(bookRepository.save(existingBook));
-}
+        book.setAvailableCopies(book.getAvailableCopies() + 1);
+        book.setBorrower(null);
+        Book savedBook = bookRepository.saveAndFlush(book);
 
-@Override
-public BookDTO updateBookStatus(Long id, boolean available) {
-    Book book = bookRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-    book.setAvailable(available);
-    return bookMapper.toDto(bookRepository.save(book));
-}
+        // Create transaction after book is saved
+        transactionService.createTransaction(bookId, TransactionType.RETURN);
+
+        return bookMapper.toDto(savedBook);
+    }
 }

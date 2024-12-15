@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 public class ConnectionMonitor {
-    private final String serverUrl = ClientConfig.BASE_URL + "/api/health";
     private final HttpClient httpClient;
     private final BooleanProperty connected = new SimpleBooleanProperty(false);
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -35,11 +34,12 @@ public class ConnectionMonitor {
     }
 
     private void startMonitoring() {
-        scheduler.scheduleAtFixedRate(this::checkConnection, 0, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::checkConnection, 0, 120, TimeUnit.SECONDS);
     }
 
     private void checkConnection() {
         try {
+            String serverUrl = ClientConfig.BASE_URL + "/api/health";
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(serverUrl))
                     .GET()

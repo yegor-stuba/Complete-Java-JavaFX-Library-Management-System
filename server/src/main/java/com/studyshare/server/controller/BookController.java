@@ -1,106 +1,28 @@
 package com.studyshare.server.controller;
 
 import com.studyshare.common.dto.BookDTO;
-import com.studyshare.common.dto.UserDTO;
-import com.studyshare.server.exception.ResourceNotFoundException;
-import com.studyshare.server.exception.ValidationException;
-import com.studyshare.server.model.Book;
-import com.studyshare.server.model.User;
 import com.studyshare.server.service.BookService;
-import com.studyshare.server.service.UserService;
-import com.studyshare.server.validation.BookValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
-    private final UserService userService;
-    private final BookValidator bookValidator;
-    private static final Logger log = LoggerFactory.getLogger(BookController.class);
-
-
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        binder.addValidators(bookValidator);
-    }
-
-
-    @GetMapping
-    public ResponseEntity<List<BookDTO>> getAllBooks() {
-        log.info("Fetching all books");
-        List<BookDTO> books = bookService.getAllBooks();
-        log.info("Found {} books", books.size());
-        try {
-            return ResponseEntity.ok(bookService.getAllBooks());
-        } catch (Exception e) {
-            log.error("Error fetching books: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
     @PostMapping
-    public ResponseEntity<BookDTO> createBook(@Valid @RequestBody BookDTO bookDTO) {
-        try {
-            return ResponseEntity.ok(bookService.createBook(bookDTO));
-        } catch (ValidationException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+public ResponseEntity<BookDTO> createBook(@Valid @RequestBody BookDTO bookDTO) {
+    return ResponseEntity.ok(bookService.createBook(bookDTO));
+}
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException e) {
-        String errors = e.getBindingResult()
-                .getAllErrors()
-                .stream()
-                .map(ObjectError::getDefaultMessage)
-                .collect(Collectors.joining(", "));
-        return ResponseEntity.badRequest().body(errors);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
-        return ResponseEntity.ok(bookService.getBookById(id));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) {
-        try {
-            return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
-        try {
-            bookService.deleteBook(id);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @GetMapping("/{bookId}")
+    public ResponseEntity<BookDTO> getBook(@PathVariable Long bookId) {
+        return ResponseEntity.ok(bookService.getBook(bookId));
     }
 
     @GetMapping("/search")
@@ -108,77 +30,35 @@ public class BookController {
         return ResponseEntity.ok(bookService.searchBooks(query));
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<Long> getBookCount() {
-        return ResponseEntity.ok(bookService.getBookCount());
+    @PostMapping("/{bookId}/borrow")
+    public ResponseEntity<BookDTO> borrowBook(@PathVariable Long bookId) {
+        return ResponseEntity.ok(bookService.borrowBook(bookId));
     }
 
-    @GetMapping("/available")
-    public ResponseEntity<List<BookDTO>> getAvailableBooks() {
-        return ResponseEntity.ok(bookService.getAvailableBooks());
+    @PostMapping("/{bookId}/return")
+    public ResponseEntity<BookDTO> returnBook(@PathVariable Long bookId) {
+        return ResponseEntity.ok(bookService.returnBook(bookId));
     }
 
-    @PostMapping("/{id}/borrow")
-public ResponseEntity<BookDTO> borrowBook(@PathVariable Long id) {
-    try {
-        return ResponseEntity.ok(bookService.borrowBook(id, getCurrentUserId()));
-    } catch (ValidationException e) {
-        return ResponseEntity.badRequest().build();
-    }
-}
-
-@PostMapping("/{id}/return")
-public ResponseEntity<BookDTO> returnBook(@PathVariable Long id) {
-    try {
-        return ResponseEntity.ok(bookService.returnBook(id));
-    } catch (ValidationException e) {
-        return ResponseEntity.badRequest().build();
-    }
-}
-
-    @GetMapping("/borrowed/{userId}")
-    public ResponseEntity<List<BookDTO>> getBorrowedBooks(@PathVariable Long userId) {
-        return ResponseEntity.ok(bookService.getBorrowedBooks(userId));
+    @GetMapping("/borrowed")
+    public ResponseEntity<List<BookDTO>> getBorrowedBooks() {
+        return ResponseEntity.ok(bookService.getBorrowedBooks());
     }
 
-    @GetMapping("/lent")
-    public ResponseEntity<List<BookDTO>> getLentBooks() {
-        return ResponseEntity.ok(bookService.getLentBooks());
+    @GetMapping
+    public ResponseEntity<List<BookDTO>> getAllBooks() {
+        return ResponseEntity.ok(bookService.getAllBooks());
     }
 
-    @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<Book>> getBooksByUserId(@PathVariable Long ownerId) {
-        userService.getUserById(ownerId);
-        return ResponseEntity.ok(bookService.getBooksByUserId(ownerId));
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
+        return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
     }
 
-    private Long getCurrentUserId() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserDTO user = userService.findByUsername(username);
-        return user.getUserId();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
+        return ResponseEntity.ok().build();
     }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(ex.getMessage());
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneralException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ex.getMessage());
-    }
-
-@PostMapping("/register")
-public ResponseEntity<BookDTO> registerBook(@Valid @RequestBody BookDTO bookDTO) {
-    log.debug("Registering new book: {}", bookDTO);
-    try {
-        BookDTO created = bookService.createBook(bookDTO);
-        return ResponseEntity.ok(created);
-    } catch (Exception e) {
-        log.error("Error creating book: {}", e.getMessage());
-        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-    }
-}
 }

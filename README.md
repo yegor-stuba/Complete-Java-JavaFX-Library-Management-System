@@ -77,7 +77,7 @@ StudyShare is a robust library management system designed to simplify book lendi
 
 ### User Login
 - **Username**: `user`
-- **Password**: `password`
+- **Password**: `123456`
 
 ### Admin Login
 - **Username**: `admin`

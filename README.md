@@ -91,16 +91,17 @@ Easily register new users with a simple and efficient form.
 
 ### Admin Dashboard
 Get an overview of library statistics and manage books and users seamlessly.
-![Admin Dashboard](https://github.com/user-attachments/assets/fd66d67a-b290-49dc-9ca8-7d791164108a)
+<img width="794" alt="Screenshot 2024-12-15 at 12 51 55" src="https://github.com/user-attachments/assets/0e22eb3a-0dff-4f3b-af6e-a183b5270b80" />
 
 ### Book Management
 Manage book inventory, add new books, and update details with ease.
-<img width="794" alt="Screenshot 2024-12-15 at 12 51 55" src="https://github.com/user-attachments/assets/0e22eb3a-0dff-4f3b-af6e-a183b5270b80" />
+<img width="794" alt="Screenshot 2024-12-15 at 12 52 04" src="https://github.com/user-attachments/assets/00d9addd-ba03-46d2-9471-a301776c4748" />
 
 
 ### Transactions
 Monitor user transactions, including who borrowed or returned specific books.
-<img width="794" alt="Screenshot 2024-12-15 at 12 52 04" src="https://github.com/user-attachments/assets/00d9addd-ba03-46d2-9471-a301776c4748" />
+<img width="796" alt="Screenshot 2024-12-15 at 12 52 19" src="https://github.com/user-attachments/assets/a6ae6909-f9d2-4cbf-901a-4100ceca2cef" />
+
 
 
 

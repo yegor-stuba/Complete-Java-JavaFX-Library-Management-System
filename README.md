@@ -1,4 +1,5 @@
-# 📚 StudyShare: Collaborative Library Management System
+# 📚 Complete Library Management System
+## All you might need to do to make it unique is change colors in styles.css 
 
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
@@ -33,11 +34,11 @@ StudyShare is a robust library management system designed to simplify book lendi
 
 ## 🛠 Tech Stack
 
-- **Backend**: Java, Spring Boot
-- **Frontend**: JavaFX (FXML for UI design)
+- **Backend**: Java 17, Spring Boot
+- **Frontend**: JavaFX 21 (FXML + CSS for UI design)
 - **Database**: SQLite
 - **Build Tool**: Maven
-- **IDE**: IntelliJ IDEA
+- **IDE**: IntelliJ IDEA | JDK 23
 
 ---
 
@@ -51,8 +52,7 @@ StudyShare is a robust library management system designed to simplify book lendi
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone git@github.com:Thursday-10-00-11-50-semester-work/thursday-10-00-11-50-semester-work-veres.git
-   cd studyshare
+   git clone git@github.com:yegor-stuba/Complete-Java-JavaFX-Library-Management-System.git
    ```
 2. Navigate to the server directory and build the backend:
    ```bash
@@ -71,7 +71,7 @@ StudyShare is a robust library management system designed to simplify book lendi
 
 ### User Login
 - **Username**: `user`
-- **Password**: `123456`
+- **Password**: `password`
 
 ### Admin Login
 - **Username**: `admin`

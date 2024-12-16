@@ -331,29 +331,23 @@ private void checkSessionStatus() {
 
 
 
-  private CompletableFuture loadData() {
+  private CompletableFuture<Void> loadData() {
       return userService.getCurrentUser()
-        .thenCompose(user -> {
-            if (!UserRole.ADMIN.equals(user.getRole())) {
-                throw new AuthorizationException("Admin privileges required");
-            }
-            return CompletableFuture.allOf(
-                loadUsers(),
-                loadBooks()
-            );
-        })
-        .exceptionally(throwable -> {
-            Platform.runLater(() -> {
-                if (throwable instanceof AuthenticationException) {
-                    sceneManager.switchToLogin();
-                } else {
-                    AlertUtil.showError("Error", throwable.getMessage());
-                }
-            });
-            return null;
-        });
-}
-
+          .thenCompose(user -> CompletableFuture.allOf(
+              loadUsers(),
+              loadBooks()
+          ))
+          .exceptionally(throwable -> {
+              Platform.runLater(() -> {
+                  if (throwable instanceof AuthenticationException) {
+                      sceneManager.switchToLogin();
+                  } else {
+                      AlertUtil.showError("Error", throwable.getMessage());
+                  }
+              });
+              return null;
+          });
+  }
 
 
 

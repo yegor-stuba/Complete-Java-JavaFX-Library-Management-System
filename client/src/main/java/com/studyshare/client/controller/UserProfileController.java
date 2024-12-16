@@ -316,6 +316,7 @@ private String formatDueDate(BookDTO book) {
 }
 
 
+
     private void updateBookStatus(BookDTO book) {
         handleAsync(bookService.getBookById(book.getBookId()))
                 .thenAccept(updatedBook -> Platform.runLater(() -> {
@@ -597,6 +598,7 @@ private void refreshAllTables() {
         }
     }
 
+
     @FXML
     private void handleReturnSelected() {
         BookDTO selectedBook = borrowedBooksTable.getSelectionModel().getSelectedItem();
@@ -608,10 +610,11 @@ private void refreshAllTables() {
                         AlertUtil.showInfo("Success", "Book returned successfully");
                     }))
                     .exceptionally(throwable -> {
-                        Platform.runLater(() -> AlertUtil.showError("Error",
-                                "Failed to return book: " + throwable.getMessage()));
+                        Platform.runLater(() -> AlertUtil.showError("Error", "Failed to return book"));
                         return null;
                     });
+        } else {
+            AlertUtil.showWarning("Warning", "Please select a book to return");
         }
     }
 

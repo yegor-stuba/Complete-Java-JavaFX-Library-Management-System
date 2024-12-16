@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -33,8 +34,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**", "/api/health").permitAll()
                 .requestMatchers("/api/books/public/**").permitAll()
-                .requestMatchers("/api/books/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/api/transactions/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/books/**").permitAll()
+                .requestMatchers("/api/transactions/**").permitAll()
                 .requestMatchers("/api/admin/**", "/api/users/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
             .logout(logout -> logout

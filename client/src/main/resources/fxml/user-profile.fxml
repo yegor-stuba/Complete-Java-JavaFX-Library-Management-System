@@ -46,7 +46,7 @@
                     <Label text="Borrowed Books" styleClass="section-header"/>
                     <TableView fx:id="borrowedBooksTable" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn fx:id="borrowedTitleColumn" text="Title"/>
+                            <TableColumn fx:id="borrowedTitleColumn" text="Title" prefWidth="200"/>
                             <TableColumn fx:id="borrowedAuthorColumn" text="Author"/>
                             <TableColumn fx:id="borrowedDueDateColumn" text="Due Date"/>
                         </columns>
@@ -63,10 +63,10 @@
             <VBox spacing="10">
                 <TableView fx:id="transactionsTable" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="timestampColumn" text="Time"/>
+                        <TableColumn fx:id="timestampColumn" text="Time" prefWidth="150"/>
                         <TableColumn fx:id="actionColumn" text="Action"/>
                         <TableColumn fx:id="userColumn" text="User"/>
-                        <TableColumn fx:id="bookColumn" text="Book"/>
+                        <TableColumn fx:id="bookColumn" text="Book" prefWidth="200"/>
                     </columns>
                 </TableView>
                 <Pagination fx:id="transactionPagination"/>
